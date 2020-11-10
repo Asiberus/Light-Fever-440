@@ -45,9 +45,9 @@ class AudioVisualizer():
       self.strip_mirror_color.append(Color(0,0,0))
 
 
-  def run(self):
-    while not self.stopped.wait(0.1):
-      self.update()
+  # def run(self):
+  #   while not self.stopped.wait(0.1):
+  #     self.update()
 
   # def stop(self):
   #   self.recorder.close()
@@ -129,11 +129,9 @@ class AudioVisualizer():
     self.set_color(y)
 
   def set_color(self, data):
-    blue = np.linalg.norm(data[:4]) * 0.1
-    green = np.linalg.norm(data[4:8])
-    red = np.linalg.norm(data[8:])
-
-    # print(blue, green, red)
+    blue = np.linalg.norm(data[1:8])
+    green = np.linalg.norm(data[8:16])
+    red = np.linalg.norm(data[16:])
 
     sum = blue + green + red
 

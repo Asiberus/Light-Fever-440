@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="text/javascript" src="../static/js/base.js"></script>
+
+    <title>Light Fever</title>
+</head>
+<body>
+    <h1>Light Fever 440</h1>
+    <div>
+        <button class="js-btn-start">Start</button>
+        <button class="js-btn-stop">Stop</button>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    document.querySelector('.js-btn-start').addEventListener('click', () => {
+        ajax({
+            type: 'POST',
+            url: 'action',
+            data: {
+                action: 'ON'
+            },
+            success: (response) => {
+                console.log('Strip led successfuly started');
+            },
+            error: (status) => {
+                console.warn('Something went wrong', status);
+            }
+        });
+    });
+
+    document.querySelector('.js-btn-stop').addEventListener('click', () => {
+        ajax({
+            type: 'POST',
+            url: 'action',
+            data: {
+                action: 'OFF'
+            },
+            success: (response) => {
+                console.log('Strip led successfuly stoped');
+            },
+            error: (status) => {
+                console.warn('Something went wrong', status);
+            }
+        });
+    });
+</script>
