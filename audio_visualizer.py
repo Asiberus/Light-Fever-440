@@ -5,13 +5,14 @@ from threading import *
 
 import numpy as np
 import pyaudio
+from rpi_ws281x import *
 
 from microphone_recorder import MicrophoneRecorder
 
-class AudioVisualizer(Thread):
-  def __init__(self, event):
-    Thread.__init__(self)
-    self.stopped = event
+class AudioVisualizer():
+  def __init__(self):
+    # Thread.__init__(self)
+    # self.stopped = event
 
     self.FORMAT = pyaudio.paInt16
     self.CHANNELS = 1
@@ -26,14 +27,33 @@ class AudioVisualizer(Thread):
     self.recorder = MicrophoneRecorder(sample_rate=self.RATE, chunksize=self.CHUNKSIZE)
     self.recorder.start()
 
+    #Initiate strip led object
+    self.LED_COUNT = 150
+    self.LED_PIN = 18
+    self.LED_FREQ_HZ = 800000
+    self.LED_DMA = 10
+    self.LED_BRIGHTNESS = 255
+    self.LED_INVERT = False
+    self.LED_CHANNEL = 0
+    self.strip = Adafruit_NeoPixel(self.LED_COUNT, self.LED_PIN, self.LED_FREQ_HZ, self.LED_DMA, self.LED_INVERT, self.LED_BRIGHTNESS, self.LED_CHANNEL)
+    self.strip.begin()
+
+    self.strip_color = collections.deque(maxlen=self.strip.numPixels())
+    self.strip_mirror_color = collections.deque(maxlen=self.strip.numPixels() // 2)
+
+    for i in range(self.strip.numPixels() // 2):
+      self.strip_mirror_color.append(Color(0,0,0))
+
+
   def run(self):
     while not self.stopped.wait(0.1):
       self.update()
 
-  def stop(self):
-    self.recorder.close()
-    self.stopped.set()
-    self.join()
+  # def stop(self):
+  #   self.recorder.close()
+  #   self.set_strip_color(0, 0, 0)
+  #   self.stopped.set()
+  #   self.join()
 
   def update(self):
     frames = self.recorder.get_frames()
@@ -109,9 +129,11 @@ class AudioVisualizer(Thread):
     self.set_color(y)
 
   def set_color(self, data):
-    blue = np.linalg.norm(data[:8]) * 0.8
-    green = np.linalg.norm(data[8:16])
-    red = np.linalg.norm(data[16:])
+    blue = np.linalg.norm(data[:4]) * 0.1
+    green = np.linalg.norm(data[4:8])
+    red = np.linalg.norm(data[8:])
+
+    # print(blue, green, red)
 
     sum = blue + green + red
 
@@ -121,11 +143,57 @@ class AudioVisualizer(Thread):
 
     hue, saturation, value = colorsys.rgb_to_hsv(red_ratio, green_ratio, blue_ratio)
     r = colorsys.hsv_to_rgb(hue, 1, 1)
-    print(r)
-    # print(hue)
-    print(hue, hex(int(hue * 255)))
+    rgb = [int(r[0] * 255), int(r[1] * 255), int(r[2] * 255)]
+
+    # print(rgb)
+
+    # self.set_strip_uniform_color(rgb[0], rgb[1], rgb[2])
+    # self.set_strip_progressive_color(rgb[0], rgb[1], rgb[2], 10)
+    self.set_strip_progressive_mirror_color(rgb[0], rgb[1], rgb[2], 5)
+
+  def set_strip_uniform_color(self, red, green, blue):
+    for i in range(self.strip.numPixels()):
+      self.strip.setPixelColor(i, Color(red, green, blue))
+    self.strip.show()
+
+  def set_strip_progressive_color(self, red, green, blue, num_pixel=5):
+    for i in range(num_pixel):
+      self.strip_color.appendleft(Color(red, green, blue))
+
+    for i in range(len(self.strip_color)):
+      self.strip.setPixelColor(i, self.strip_color[i])
+      
+    self.strip.show()
+
+  def set_strip_progressive_mirror_color(self, red, green, blue, num_pixel=5):
+    for i in range(num_pixel):
+      self.strip_mirror_color.append(Color(red, green, blue))
+
+    strip_color = list(self.strip_mirror_color) + list(self.strip_mirror_color)[::-1]
+
+    for i in range(len(strip_color)):
+      self.strip.setPixelColor(i, strip_color[i])
+      
+    self.strip.show()
+
+    
+  def switch_off_strip(self):
+    self.set_strip_uniform_color(0, 0, 0)
+      
+  
 
 if __name__ == '__main__':
-  stopFlag = Event()
-  thread = AudioVisualizer(stopFlag)
-  thread.start()
+  # stopFlag = Event()
+  # thread = AudioVisualizer(stopFlag)
+  # thread.start()
+
+  audio_visualizer = AudioVisualizer()
+
+  try:
+    while True:
+      audio_visualizer.update()
+      time.sleep(0.01)
+
+  except KeyboardInterrupt:
+    audio_visualizer.switch_off_strip()
+
