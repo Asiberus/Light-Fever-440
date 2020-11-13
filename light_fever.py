@@ -7,23 +7,16 @@ from audio_visualizer import AudioVisualizer
 # TODO : Stop stream when webserver is kill
 
 class LightFever(object):
-    _instance = None
-
-    # def __new__(class_, *args, **kwargs):
-    #     print(class_._instance)
-    #     if not isinstance(class_._instance, class_):
-    #         class_._instance = object.__new__(class_, *args, **kwargs)
-    #     return class_._instance
 
     def __init__(self):
-        print('INITIALIZE LIGHT FEVER START')
         self.strip = StripLed()
-        # self.audio_visualizer = None
         self.audio_visualizer = AudioVisualizer()
 
         self.audio_analize_running = False
-        self.TIMER = 100
-        print('INITIALIZE LIGHT FEVER FINISH')
+        self.TIMER = 50
+
+        # Default mode is uniform color
+        self.set_strip_color = self.strip.set_uniform_color
 
     def start(self):
         self.audio_analize_running = True
@@ -41,10 +34,18 @@ class LightFever(object):
     def start_audio_analyse(self):
         while self.audio_analize_running:
             rgb = self.audio_visualizer.get_color_from_analysis()
-            print(rgb)
             if rgb:
-                self.strip.set_strip_uniform_color(rgb[0], rgb[1], rgb[2])
+                self.set_strip_color(rgb[0], rgb[1], rgb[2])
             time.sleep(self.TIMER/1000.0)
+
+    def set_audio_analyse_mode(self, mode):
+        if mode == 'UNIFORM':
+            self.set_strip_color = self.strip.set_uniform_color
+        elif mode == 'PROGRESSIVE':
+            self.set_strip_color = self.strip.set_progressive_color
+        elif mode == 'PROGRESSIVE_MIRROR':
+            self.set_strip_color = self.strip.set_progressive_mirror_color
+        
 
     
 

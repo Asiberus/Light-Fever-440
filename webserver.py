@@ -24,6 +24,15 @@ class WebServer(object):
 
         return {'success': True}
 
+    @cherrypy.expose
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
+    def mode(self):
+        data = cherrypy.request.json
+        mode = data.get('mode', None)
+        self.light_fever.set_audio_analyse_mode(mode)
+
+        return {'success': True}
 
 if __name__ == '__main__':
     conf = {
