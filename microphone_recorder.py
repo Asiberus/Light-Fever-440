@@ -18,6 +18,7 @@ class MicrophoneRecorder(object):
         self.sample_rate = sample_rate
         self.chunksize = chunksize
         self.p = pyaudio.PyAudio()
+        print(self.p.get_default_input_device_info())
         self.stream = self.p.open(format=pyaudio.paInt16,
                                   channels=1,
                                   rate=self.sample_rate,
@@ -43,8 +44,11 @@ class MicrophoneRecorder(object):
             self.frames = []
             return frames
 
-    def start(self):
+    def start_stream(self):
         self.stream.start_stream()
+
+    def stop_stream(self):
+        self.stream.stop_stream()
 
     def close(self):
         with self.lock:

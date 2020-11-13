@@ -1,25 +1,42 @@
-from bottle import Bottle, run, template, static_file, request, response, HTTPResponse
+import os, os.path
+import cherrypy
 
-app = Bottle()
+from light_fever import LightFever
 
-@app.get('/')
-def index():
-    return template('index')
+class WebServer(object):
+    def __init__(self, light_fever):
+        self.light_fever = light_fever
 
-@app.post('/action')
-def action():
-    action = request.json.get('action', None)
+    @cherrypy.expose
+    def index(self):
+        return open('index.html')
 
-    if(action == 'ON'):
-        print('switch on audio analyse')
-    elif (action == 'OFF'):
-        print('switch off audio analyse')
-    
+    @cherrypy.expose
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
+    def action(self):
+        data = cherrypy.request.json
+        action = data.get('action', None)
+        if action == 'ON':
+            self.light_fever.start()
+        elif action == 'OFF':
+            self.light_fever.stop()
+        
+        return {'success': True}
 
-    return HTTPResponse(status=204)
 
-@app.route('/static/:path#.+#', name='static')
-def static(path):
-    return static_file(path, root='static')
+if __name__ == '__main__':
+    conf = {
+        '/': {
+            'tools.sessions.on': True,
+            'tools.staticdir.root': os.path.abspath(os.getcwd())
+        },
+        '/static': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': './public'
+        }
+    }
 
-run(app, host='localhost', port=8080, reloader=True, debug=True)
+    light_fever = LightFever()
+
+    cherrypy.quickstart(WebServer(light_fever), '/', conf)

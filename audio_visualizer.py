@@ -5,11 +5,10 @@ from threading import *
 
 import numpy as np
 import pyaudio
-from rpi_ws281x import *
 
 from microphone_recorder import MicrophoneRecorder
 
-class AudioVisualizer():
+class AudioVisualizer(object):
   def __init__(self):
     # Thread.__init__(self)
     # self.stopped = event
@@ -25,24 +24,12 @@ class AudioVisualizer():
     self.previous_spectrum = collections.deque(maxlen=10)
 
     self.recorder = MicrophoneRecorder(sample_rate=self.RATE, chunksize=self.CHUNKSIZE)
-    self.recorder.start()
 
-    #Initiate strip led object
-    self.LED_COUNT = 150
-    self.LED_PIN = 18
-    self.LED_FREQ_HZ = 800000
-    self.LED_DMA = 10
-    self.LED_BRIGHTNESS = 255
-    self.LED_INVERT = False
-    self.LED_CHANNEL = 0
-    self.strip = Adafruit_NeoPixel(self.LED_COUNT, self.LED_PIN, self.LED_FREQ_HZ, self.LED_DMA, self.LED_INVERT, self.LED_BRIGHTNESS, self.LED_CHANNEL)
-    self.strip.begin()
+    # self.strip_color = collections.deque(maxlen=self.strip.numPixels())
+    # self.strip_mirror_color = collections.deque(maxlen=self.strip.numPixels() // 2)
 
-    self.strip_color = collections.deque(maxlen=self.strip.numPixels())
-    self.strip_mirror_color = collections.deque(maxlen=self.strip.numPixels() // 2)
-
-    for i in range(self.strip.numPixels() // 2):
-      self.strip_mirror_color.append(Color(0,0,0))
+    # for i in range(self.strip.numPixels() // 2):
+    #   self.strip_mirror_color.append(Color(0,0,0))
 
 
   # def run(self):
@@ -55,29 +42,31 @@ class AudioVisualizer():
   #   self.stopped.set()
   #   self.join()
 
-  def update(self):
+  def start(self):
+    self.recorder.start_stream()
+
+  def stop(self):
+    self.recorder.stop_stream()
+
+  def get_color_from_analysis(self):
     frames = self.recorder.get_frames()
     if len(frames) == 0:
       data = np.zeros((self.recorder.chunksize,), dtype=np.int)
     else:
       data = frames[-1]
 
-    if data.max() > 1:
-      self.get_spectrum_data(data)
+    if not data.max() > 1:
+      return
 
-  def get_spectrum_data(self, data):
-    spectrum = np.fft.fft(np.hanning(data.size) * data, n=self.N_FFT)
+    bark_split = self.get_bark_split(data)
+    rgb_split = self.get_rgb_split(bark_split)
 
-    self.get_bark_split(spectrum)
-
-    # spectrum_magnitude = np.sqrt(np.real(spectrum) ** 2 + np.imag(spectrum) ** 2)
-    # spectrum_magnitude = spectrum_magnitude[:self.CHUNKSIZE] * 2 / (128 * self.CHUNKSIZE)
+    return rgb_split
 
   def get_bark_split(self, data):
-    bark_scale = [0, 100, 200, 300, 400, 510, 630, 770, 920, 1080, 1270, 1480, 1720, 2000,
-                  2320, 2700, 3150, 3700, 4400, 5300, 6400, 7700, 9500, 12000, 15500]
-
-    bark_scale_vector = [
+    spectrum = np.fft.fft(np.hanning(data.size) * data, n=self.N_FFT)
+  
+    bark_scale = [
       {'freq': 100, 'data': [], 'value': 0},
       {'freq': 200, 'data': [], 'value': 0},
       {'freq': 300, 'data': [], 'value': 0},
@@ -104,32 +93,33 @@ class AudioVisualizer():
       {'freq': 15500, 'data': [], 'value': 0},
     ]
 
+
     step = self.RATE // self.N_FFT
 
     for i in range(self.CHUNKSIZE):
       freq = i * step
-      value = data[i]
+      value = spectrum[i]
 
-      for bark in bark_scale_vector[::-1]:
+      for bark in bark_scale[::-1]:
         if freq >= bark['freq']:
           bark['data'].append(value)
           break
 
-    y = []
-    for bark in bark_scale_vector:
+    bark_split = []
+    for bark in bark_scale:
       magnitude = np.sqrt(np.real(bark['data']) ** 2 + np.imag(bark['data']) ** 2)
       d = np.linalg.norm(magnitude)
       bark['value'] = int(d)
 
-      y.append(bark['value'])
+      bark_split.append(bark['value'])
 
-    y = np.array(y)
-    y = (y - y.min()) / (y.max() - y.min())
+    bark_split = np.array(bark_split)
+    bark_split = (bark_split - bark_split.min()) / (bark_split.max() - bark_split.min())
 
-    self.set_color(y)
+    return bark_split
 
-  def set_color(self, data):
-    blue = np.linalg.norm(data[1:8])
+  def get_rgb_split(self, data):
+    blue = np.linalg.norm(data[0:8])
     green = np.linalg.norm(data[8:16])
     red = np.linalg.norm(data[16:])
 
@@ -143,40 +133,12 @@ class AudioVisualizer():
     r = colorsys.hsv_to_rgb(hue, 1, 1)
     rgb = [int(r[0] * 255), int(r[1] * 255), int(r[2] * 255)]
 
-    # print(rgb)
+    return rgb
 
-    # self.set_strip_uniform_color(rgb[0], rgb[1], rgb[2])
     # self.set_strip_progressive_color(rgb[0], rgb[1], rgb[2], 10)
-    self.set_strip_progressive_mirror_color(rgb[0], rgb[1], rgb[2], 5)
+    # self.set_strip_progressive_mirror_color(rgb[0], rgb[1], rgb[2], 5)
 
-  def set_strip_uniform_color(self, red, green, blue):
-    for i in range(self.strip.numPixels()):
-      self.strip.setPixelColor(i, Color(red, green, blue))
-    self.strip.show()
-
-  def set_strip_progressive_color(self, red, green, blue, num_pixel=5):
-    for i in range(num_pixel):
-      self.strip_color.appendleft(Color(red, green, blue))
-
-    for i in range(len(self.strip_color)):
-      self.strip.setPixelColor(i, self.strip_color[i])
-      
-    self.strip.show()
-
-  def set_strip_progressive_mirror_color(self, red, green, blue, num_pixel=5):
-    for i in range(num_pixel):
-      self.strip_mirror_color.append(Color(red, green, blue))
-
-    strip_color = list(self.strip_mirror_color) + list(self.strip_mirror_color)[::-1]
-
-    for i in range(len(strip_color)):
-      self.strip.setPixelColor(i, strip_color[i])
-      
-    self.strip.show()
-
-    
-  def switch_off_strip(self):
-    self.set_strip_uniform_color(0, 0, 0)
+  
       
   
 
@@ -186,12 +148,16 @@ if __name__ == '__main__':
   # thread.start()
 
   audio_visualizer = AudioVisualizer()
+  audio_visualizer.start()
 
   try:
     while True:
-      audio_visualizer.update()
-      time.sleep(0.01)
+      rgb = audio_visualizer.get_color_from_analysis()
+      print(rgb)
+      time.sleep(0.1)
 
   except KeyboardInterrupt:
-    audio_visualizer.switch_off_strip()
+    audio_visualizer.stop()
+    audio_visualizer.recorder.close()
+    # audio_visualizer.switch_off_strip()
 
