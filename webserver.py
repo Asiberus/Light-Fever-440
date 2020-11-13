@@ -9,7 +9,7 @@ class WebServer(object):
 
     @cherrypy.expose
     def index(self):
-        return open('index.html')
+        return open('web/index.html')
 
     @cherrypy.expose
     @cherrypy.tools.json_in()
@@ -21,7 +21,7 @@ class WebServer(object):
             self.light_fever.start()
         elif action == 'OFF':
             self.light_fever.stop()
-        
+
         return {'success': True}
 
 

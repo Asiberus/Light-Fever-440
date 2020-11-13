@@ -1,0 +1,14 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html, body {
+  font-size: 62.5%;
+  height: 100vh;
+  width: 100vw;
+}
+
+.app-wrapper {
+  font-size: 1.6rem; /* Base height is 16pt */
+}
