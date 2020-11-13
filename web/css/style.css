@@ -3,7 +3,22 @@
   margin: 0;
 }
 
+.dark-theme {
+  --background-color: rgb(66, 66, 66);
+  --background-light-color: rgb(33, 33, 33);
+  --text-color: white;
+}
+
+.light-theme {
+  --background-color: rgb(189, 189, 189);
+  --background-light-color: rgb(222, 222, 222);
+  --text-color: black;
+}
+
 html, body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: sans-serif;
   font-size: 62.5%;
   height: 100vh;
   width: 100vw;
@@ -11,4 +26,44 @@ html, body {
 
 .app-wrapper {
   font-size: 1.6rem; /* Base height is 16pt */
+  height: 100%;
+  width: 100%;
+}
+
+/* Header section */
+
+.header {
+  align-items: center;
+  background-color: var(--background-light-color);
+  border-bottom: solid 1px grey;
+  display: flex;
+  height: 6rem;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.header .btn-on,
+.header .btn-off {
+  border: solid 1px grey;
+  border-radius: 5px;
+  color: var(--text-color);
+  height: 4rem;
+  padding: 0;
+  width: 4rem;
+}
+
+.header .btn-on {
+  background-color: green;
+}
+
+.header .btn-off {
+  background-color: red;
+}
+
+/* Container */
+
+.container {
+  height: calc(100% - 6rem);
+  overflow-y: auto;
+  width: 100%;
 }
