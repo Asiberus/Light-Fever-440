@@ -16,21 +16,7 @@ class WebServer(object):
     @cherrypy.tools.json_out()
     def action(self):
         data = cherrypy.request.json
-        action = data.get('action', None)
-        if action == 'ON':
-            self.light_fever.start()
-        elif action == 'OFF':
-            self.light_fever.stop()
-
-        return {'success': True}
-
-    @cherrypy.expose
-    @cherrypy.tools.json_in()
-    @cherrypy.tools.json_out()
-    def mode(self):
-        data = cherrypy.request.json
-        mode = data.get('mode', None)
-        self.light_fever.set_audio_analyse_mode(mode)
+        self.light_fever.handle_action(data)
 
         return {'success': True}
 
@@ -42,7 +28,7 @@ if __name__ == '__main__':
         },
         '/static': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': './public'
+            'tools.staticdir.dir': './web'
         }
     }
 

@@ -1,4 +1,5 @@
 import collections
+import time
 from rpi_ws281x import *
 
 class StripLed(object):
@@ -44,6 +45,59 @@ class StripLed(object):
             self.strip.setPixelColor(i, strip_color_mirror[i])
         
         self.strip.show()
+
+    def stroboscope(self, options):
+        red, green, blue = options.get('color', (127, 127, 127))
+        delay = options.get('delay', 50)
+        self.set_uniform_color(red, green, blue)
+        time.sleep(delay/1000.0)
+        self.set_uniform_color(0, 0, 0)
+        time.sleep(delay/1000.0)
+
+    def theater_chase(self, options):
+        red, green, blue = options.get('color', (127, 127, 127))
+        delay = options.get('delay', 50)
+
+        for q in range(3):
+            for i in range(0, self.strip.numPixels(), 3):
+                self.strip.setPixelColor(i+q, Color(red, green, blue))
+            self.strip.show()
+            time.sleep(delay/1000.0)
+            for i in range(0, self.strip.numPixels(), 3):
+                self.strip.setPixelColor(i+q, 0)
+
+    def wheel(self, position):
+        """Generate rainbow colors across 0-255 positions."""
+        if position < 85:
+            return Color(position * 3, 255 - position * 3, 0)
+        elif position < 170:
+            position -= 85
+            return Color(255 - position * 3, 0, position * 3)
+        else:
+            position -= 170
+            return Color(0, position * 3, 255 - position * 3)
+
+    def rainbow_cycle(self):
+        """Draw rainbow that uniformly distributes itself across all pixels."""
+        for j in range(256):
+            for i in range(self.strip.numPixels()):
+                self.strip.setPixelColor(i, self.wheel((int(i * 256 / self.strip.numPixels()) + j) % 255))
+            self.strip.show()
+            time.sleep(20/1000.0)
+
+    def theater_chase_rainbow(self):
+        """Rainbow movie theater light style chaser animation."""
+        for j in range(256):
+            for q in range(3):
+                for i in range(0, self.strip.numPixels(), 3):
+                    self.strip.setPixelColor(i+q, self.wheel((i+j) % 255))
+                self.strip.show()
+                time.sleep(50/1000.0)
+                for i in range(0, self.strip.numPixels(), 3):
+                    self.strip.setPixelColor(i+q, 0)
         
     def switch_off_strip(self):
-        self.set_uniform_color(0, 0, 0)
+        for i in range(self.strip.numPixels()):
+            self.strip_color.append(Color(0,0,0))
+            self.strip.setPixelColor(i, Color(0, 0, 0))
+            self.strip.show()

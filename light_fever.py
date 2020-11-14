@@ -12,47 +12,108 @@ class LightFever(object):
         self.strip = StripLed()
         self.audio_visualizer = AudioVisualizer()
 
-        self.audio_analize_running = False
+        self.is_audio_analyse_running = False
+        self.is_manual_mode_running = False
         self.TIMER = 50
 
-        # Default mode is uniform color
-        self.set_strip_color = self.strip.set_uniform_color
+    def handle_action(self, action):
+        state = action.get('state', 'OFF')
+        mode = action.get('mode', None)
+        effect = action.get('effect', None)
+        options = action.get('options', None)
 
-    def start(self):
-        self.audio_analize_running = True
-        self.audio_visualizer.start()
+        if state == 'ON':
+            if mode == 'MANUAL':
+                if self.is_audio_analyse_running:
+                    self.stop_audio_analyse()
+                self.start_manual_mode(effect, options)
+                
+            elif mode == 'AUDIO_ANALYSE':    
+                if self.is_manual_mode_running:
+                    self.stop_manual_mode()
+                self.start_audio_analyse(effect)
 
-        self.audio_analize = Thread(target=self.start_audio_analyse)
-        self.audio_analize.start()
-
-    def stop(self):
-        self.audio_analize_running = False
-        self.audio_analize.join()
-        self.audio_visualizer.stop()
-        self.strip.switch_off_strip()
+        elif state == 'OFF':
+            self.stop_audio_analyse()
+            self.stop_manual_mode()
+            self.strip.switch_off_strip()
+            
     
-    def start_audio_analyse(self):
-        while self.audio_analize_running:
+    def start_audio_analyse(self, effect):
+        self.strip_color_effect = self.get_audio_analyse_strip_effect(effect)
+
+        if not self.is_audio_analyse_running: 
+            self.is_audio_analyse_running = True
+            self.audio_visualizer.start()
+            self.audio_analize_thread = Thread(target=self.audio_analyze)
+            self.audio_analize_thread.start()
+
+    def stop_audio_analyse(self):
+        if self.is_audio_analyse_running:
+            self.is_audio_analyse_running = False
+            self.audio_analize_thread.join()
+
+        self.audio_visualizer.stop()
+
+    def get_audio_analyse_strip_effect(self, effect):
+        if effect == 'UNIFORM':
+            return self.strip.set_uniform_color
+        elif effect == 'PROGRESSIVE':
+            return self.strip.set_progressive_color
+        elif effect == 'PROGRESSIVE_MIRROR':
+            return self.strip.set_progressive_mirror_color
+    
+    def audio_analyze(self):
+        while self.is_audio_analyse_running:
             rgb = self.audio_visualizer.get_color_from_analysis()
             if rgb:
-                self.set_strip_color(rgb[0], rgb[1], rgb[2])
+                self.strip_color_effect(rgb[0], rgb[1], rgb[2])
             time.sleep(self.TIMER/1000.0)
 
-    def set_audio_analyse_mode(self, mode):
-        if mode == 'UNIFORM':
-            self.set_strip_color = self.strip.set_uniform_color
-        elif mode == 'PROGRESSIVE':
-            self.set_strip_color = self.strip.set_progressive_color
-        elif mode == 'PROGRESSIVE_MIRROR':
-            self.set_strip_color = self.strip.set_progressive_mirror_color
-        
+    def start_manual_mode(self, effect, options):
+        if effect == 'UNIFORM':
+            if self.is_manual_mode_running:
+                self.stop_manual_mode()
 
-    
+            red, green, blue = options.get('color', (127, 127, 127))
+            self.strip.set_uniform_color(red, green, blue)
+            return
+
+        self.strip_color_effect = self.get_manual_strip_effect(effect)
+        self.manual_options = options
+
+        if not self.is_manual_mode_running:
+            self.is_manual_mode_running = True
+            self.manual_mode_thread = Thread(target=self.manual_mode)
+            self.manual_mode_thread.start()
+
+    def stop_manual_mode(self):
+        if self.is_manual_mode_running:
+            self.is_manual_mode_running = False
+            self.manual_mode_thread.join()
+
+    def get_manual_strip_effect(self, effect):
+        if effect == 'STROBOSCOPE':
+            return self.strip.stroboscope
+        elif effect == 'THEATER_CHASE':
+            return self.strip.theater_chase
+        elif effect == 'RAINBOW_CYCLE':
+            return self.strip.rainbow_cycle
+        elif effect == 'THEATER_CHASE_RAINBOW':
+            return self.strip.theater_chase_rainbow
+
+    def manual_mode(self):
+        while self.is_manual_mode_running:
+            if self.manual_options:
+                self.strip_color_effect(self.manual_options)
+            else:
+                self.strip_color_effect()
+
 
 
 if __name__ == '__main__':
     light_fever = LightFever()
 
-    light_fever.start()
-    time.sleep(2)
-    light_fever.stop()
+    # light_fever.start()
+    # time.sleep(2)
+    # light_fever.stop()

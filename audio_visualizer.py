@@ -93,7 +93,6 @@ class AudioVisualizer(object):
       {'freq': 15500, 'data': [], 'value': 0},
     ]
 
-
     step = self.RATE // self.N_FFT
 
     for i in range(self.CHUNKSIZE):
@@ -132,7 +131,6 @@ class AudioVisualizer(object):
     hue, saturation, value = colorsys.rgb_to_hsv(red_ratio, green_ratio, blue_ratio)
     r = colorsys.hsv_to_rgb(hue, 1, 1)
     rgb = [int(r[0] * 255), int(r[1] * 255), int(r[2] * 255)]
-
     return rgb
 
     # self.set_strip_progressive_color(rgb[0], rgb[1], rgb[2], 10)
