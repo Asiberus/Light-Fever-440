@@ -13,9 +13,13 @@ class LightFever440 {
     };
 
     this._isActive = false;
-    this._isManual = true;
     this._isDark = true;
-
+    // TODO : init with local storage values
+    this._state = 'OFF';
+    this._mode = 'MANUAL';
+    this._effect = null;
+    this._options = null;
+    // Make UI interactive by listening to user actions
     this._events();
   }
 
@@ -46,55 +50,35 @@ class LightFever440 {
 
 
   _startLightFever() {
-    this.ajax({
-      type: 'POST',
-      url: 'action',
-      data: {
-        action: 'ON'
-      },
-      success: (response) => {
-        console.log('Strip led successfuly started');
-      },
-      error: (status) => {
-        console.warn('Something went wrong', status);
-      }
-    });
+    this._state = 'ON';
+    this.sendAction();
   }
 
 
   _stopLightFever() {
-    this.ajax({
-      type: 'POST',
-      url: 'action',
-      data: {
-        action: 'OFF'
-      },
-      success: (response) => {
-        console.log('Strip led successfuly stoped');
-      },
-      error: (status) => {
-        console.warn('Something went wrong', status);
-      }
-    });
+    this._state = 'OFF';
+    this.sendAction();
   }
 
 
   _switchMode(event) {
     if (event.target.dataset.manual === 'false') {
-      this._isManual = false;
       this._dom.manual.classList.remove('selected');
       this._dom.analyzer.classList.add('selected');
       this._dom.selection.style.left = '50%';
       this._dom.manualContainer.style.left = '-100%';
       this._dom.autoContainer.style.left = '0';
+      this._mode = 'AUDIO_ANALYSE';
     } else {
-      this._isManual = true;
       this._dom.analyzer.classList.remove('selected');
       this._dom.manual.classList.add('selected');
       this._dom.selection.style.left = '0';
       this._dom.manualContainer.style.left = '0';
       this._dom.autoContainer.style.left = '100%';
+      this._mode = 'MANUAL';
     }
+    // Update light fever script with new internals
+    this.sendAction();
   }
 
 
@@ -111,31 +95,40 @@ class LightFever440 {
   }
 
 
-  ajax(options) {
-    let xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-      if (this.readyState === 4 && (this.status === 200 || this.status === 204)) {
-        if (options.hasOwnProperty('success') && typeof options.success === 'function') {
-          const response = (this.responseText) ? JSON.parse(this.responseText) : null;
-          options.success(response);
-        }
-      } else if (this.readyState === 4 && (this.status !== 200 || this.status !==  204)) {
-        if (options.hasOwnProperty('error') && typeof options.error === 'function') {
-          options.error(this.status);
-        }
-      }
-    };
+  sendAction() {
+    this.ajax({
+      state: this._state,
+      mode: this._mode,
+      effect: this._effect,
+      options: this._options
+    }).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.error(error);
+    });
+  }
 
-    const type = options.type.toUpperCase();
-    xhr.open(type, options.url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    xhr.setRequestHeader('Accept', 'application/json');
 
-    if (type === 'POST') {
-      xhr.send(JSON.stringify(options.data));
-    } else {
-      xhr.send();
-    }
+  ajax(data) {
+    return new Promise((resolve, reject) => {
+      const options = {
+        method: 'POST',
+        headers: new Headers([['Content-Type','application/json; charset=UTF-8'],['Accept','application/json']]),
+        body: JSON.stringify(data)
+      };
+
+      fetch('action', options).then(response => {
+        if (response) {
+          if (response.ok) {
+            resolve(response.json());
+          } else {
+            reject(`ERROR_${response.status}`);
+          }
+        } else {
+          reject('ERROR_MISSING_ARGUMENT');
+        }
+      });
+    });
   }
 
 
