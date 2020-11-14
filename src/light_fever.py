@@ -1,8 +1,8 @@
 import time
 from threading import Thread
 
-from strip import StripLed
-from audio_visualizer import AudioVisualizer
+from src.strip import StripLed
+from src.audio_visualizer import AudioVisualizer
 
 # TODO : Stop stream when webserver is kill
 
@@ -27,8 +27,8 @@ class LightFever(object):
                 if self.is_audio_analyse_running:
                     self.stop_audio_analyse()
                 self.start_manual_mode(effect, options)
-                
-            elif mode == 'AUDIO_ANALYSE':    
+
+            elif mode == 'AUDIO_ANALYSE':
                 if self.is_manual_mode_running:
                     self.stop_manual_mode()
                 self.start_audio_analyse(effect)
@@ -37,12 +37,12 @@ class LightFever(object):
             self.stop_audio_analyse()
             self.stop_manual_mode()
             self.strip.switch_off_strip()
-            
-    
+
+
     def start_audio_analyse(self, effect):
         self.strip_color_effect = self.get_audio_analyse_strip_effect(effect)
 
-        if not self.is_audio_analyse_running: 
+        if not self.is_audio_analyse_running:
             self.is_audio_analyse_running = True
             self.audio_visualizer.start()
             self.audio_analize_thread = Thread(target=self.audio_analyze)
@@ -62,7 +62,7 @@ class LightFever(object):
             return self.strip.set_progressive_color
         elif effect == 'PROGRESSIVE_MIRROR':
             return self.strip.set_progressive_mirror_color
-    
+
     def audio_analyze(self):
         while self.is_audio_analyse_running:
             rgb = self.audio_visualizer.get_color_from_analysis()

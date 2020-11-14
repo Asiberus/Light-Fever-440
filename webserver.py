@@ -1,7 +1,7 @@
 import os, os.path
 import cherrypy
 
-from light_fever import LightFever
+from src.light_fever import LightFever
 
 class WebServer(object):
     def __init__(self, light_fever):
@@ -17,21 +17,17 @@ class WebServer(object):
     def action(self):
         data = cherrypy.request.json
         self.light_fever.handle_action(data)
-
         return {'success': True}
 
 if __name__ == '__main__':
     conf = {
         '/': {
             'tools.sessions.on': True,
-            'tools.staticdir.root': os.path.abspath(os.getcwd())
-        },
-        '/static': {
+            'tools.staticdir.root': os.path.abspath(os.getcwd()),
             'tools.staticdir.on': True,
             'tools.staticdir.dir': './web'
         }
     }
 
     light_fever = LightFever()
-
     cherrypy.quickstart(WebServer(light_fever), '/', conf)

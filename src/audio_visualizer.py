@@ -6,7 +6,7 @@ from threading import *
 import numpy as np
 import pyaudio
 
-from microphone_recorder import MicrophoneRecorder
+from src.microphone_recorder import MicrophoneRecorder
 
 class AudioVisualizer(object):
   def __init__(self):
@@ -65,7 +65,7 @@ class AudioVisualizer(object):
 
   def get_bark_split(self, data):
     spectrum = np.fft.fft(np.hanning(data.size) * data, n=self.N_FFT)
-  
+
     bark_scale = [
       {'freq': 100, 'data': [], 'value': 0},
       {'freq': 200, 'data': [], 'value': 0},
@@ -136,9 +136,9 @@ class AudioVisualizer(object):
     # self.set_strip_progressive_color(rgb[0], rgb[1], rgb[2], 10)
     # self.set_strip_progressive_mirror_color(rgb[0], rgb[1], rgb[2], 5)
 
-  
-      
-  
+
+
+
 
 if __name__ == '__main__':
   # stopFlag = Event()
@@ -158,4 +158,3 @@ if __name__ == '__main__':
     audio_visualizer.stop()
     audio_visualizer.recorder.close()
     # audio_visualizer.switch_off_strip()
-

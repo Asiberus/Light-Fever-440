@@ -8,20 +8,37 @@
   <meta content="initial-scale=1" name="viewport">
   <meta name="description" content="Web controller app for Light Fever 440. Use this page to control the light system!">
   <title>Light Fever 440</title>
-  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="dark-theme">
   <div class="app-wrapper">
     <div class="header">
-      <button id="btn-on" class="btn-on">ON</button>
       <h2>Light Fever 440</h2>
-      <button id="btn-off" class="btn-off">OFF</button>
+      <button id="toggle-light-fever" class="light-fever-off">OFF</button>
+    </div>
+    <div class="tabs">
+      <p id="manual-mode" data-manual="true" class="selected">Manual</p>
+      <p id="analyzer-mode" data-manual="false">Audio Analyser</p>
+      <div id="selection-border" class="border"></div>
     </div>
     <div class="container">
+      <div id="manual-container" class="manual-container">
+
+      </div>
+      <div id="auto-container" class="auto-container">
+
+      </div>
+    </div>
+    <div class="status-bar">
+      <div class="switch-wrapper">
+  			<input id="theme-switch" type="checkbox" class="switch">
+  		</div>
     </div>
   </div>
-  <script type="text/javascript" src="static/lib/Kom.bundle.js"></script>
-  <script type="text/javascript" src="static/dist/LightFever440.bundle.js"></script>
-  <script type="text/javascript" src="static/js/App.js"></script>
+  <script type="text/javascript" src="dist/LightFever440.bundle.js"></script>
+  <script type="text/javascript">
+    'use strict';
+    const LF440 = new window.LightFever440();
+  </script>
 </body>
 </html>

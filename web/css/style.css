@@ -4,15 +4,21 @@
 }
 
 .dark-theme {
-  --background-color: rgb(66, 66, 66);
-  --background-light-color: rgb(33, 33, 33);
+  --background-color: rgb(65, 74, 111);
+  --background-dark-color: rgb(34, 38, 57);
   --text-color: white;
+  --accent-color: rgb(147, 247, 233);
+  --green-color: rgb(86, 212, 91);
+  --red-color: rgb(255, 107, 103);
 }
 
 .light-theme {
   --background-color: rgb(189, 189, 189);
-  --background-light-color: rgb(222, 222, 222);
+  --background-dark-color: rgb(222, 222, 222);
   --text-color: black;
+  --accent-color: rgb(147, 247, 233);
+  --green-color: rgb(86, 212, 91);
+  --red-color: rgb(255, 107, 103);
 }
 
 html, body {
@@ -22,6 +28,7 @@ html, body {
   font-size: 62.5%;
   height: 100vh;
   width: 100vw;
+  transition: all .2s;
 }
 
 .app-wrapper {
@@ -34,36 +41,138 @@ html, body {
 
 .header {
   align-items: center;
-  background-color: var(--background-light-color);
-  border-bottom: solid 1px grey;
+  background-color: var(--background-dark-color);
   display: flex;
   height: 6rem;
   justify-content: space-evenly;
   width: 100%;
 }
 
-.header .btn-on,
-.header .btn-off {
+.header .light-fever-on,
+.header .light-fever-off {
   border: solid 1px grey;
   border-radius: 5px;
   color: var(--text-color);
   height: 4rem;
   padding: 0;
   width: 4rem;
+  transition: background-color .2s;
 }
 
-.header .btn-on {
-  background-color: green;
+.header .light-fever-on {
+  background-color: var(--green-color);
 }
 
-.header .btn-off {
-  background-color: red;
+.header .light-fever-off {
+  background-color: var(--red-color);
+}
+
+/* Tabs */
+
+.tabs {
+  align-items: center;
+  background-color: var(--background-dark-color);
+  border-bottom: solid 1px grey;
+  display: flex;
+  height: 3rem;
+  position: relative;
+}
+
+.tabs p {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  width: 50%;
+}
+
+.tabs p.selected {
+  font-weight: bold;
+}
+
+.tabs .border {
+  bottom: 0;
+  height: 2px;
+  background-color: var(--accent-color);
+  left: 0;
+  position: absolute;
+  width: 50%;
+  transition: left .2s ease-in-out;
 }
 
 /* Container */
 
 .container {
-  height: calc(100% - 6rem);
-  overflow-y: auto;
+  height: calc(100% - 12rem);
+  overflow: hidden;
+  position: relative;
   width: 100%;
+}
+
+.manual-container,
+.auto-container {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  transition: left .2s ease-in-out;
+}
+
+.manual-container {
+  left: 0;
+}
+
+.auto-container {
+  left: 100%;
+}
+
+/* Status Bar */
+
+.status-bar {
+  background-color: var(--background-dark-color);
+  border-top: solid 1px grey;
+  height: 3rem;
+  width: 100%;
+}
+
+/* Tools */
+.switch-wrapper {
+  align-items: center;
+	display: flex;
+  flex: 1;
+	height: 100%;
+  justify-content: center;
+  width: 5rem;
+}
+
+input[type="checkbox"].switch {
+  appearance: none;
+	height: calc(1.5rem + 2px);
+	background-color: var(--red-color);
+  border: solid 1px grey;
+	border-radius: 3rem;
+	position: relative;
+	outline: none;
+  width: 4rem;
+	transition: all .2s ease-in-out;
+}
+
+input[type="checkbox"].switch:checked {
+	background-color: var(--green-color);
+}
+
+input[type="checkbox"].switch:after {
+  content: '';
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 .25rem rgba(0, 0, 0, .9);
+	height: 1.5rem;
+  left: 0;
+  position: absolute;
+  transform: scale(.7);
+  width: 1.5rem;
+	transition: all .2s ease-in-out;
+}
+
+input[type="checkbox"].switch:checked:after {
+	left: calc(100% - 1.5rem);
 }
