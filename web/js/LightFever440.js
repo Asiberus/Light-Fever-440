@@ -9,7 +9,15 @@ class LightFever440 {
       selection: document.getElementById('selection-border'),
       manualContainer: document.getElementById('manual-container'),
       autoContainer: document.getElementById('auto-container'),
-      themeSwitch: document.getElementById('theme-switch')
+      themeSwitch: document.getElementById('theme-switch'),
+      manualUniform: document.getElementById('manual-uniform'),
+      manualStrob: document.getElementById('manual-stroboscope'),
+      manualChase: document.getElementById('manual-chase'),
+      manualRainbow: document.getElementById('manual-rainbow'),
+      manualRainbowChase: document.getElementById('manual-chase-rainbow'),
+      autoUniform: document.getElementById('auto-uniform'),
+      autoProgressive: document.getElementById('auto-progressive'),
+      autoProgMirror: document.getElementById('auto-progressive-mirror'),
     };
 
     this._isActive = false;
@@ -29,6 +37,15 @@ class LightFever440 {
     this._dom.manual.addEventListener('click', this._switchMode.bind(this));
     this._dom.analyzer.addEventListener('click', this._switchMode.bind(this));
     this._dom.themeSwitch.addEventListener('click', this._switchTheme.bind(this));
+
+    this._dom.manualUniform.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.manualStrob.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.manualChase.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.manualRainbow.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.manualRainbowChase.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.autoUniform.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.autoProgressive.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.autoProgMirror.addEventListener('click', this._updateEffect.bind(this));
   }
 
 
@@ -92,6 +109,12 @@ class LightFever440 {
       document.body.classList.remove('light-theme');
       document.body.classList.add('dark-theme');
     }
+  }
+
+
+  _updateEffect(event) {
+    this._effect = event.target.dataset.effect;
+    this.sendAction();
   }
 
 

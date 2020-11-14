@@ -109,6 +109,16 @@ html, body {
   width: 100%;
 }
 
+.container button {
+  background-color: transparent;
+  border: solid 1px grey;
+  border-radius: .5rem;
+  color: var(--text-color);
+  height: 4rem;
+  padding: .5rem 1rem;
+  margin: .5rem;
+}
+
 .manual-container,
 .auto-container {
   height: 100%;
