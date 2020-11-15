@@ -10,14 +10,18 @@ class LightFever440 {
       manualContainer: document.getElementById('manual-container'),
       autoContainer: document.getElementById('auto-container'),
       themeSwitch: document.getElementById('theme-switch'),
-      manualUniform: document.getElementById('manual-uniform'),
-      manualStrob: document.getElementById('manual-stroboscope'),
-      manualChase: document.getElementById('manual-chase'),
-      manualRainbow: document.getElementById('manual-rainbow'),
-      manualRainbowChase: document.getElementById('manual-chase-rainbow'),
-      autoUniform: document.getElementById('auto-uniform'),
-      autoProgressive: document.getElementById('auto-progressive'),
-      autoProgMirror: document.getElementById('auto-progressive-mirror'),
+      manualButtons: {
+        uniform: document.getElementById('manual-uniform'),
+        strob: document.getElementById('manual-stroboscope'),
+        chase: document.getElementById('manual-chase'),
+        rainbow: document.getElementById('manual-rainbow'),
+        rainbowChase: document.getElementById('manual-chase-rainbow')
+      },
+      autoButtons: {
+        uniform: document.getElementById('auto-uniform'),
+        progressive: document.getElementById('auto-progressive'),
+        progMirror: document.getElementById('auto-progressive-mirror')
+      }
     };
 
     this._isActive = false;
@@ -38,14 +42,15 @@ class LightFever440 {
     this._dom.analyzer.addEventListener('click', this._switchMode.bind(this));
     this._dom.themeSwitch.addEventListener('click', this._switchTheme.bind(this));
 
-    this._dom.manualUniform.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.manualStrob.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.manualChase.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.manualRainbow.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.manualRainbowChase.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.autoUniform.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.autoProgressive.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.autoProgMirror.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.manualButtons.uniform.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.manualButtons.strob.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.manualButtons.chase.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.manualButtons.rainbow.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.manualButtons.rainbowChase.addEventListener('click', this._updateEffect.bind(this));
+
+    this._dom.autoButtons.uniform.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.autoButtons.progressive.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.autoButtons.progMirror.addEventListener('click', this._updateEffect.bind(this));
   }
 
 
@@ -113,6 +118,16 @@ class LightFever440 {
 
 
   _updateEffect(event) {
+    if (this._mode === 'MANUAL') {
+      for (const [key, value] of Object.entries(this._dom.manualButtons)) {
+        this._dom.manualButtons[key].classList.remove('selected');
+      }
+    } else {
+      for (const [key, value] of Object.entries(this._dom.autoButtons)) {
+        this._dom.autoButtons[key].classList.remove('selected');
+      }
+    }
+    event.target.classList.add('selected');
     this._effect = event.target.dataset.effect;
     this.sendAction();
   }

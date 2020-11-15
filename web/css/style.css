@@ -6,6 +6,7 @@
 .dark-theme {
   --background-color: rgb(65, 74, 111);
   --background-dark-color: rgb(34, 38, 57);
+  --text-alpha-color: rgba(255, 255, 255, .2);
   --text-color: white;
   --accent-color: rgb(147, 247, 233);
   --green-color: rgb(86, 212, 91);
@@ -15,6 +16,7 @@
 .light-theme {
   --background-color: rgb(189, 189, 189);
   --background-dark-color: rgb(222, 222, 222);
+  --text-alpha-color: rgba(0, 0, 0, .2);
   --text-color: black;
   --accent-color: rgb(147, 247, 233);
   --green-color: rgb(86, 212, 91);
@@ -109,16 +111,6 @@ html, body {
   width: 100%;
 }
 
-.container button {
-  background-color: transparent;
-  border: solid 1px grey;
-  border-radius: .5rem;
-  color: var(--text-color);
-  height: 4rem;
-  padding: .5rem 1rem;
-  margin: .5rem;
-}
-
 .manual-container,
 .auto-container {
   height: 100%;
@@ -133,6 +125,46 @@ html, body {
 
 .auto-container {
   left: 100%;
+}
+
+.effect-container,
+.option-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.effect-container p,
+.option-container p {
+  font-style: italic;
+  font-weight: bold;
+  margin-top: 1.6rem;
+  text-align: center;
+}
+
+.effect-type,
+.option-type {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1.6rem;
+}
+
+.effect-type button,
+.option-type button {
+  background-color: transparent;
+  border: solid 1px var(--text-color);
+  border-radius: .3rem;
+  color: var(--text-color);
+  height: 4rem;
+  padding: .5rem 1rem;
+  margin: .5rem;
+}
+
+.effect-type button.selected,
+.option-type button.selected {
+  background-color: var(--text-alpha-color);
+  font-weight: bold;
 }
 
 /* Status Bar */
