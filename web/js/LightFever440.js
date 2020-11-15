@@ -10,6 +10,7 @@ class LightFever440 {
       manualContainer: document.getElementById('manual-container'),
       autoContainer: document.getElementById('auto-container'),
       themeSwitch: document.getElementById('theme-switch'),
+      status: document.getElementById('status-text'),
       manualButtons: {
         uniform: document.getElementById('manual-uniform'),
         strob: document.getElementById('manual-stroboscope'),
@@ -26,7 +27,6 @@ class LightFever440 {
 
     this._isActive = false;
     this._isDark = true;
-    // TODO : init with local storage values
     this._state = 'OFF';
     this._mode = 'MANUAL';
     this._effect = null;
@@ -73,13 +73,21 @@ class LightFever440 {
 
   _startLightFever() {
     this._state = 'ON';
-    this.sendAction();
+    this.sendAction().then(() => {
+      this._dom.status.innerHTML = 'Light Fever 440 started';
+    }).catch(() => {
+      this._dom.status.innerHTML = 'Unable to start Light Fever 440';
+    });
   }
 
 
   _stopLightFever() {
     this._state = 'OFF';
-    this.sendAction();
+    this.sendAction().then(() => {
+      this._dom.status.innerHTML = 'Light Fever 440 stopped';
+    }).catch(() => {
+      this._dom.status.innerHTML = 'Unable to stop Light Fever 440';
+    });
   }
 
 
@@ -91,6 +99,7 @@ class LightFever440 {
       this._dom.manualContainer.style.left = '-100%';
       this._dom.autoContainer.style.left = '0';
       this._mode = 'AUDIO_ANALYSE';
+      this._dom.status.innerHTML = 'Audio analyzer activated';
     } else {
       this._dom.analyzer.classList.remove('selected');
       this._dom.manual.classList.add('selected');
@@ -98,6 +107,7 @@ class LightFever440 {
       this._dom.manualContainer.style.left = '0';
       this._dom.autoContainer.style.left = '100%';
       this._mode = 'MANUAL';
+      this._dom.status.innerHTML = 'Manual control activated';
     }
     // Update light fever script with new internals
     this.sendAction();
@@ -109,15 +119,18 @@ class LightFever440 {
       this._isDark = false;
       document.body.classList.remove('dark-theme');
       document.body.classList.add('light-theme');
+      this._dom.status.innerHTML = 'Switched to light theme';
     } else {
       this._isDark = true;
       document.body.classList.remove('light-theme');
       document.body.classList.add('dark-theme');
+      this._dom.status.innerHTML = 'Switched to dark theme';
     }
   }
 
 
   _updateEffect(event) {
+    // First we unselect all buttons
     if (this._mode === 'MANUAL') {
       for (const [key, value] of Object.entries(this._dom.manualButtons)) {
         this._dom.manualButtons[key].classList.remove('selected');
@@ -127,22 +140,25 @@ class LightFever440 {
         this._dom.autoButtons[key].classList.remove('selected');
       }
     }
+    // Then use target as current selection
     event.target.classList.add('selected');
     this._effect = event.target.dataset.effect;
-    this.sendAction();
+    this.sendAction().then(() => {
+      this._dom.status.innerHTML = `Effect ${this._effect} activated`;
+    }).catch(() => {
+      this._dom.status.innerHTML = `Unable to set effect ${this._effect}`;
+    });
   }
 
 
   sendAction() {
-    this.ajax({
-      state: this._state,
-      mode: this._mode,
-      effect: this._effect,
-      options: this._options
-    }).then(response => {
-      console.log(response);
-    }).catch(error => {
-      console.error(error);
+    return new Promise((resolve, reject) => {
+      this.ajax({
+        state: this._state,
+        mode: this._mode,
+        effect: this._effect,
+        options: this._options
+      }).then(resolve).catch(reject);
     });
   }
 
@@ -165,7 +181,7 @@ class LightFever440 {
         } else {
           reject('ERROR_MISSING_ARGUMENT');
         }
-      });
+      }).catch(reject);
     });
   }
 

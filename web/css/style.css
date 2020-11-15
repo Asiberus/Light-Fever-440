@@ -172,8 +172,17 @@ html, body {
 .status-bar {
   background-color: var(--background-dark-color);
   border-top: solid 1px grey;
+  display: flex;
   height: 3rem;
   width: 100%;
+}
+
+.status-text {
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: .5rem;
+  width: calc(100% - 5rem);
 }
 
 /* Tools */
