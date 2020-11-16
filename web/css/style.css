@@ -108,7 +108,7 @@ html, body {
 /* Container */
 
 .container {
-  height: calc(100% - 12rem);
+  height: calc(100% - 17rem);
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -153,8 +153,7 @@ html, body {
   margin-top: 1.6rem;
 }
 
-.effect-type button,
-.option-type button {
+button.btn {
   background-color: transparent;
   border: solid 1px var(--text-color);
   border-radius: .3rem;
@@ -168,6 +167,11 @@ html, body {
 .option-type button.selected {
   background-color: var(--text-alpha-color);
   font-weight: bold;
+}
+
+.global-controls {
+  height: 5rem;
+  width: 100%;
 }
 
 /* Status Bar */

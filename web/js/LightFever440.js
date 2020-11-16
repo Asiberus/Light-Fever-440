@@ -13,7 +13,6 @@ class LightFever440 {
       status: document.getElementById('status-text'),
       manualButtons: {
         uniform: document.getElementById('manual-uniform'),
-        strob: document.getElementById('manual-stroboscope'),
         chase: document.getElementById('manual-chase'),
         rainbow: document.getElementById('manual-rainbow'),
         rainbowChase: document.getElementById('manual-chase-rainbow')
@@ -22,17 +21,33 @@ class LightFever440 {
         uniform: document.getElementById('auto-uniform'),
         progressive: document.getElementById('auto-progressive'),
         progMirror: document.getElementById('auto-progressive-mirror')
+      },
+      globalButtons: {
+        strob: document.getElementById('global-stroboscope')
       }
     };
-
+    // Useful bools
     this._isActive = false;
     this._isDark = true;
+    // Options that are sent to /action url
     this._state = 'OFF';
     this._mode = 'MANUAL';
     this._effect = null;
     this._options = null;
+    // Init web view from Light Fever 440 state
+    this._initState();
     // Make UI interactive by listening to user actions
     this._events();
+  }
+
+
+  _initState() {
+    this.getState().then(response => {
+      this._dom.status.innerHTML = 'Set Light Fever 440 state';
+      console.log(response);
+    }).catch(error => {
+      this._dom.status.innerHTML = 'Unable to load state';
+    });
   }
 
 
@@ -43,7 +58,6 @@ class LightFever440 {
     this._dom.themeSwitch.addEventListener('click', this._switchTheme.bind(this));
 
     this._dom.manualButtons.uniform.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.manualButtons.strob.addEventListener('click', this._updateEffect.bind(this));
     this._dom.manualButtons.chase.addEventListener('click', this._updateEffect.bind(this));
     this._dom.manualButtons.rainbow.addEventListener('click', this._updateEffect.bind(this));
     this._dom.manualButtons.rainbowChase.addEventListener('click', this._updateEffect.bind(this));
@@ -51,6 +65,8 @@ class LightFever440 {
     this._dom.autoButtons.uniform.addEventListener('click', this._updateEffect.bind(this));
     this._dom.autoButtons.progressive.addEventListener('click', this._updateEffect.bind(this));
     this._dom.autoButtons.progMirror.addEventListener('click', this._updateEffect.bind(this));
+
+    this._dom.globalButtons.strob.addEventListener('click', this._updateEffect.bind(this));
   }
 
 
@@ -110,7 +126,11 @@ class LightFever440 {
       this._dom.status.innerHTML = 'Manual control activated';
     }
     // Update light fever script with new internals
-    this.sendAction();
+    this.sendAction().then(() => {
+      this._dom.status.innerHTML = `Switched to mode ${this._mode}`;
+    }).catch(() => {
+      this._dom.status.innerHTML = 'Unable to switch mode';
+    });
   }
 
 
@@ -151,9 +171,16 @@ class LightFever440 {
   }
 
 
+  getState() {
+    return new Promise((resolve, reject) => {
+      this.ajax('state').then(resolve).catch(reject);
+    });
+  }
+
+
   sendAction() {
     return new Promise((resolve, reject) => {
-      this.ajax({
+      this.ajax('action', {
         state: this._state,
         mode: this._mode,
         effect: this._effect,
@@ -163,15 +190,15 @@ class LightFever440 {
   }
 
 
-  ajax(data) {
+  ajax(url, data) {
     return new Promise((resolve, reject) => {
       const options = {
-        method: 'POST',
+        method: data ? 'POST' : 'GET',
         headers: new Headers([['Content-Type','application/json; charset=UTF-8'],['Accept','application/json']]),
         body: JSON.stringify(data)
       };
 
-      fetch('action', options).then(response => {
+      fetch(url, options).then(response => {
         if (response) {
           if (response.ok) {
             resolve(response.json());

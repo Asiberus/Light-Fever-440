@@ -31,7 +31,7 @@ class StripLed(object):
 
         for i in range(len(self.strip_color)):
             self.strip.setPixelColor(i, self.strip_color[i])
-            
+
         self.strip.show()
 
     def set_progressive_mirror_color(self, red, green, blue, num_pixel=5):
@@ -43,7 +43,7 @@ class StripLed(object):
 
         for i in range(len(strip_color_mirror)):
             self.strip.setPixelColor(i, strip_color_mirror[i])
-        
+
         self.strip.show()
 
     def stroboscope(self, options):
@@ -95,7 +95,7 @@ class StripLed(object):
                 time.sleep(50/1000.0)
                 for i in range(0, self.strip.numPixels(), 3):
                     self.strip.setPixelColor(i+q, 0)
-        
+
     def switch_off_strip(self):
         for i in range(self.strip.numPixels()):
             self.strip_color.append(Color(0,0,0))
