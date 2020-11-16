@@ -141,7 +141,6 @@ button.btn {
   margin: .5rem;
 }
 
-button.btn.selected,
 button.btn.selected {
   background-color: var(--text-alpha-color);
   font-weight: bold;
@@ -180,6 +179,7 @@ button.btn.selected {
 /* Status Bar */
 
 .status-bar {
+  align-items: center;
   background-color: var(--background-dark-color);
   border-top: solid 1px grey;
   display: flex;
@@ -188,10 +188,10 @@ button.btn.selected {
 }
 
 .status-text {
-  align-items: center;
-  display: flex;
-  justify-content: flex-end;
+  font-size: 1.3rem;
+  height: 1.3rem;
   margin-right: .5rem;
+  text-align: right;
   width: calc(100% - 5rem);
 }
 
