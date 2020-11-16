@@ -159,6 +159,13 @@ class LightFever440 {
       this._dom.autoContainer.style.left = '0';
       this._mode = 'AUDIO_ANALYSE';
       this._dom.status.innerHTML = 'Audio analyzer activated';
+      // Find selected effect in mode
+      for (const [key, value] of Object.entries(this._dom.autoButtons)) {
+        if (this._dom.autoButtons[key].classList.contains('selected')) {
+          this._mode = this._dom.autoButtons[key].dataset.effect;
+          break;
+        }
+      }
     } else {
       this._dom.analyzer.classList.remove('selected');
       this._dom.manual.classList.add('selected');
@@ -167,6 +174,13 @@ class LightFever440 {
       this._dom.autoContainer.style.left = '100%';
       this._mode = 'MANUAL';
       this._dom.status.innerHTML = 'Manual control activated';
+      // Find selected effect in mode
+      for (const [key, value] of Object.entries(this._dom.manualButtons)) {
+        if (this._dom.manualButtons[key].classList.contains('selected')) {
+          this._mode = this._dom.manualButtons[key].dataset.effect;
+          break;
+        }
+      }
     }
     // Update light fever script with new internals
     this.sendAction().then(() => {
