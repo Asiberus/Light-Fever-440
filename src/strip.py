@@ -20,12 +20,15 @@ class StripLed(object):
             self.strip_color.append(Color(0,0,0))
 
 
-    def set_uniform_color(self, red, green, blue):
+    def set_uniform_color(self, data):
+        red, green, blue = data.get('color')
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, Color(red, green, blue))
         self.strip.show()
 
-    def set_progressive_color(self, red, green, blue, num_pixel=5):
+    def set_progressive_color(self, data):
+        red, green, blue = data.get('color')
+        num_pixel = 5
         for i in range(num_pixel):
             self.strip_color.appendleft(Color(red, green, blue))
 
@@ -34,7 +37,9 @@ class StripLed(object):
 
         self.strip.show()
 
-    def set_progressive_mirror_color(self, red, green, blue, num_pixel=5):
+    def set_progressive_mirror_color(self, data):
+        red, green, blue = data.get('color')
+        num_pixel = 5
         for i in range(num_pixel):
             self.strip_color.appendleft(Color(red, green, blue))
 
@@ -46,12 +51,23 @@ class StripLed(object):
 
         self.strip.show()
 
+    def pulse(self, data):
+        red, green, blue = data.get('color')
+        peak = data.get('peak')
+        red, green, blue = (255, 0, 0)
+        for i in range(self.strip.numPixels()):
+            self.strip.setPixelColor(i, Color(red, green, blue))
+        print(int(peak * 255))
+        self.strip.setBrightness(int(peak * 255))
+        self.strip.show()
+        
+
     def stroboscope(self, options):
-        red, green, blue = options.get('color', (127, 127, 127))
+        # red, green, blue = options.get('color', (127, 127, 127))
         delay = options.get('delay', 50)
-        self.set_uniform_color(red, green, blue)
+        self.set_uniform_color(options)
         time.sleep(delay/1000.0)
-        self.set_uniform_color(0, 0, 0)
+        self.set_uniform_color({'color': (0, 0, 0)})
         time.sleep(delay/1000.0)
 
     def theater_chase(self, options):

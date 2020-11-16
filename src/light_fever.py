@@ -72,14 +72,16 @@ class LightFever(object):
             return self.strip.set_progressive_color
         elif effect == 'PROGRESSIVE_MIRROR':
             return self.strip.set_progressive_mirror_color
+        elif effect == 'PULSE':
+            return self.strip.pulse
         else:
             return self.strip.switch_off_strip
 
     def audio_analyze(self):
         while self.is_audio_analyse_running:
-            rgb = self.audio_visualizer.get_color_from_analysis()
-            if rgb:
-                self.strip_color_effect(rgb[0], rgb[1], rgb[2])
+            data = self.audio_visualizer.get_color_from_analysis()
+            if data['color']:
+                self.strip_color_effect(data)
             time.sleep(self.TIMER/1000.0)
 
     def start_manual_mode(self, effect, options):
@@ -87,8 +89,8 @@ class LightFever(object):
             if self.is_manual_mode_running:
                 self.stop_manual_mode()
 
-            red, green, blue = options.get('color', (127, 127, 127))
-            self.strip.set_uniform_color(red, green, blue)
+            # red, green, blue = options.get('color', (127, 127, 127))
+            self.strip.set_uniform_color(options)
             return
 
         self.strip_color_effect = self.get_manual_strip_effect(effect)

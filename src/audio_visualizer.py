@@ -10,11 +10,6 @@ from src.microphone_recorder import MicrophoneRecorder
 
 class AudioVisualizer(object):
   def __init__(self):
-    # Thread.__init__(self)
-    # self.stopped = event
-
-    self.FORMAT = pyaudio.paInt16
-    self.CHANNELS = 1
     self.RATE = 44100
     self.CHUNKSIZE = 1024
     self.N_FFT = 2048
@@ -23,24 +18,9 @@ class AudioVisualizer(object):
     self.hue_offset = 0
     self.previous_spectrum = collections.deque(maxlen=10)
 
+    self.peak_history = collections.deque(maxlen=250)
+
     self.recorder = MicrophoneRecorder(sample_rate=self.RATE, chunksize=self.CHUNKSIZE)
-
-    # self.strip_color = collections.deque(maxlen=self.strip.numPixels())
-    # self.strip_mirror_color = collections.deque(maxlen=self.strip.numPixels() // 2)
-
-    # for i in range(self.strip.numPixels() // 2):
-    #   self.strip_mirror_color.append(Color(0,0,0))
-
-
-  # def run(self):
-  #   while not self.stopped.wait(0.1):
-  #     self.update()
-
-  # def stop(self):
-  #   self.recorder.close()
-  #   self.set_strip_color(0, 0, 0)
-  #   self.stopped.set()
-  #   self.join()
 
   def start(self):
     self.recorder.start_stream()
@@ -56,12 +36,19 @@ class AudioVisualizer(object):
       data = frames[-1]
 
     if not data.max() > 1:
-      return
-
+      return {'color': None, 'peak': None}
+    
     bark_split = self.get_bark_split(data)
     rgb_split = self.get_rgb_split(bark_split)
 
-    return rgb_split
+    peak = self.get_peak(data)
+
+    return {'color': rgb_split, 'peak': peak}
+
+  def get_peak(self, data):
+    self.peak_history.append(data.max())
+    peak = (data.max() / np.array(self.peak_history).mean()) % 1
+    return peak
 
   def get_bark_split(self, data):
     spectrum = np.fft.fft(np.hanning(data.size) * data, n=self.N_FFT)
@@ -131,30 +118,22 @@ class AudioVisualizer(object):
     hue, saturation, value = colorsys.rgb_to_hsv(red_ratio, green_ratio, blue_ratio)
     r = colorsys.hsv_to_rgb(hue, 1, 1)
     rgb = [int(r[0] * 255), int(r[1] * 255), int(r[2] * 255)]
-    return rgb
 
-    # self.set_strip_progressive_color(rgb[0], rgb[1], rgb[2], 10)
-    # self.set_strip_progressive_mirror_color(rgb[0], rgb[1], rgb[2], 5)
+    return rgb
 
 
 
 
 
 if __name__ == '__main__':
-  # stopFlag = Event()
-  # thread = AudioVisualizer(stopFlag)
-  # thread.start()
-
   audio_visualizer = AudioVisualizer()
   audio_visualizer.start()
 
   try:
     while True:
       rgb = audio_visualizer.get_color_from_analysis()
-      print(rgb)
       time.sleep(0.1)
 
   except KeyboardInterrupt:
     audio_visualizer.stop()
     audio_visualizer.recorder.close()
-    # audio_visualizer.switch_off_strip()
