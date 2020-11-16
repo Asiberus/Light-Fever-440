@@ -12,62 +12,105 @@ class LightFever440 {
       themeSwitch: document.getElementById('theme-switch'),
       status: document.getElementById('status-text'),
       manualButtons: {
-        uniform: document.getElementById('manual-uniform'),
-        chase: document.getElementById('manual-chase'),
-        rainbow: document.getElementById('manual-rainbow'),
-        rainbowChase: document.getElementById('manual-chase-rainbow')
+        UNIFORM: document.getElementById('manual-uniform'),
+        THEATER_CHASE: document.getElementById('manual-chase'),
+        RAINBOW_CYCLE: document.getElementById('manual-rainbow'),
+        THEATER_CHASE_RAINBOW: document.getElementById('manual-chase-rainbow')
       },
       autoButtons: {
-        uniform: document.getElementById('auto-uniform'),
-        progressive: document.getElementById('auto-progressive'),
-        progMirror: document.getElementById('auto-progressive-mirror')
+        UNIFORM: document.getElementById('auto-uniform'),
+        PROGRESSIVE: document.getElementById('auto-progressive'),
+        PROGRESSIVE_MIRROR: document.getElementById('auto-progressive-mirror')
       },
       globalButtons: {
-        strob: document.getElementById('global-stroboscope')
+        STROBOSCOPE: document.getElementById('global-stroboscope')
       }
     };
-    // Useful bools
+    // Useful bools and variables
     this._isActive = false;
     this._isDark = true;
+    this._previousEffect = null; // Used with stroboscope bypass
     // Options that are sent to /action url
     this._state = 'OFF';
     this._mode = 'MANUAL';
     this._effect = null;
     this._options = null;
+    // Make UI interactive by listening to user actions
+    this._initEvents();
     // Init web view from Light Fever 440 state
     this._initState();
-    // Make UI interactive by listening to user actions
-    this._events();
+  }
+
+
+  /*  --------------------------------------------------------------------------------------------------------------- */
+  /*  ------------------------------------------  UI INITIALIZATION  -----------------------------------------------  */
+  /*  --------------------------------------------------------------------------------------------------------------- */
+
+
+  _initEvents() {
+    this._dom.toggle.addEventListener('click', this._toggleLightFever.bind(this));
+    this._dom.manual.addEventListener('click', this._switchMode.bind(this));
+    this._dom.analyzer.addEventListener('click', this._switchMode.bind(this));
+    this._dom.themeSwitch.addEventListener('click', this._switchTheme.bind(this));
+
+    this._dom.manualButtons.UNIFORM.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.manualButtons.THEATER_CHASE.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.manualButtons.RAINBOW_CYCLE.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.manualButtons.THEATER_CHASE_RAINBOW.addEventListener('click', this._updateEffect.bind(this));
+
+    this._dom.autoButtons.UNIFORM.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.autoButtons.PROGRESSIVE.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.autoButtons.PROGRESSIVE_MIRROR.addEventListener('click', this._updateEffect.bind(this));
+
+    this._dom.globalButtons.STROBOSCOPE.addEventListener('touchstart', this._startStroboscope.bind(this));
+    this._dom.globalButtons.STROBOSCOPE.addEventListener('touchend', this._stopStroboscope.bind(this));
   }
 
 
   _initState() {
     this.getState().then(response => {
       this._dom.status.innerHTML = 'Set Light Fever 440 state';
-      console.log(response);
+      // No need to check for OFF, as it is by default
+      if (response.state === 'ON') {
+        this._isActive = true;
+        this._dom.toggle.innerHTML = 'ON';
+        this._dom.toggle.classList.remove('light-fever-off');
+        this._dom.toggle.classList.add('light-fever-on');
+      }
+      // No need to check manual aswell, as it is by default
+      if (response.mode === 'AUDIO_ANALYSE') {
+        this._dom.manual.classList.remove('selected');
+        this._dom.analyzer.classList.add('selected');
+        this._dom.selection.style.left = '50%';
+        this._dom.manualContainer.style.left = '-100%';
+        this._dom.autoContainer.style.left = '0';
+        this._mode = 'AUDIO_ANALYSE';
+      }
+      // Same with effect, UNIFORM is the default
+      if (response.effect !== 'UNIFORM') {
+        let buttons = {};
+        if (this._mode === 'MANUAL') {
+          buttons = this._dom.manualButtons;
+        } else {
+          buttons = this._dom.autoButtons;
+        }
+        // Unselect all buttons
+        for (const [key, value] of Object.entries(buttons)) {
+          buttons[key].classList.remove('selected');
+        }
+        // Update effect toggled
+        buttons[response.effect].classList.add('selected');
+        this._effect = response.effect;
+      }
     }).catch(error => {
       this._dom.status.innerHTML = 'Unable to load state';
     });
   }
 
 
-  _events() {
-    this._dom.toggle.addEventListener('click', this._toggleLightFever.bind(this));
-    this._dom.manual.addEventListener('click', this._switchMode.bind(this));
-    this._dom.analyzer.addEventListener('click', this._switchMode.bind(this));
-    this._dom.themeSwitch.addEventListener('click', this._switchTheme.bind(this));
-
-    this._dom.manualButtons.uniform.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.manualButtons.chase.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.manualButtons.rainbow.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.manualButtons.rainbowChase.addEventListener('click', this._updateEffect.bind(this));
-
-    this._dom.autoButtons.uniform.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.autoButtons.progressive.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.autoButtons.progMirror.addEventListener('click', this._updateEffect.bind(this));
-
-    this._dom.globalButtons.strob.addEventListener('click', this._updateEffect.bind(this));
-  }
+  /*  --------------------------------------------------------------------------------------------------------------- */
+  /*  ------------------------------------------  BUTTON INTERACTION  ----------------------------------------------  */
+  /*  --------------------------------------------------------------------------------------------------------------- */
 
 
   _toggleLightFever() {
@@ -134,6 +177,58 @@ class LightFever440 {
   }
 
 
+  _updateEffect(event) {
+    // First we unselect all buttons
+    let buttons = {};
+    if (this._mode === 'MANUAL') {
+      buttons = this._dom.manualButtons;
+    } else {
+      buttons = this._dom.autoButtons;
+    }
+    // Unselect all buttons
+    for (const [key, value] of Object.entries(buttons)) {
+      buttons[key].classList.remove('selected');
+    }
+    // Then use target as current selection
+    event.target.classList.add('selected');
+    this._effect = event.target.dataset.effect;
+    this.sendAction().then(() => {
+      this._dom.status.innerHTML = `Effect ${this._effect} activated`;
+    }).catch(() => {
+      this._dom.status.innerHTML = `Unable to set effect ${this._effect}`;
+    });
+  }
+
+
+  _startStroboscope() {
+    this._previousEffect = this._effect;
+    this._dom.globalButtons.STROBOSCOPE.classList.add('selected');
+    this._effect = 'STROBOSCOPE';
+    this.sendAction().then(() => {
+      this._dom.status.innerHTML = 'Stroboscope activated';
+    }).catch(() => {
+      this._dom.status.innerHTML = 'Unable to start stroboscope';
+    });
+  }
+
+
+  _stopStroboscope() {
+    this._effect = this._previousEffect;
+    this._previousEffect = null;
+    this._dom.globalButtons.STROBOSCOPE.classList.remove('selected');
+    this.sendAction().then(() => {
+      this._dom.status.innerHTML = 'Stroboscope deactivated';
+    }).catch(() => {
+      this._dom.status.innerHTML = 'Unable to stop stroboscope';
+    });
+  }
+
+
+  /*  --------------------------------------------------------------------------------------------------------------- */
+  /*  ------------------------------------------  FRONT ONLY METHODS  ----------------------------------------------  */
+  /*  --------------------------------------------------------------------------------------------------------------- */
+
+
   _switchTheme(event) {
     if (event.target.checked === true) {
       this._isDark = false;
@@ -149,26 +244,9 @@ class LightFever440 {
   }
 
 
-  _updateEffect(event) {
-    // First we unselect all buttons
-    if (this._mode === 'MANUAL') {
-      for (const [key, value] of Object.entries(this._dom.manualButtons)) {
-        this._dom.manualButtons[key].classList.remove('selected');
-      }
-    } else {
-      for (const [key, value] of Object.entries(this._dom.autoButtons)) {
-        this._dom.autoButtons[key].classList.remove('selected');
-      }
-    }
-    // Then use target as current selection
-    event.target.classList.add('selected');
-    this._effect = event.target.dataset.effect;
-    this.sendAction().then(() => {
-      this._dom.status.innerHTML = `Effect ${this._effect} activated`;
-    }).catch(() => {
-      this._dom.status.innerHTML = `Unable to set effect ${this._effect}`;
-    });
-  }
+  /*  --------------------------------------------------------------------------------------------------------------- */
+  /*  ------------------------------------------  SERVER CALLS UTILS  ----------------------------------------------  */
+  /*  --------------------------------------------------------------------------------------------------------------- */
 
 
   getState() {

@@ -47,29 +47,7 @@ html, body {
   display: flex;
   height: 6rem;
   justify-content: space-evenly;
-  position: relative;
   width: 100%;
-}
-
-.header .light-fever-on,
-.header .light-fever-off {
-  border: solid 1px grey;
-  border-radius: 5px;
-  color: var(--text-color);
-  height: 4rem;
-  padding: 0;
-  position: absolute;
-  right: 1rem;
-  width: 4rem;
-  transition: background-color .2s;
-}
-
-.header .light-fever-on {
-  background-color: var(--green-color);
-}
-
-.header .light-fever-off {
-  background-color: var(--red-color);
 }
 
 /* Tabs */
@@ -170,9 +148,34 @@ button.btn {
 }
 
 .global-controls {
+  align-items: center;
+  display: flex;
   height: 5rem;
+  justify-content: flex-end;
   width: 100%;
 }
+
+.light-fever-on,
+.light-fever-off {
+  border: solid 1px grey;
+  border-radius: 5px;
+  color: var(--text-color);
+  height: 4rem;
+  margin: .5rem;
+  padding: 0;
+  right: 1rem;
+  width: 4rem;
+  transition: background-color .2s;
+}
+
+.light-fever-on {
+  background-color: var(--green-color);
+}
+
+.light-fever-off {
+  background-color: var(--red-color);
+}
+
 
 /* Status Bar */
 
