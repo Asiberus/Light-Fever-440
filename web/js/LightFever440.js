@@ -162,7 +162,7 @@ class LightFever440 {
       // Find selected effect in mode
       for (const [key, value] of Object.entries(this._dom.autoButtons)) {
         if (this._dom.autoButtons[key].classList.contains('selected')) {
-          this._mode = this._dom.autoButtons[key].dataset.effect;
+          this._effect = this._dom.autoButtons[key].dataset.effect;
           break;
         }
       }
@@ -177,7 +177,7 @@ class LightFever440 {
       // Find selected effect in mode
       for (const [key, value] of Object.entries(this._dom.manualButtons)) {
         if (this._dom.manualButtons[key].classList.contains('selected')) {
-          this._mode = this._dom.manualButtons[key].dataset.effect;
+          this._effect = this._dom.manualButtons[key].dataset.effect;
           break;
         }
       }
