@@ -192,22 +192,46 @@ class LightFever440 {
     // Then use target as current selection
     event.target.classList.add('selected');
     this._effect = event.target.dataset.effect;
+    this._setOptionsForEffect();
     this.sendAction().then(() => {
       this._dom.status.innerHTML = `Effect ${this._effect} activated`;
     }).catch(() => {
       this._dom.status.innerHTML = `Unable to set effect ${this._effect}`;
+    }).finally(() => {
+      this._options = null;
     });
   }
 
 
-  _startStroboscope() {
+  _setOptionsForEffect() {
+    if (this._effect === 'UNIFORM') {
+      this._options = {
+        COLOR: [255, 255, 255]
+      };
+    } else if (this._effect === 'THEATER_CHASE') {
+      this._options = {
+        COLOR: [255, 255, 255],
+        DELAY: 50 // ms
+      };
+    }
+  }
+
+
+  _startStroboscope(event) {
+    event.preventDefault(); // Avoid context to open when keeping touch down
     this._previousEffect = this._effect;
     this._dom.globalButtons.STROBOSCOPE.classList.add('selected');
     this._effect = 'STROBOSCOPE';
+    this._options = {
+      COLOR: [255, 255, 255],
+      DELAY: 50 // ms
+    };
     this.sendAction().then(() => {
       this._dom.status.innerHTML = 'Stroboscope activated';
     }).catch(() => {
       this._dom.status.innerHTML = 'Unable to start stroboscope';
+    }).finally(() => {
+      this._options = null;
     });
   }
 

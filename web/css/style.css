@@ -141,8 +141,8 @@ button.btn {
   margin: .5rem;
 }
 
-.effect-type button.selected,
-.option-type button.selected {
+button.btn.selected,
+button.btn.selected {
   background-color: var(--text-alpha-color);
   font-weight: bold;
 }
