@@ -16,6 +16,11 @@ class LightFever(object):
         self.is_manual_mode_running = False
         self.TIMER = 50
 
+        self.state = {'state': 'OFF', 'mode': None, 'effect': None, 'options': None}
+
+    def get_state(self):
+        return self.state
+
     def handle_action(self, action):
         state = action.get('state', 'OFF')
         mode = action.get('mode', None)
@@ -37,6 +42,11 @@ class LightFever(object):
             self.stop_audio_analyse()
             self.stop_manual_mode()
             self.strip.switch_off_strip()
+
+        self.state['state'] = state
+        self.state['mode'] = mode
+        self.state['effect'] = effect
+        self.state['options'] = options
 
 
     def start_audio_analyse(self, effect):
@@ -62,6 +72,8 @@ class LightFever(object):
             return self.strip.set_progressive_color
         elif effect == 'PROGRESSIVE_MIRROR':
             return self.strip.set_progressive_mirror_color
+        else: 
+            return self.strip.switch_off_strip
 
     def audio_analyze(self):
         while self.is_audio_analyse_running:
@@ -101,6 +113,8 @@ class LightFever(object):
             return self.strip.rainbow_cycle
         elif effect == 'THEATER_CHASE_RAINBOW':
             return self.strip.theater_chase_rainbow
+        else: 
+            return self.strip.switch_off_strip
 
     def manual_mode(self):
         while self.is_manual_mode_running:

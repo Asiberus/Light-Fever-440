@@ -12,12 +12,18 @@ class WebServer(object):
         return open('web/index.html')
 
     @cherrypy.expose
+    @cherrypy.tools.json_out()
+    def state(self):
+        return self.light_fever.get_state()
+
+    @cherrypy.expose
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
     def action(self):
         data = cherrypy.request.json
         self.light_fever.handle_action(data)
         return {'success': True}
+    
 
 if __name__ == '__main__':
     conf = {
