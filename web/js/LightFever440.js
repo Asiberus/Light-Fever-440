@@ -299,11 +299,13 @@ class LightFever440 {
       }
     }
     // Update light fever script with new internals
-    this._sendAction().then(() => {
-      this._dom.status.innerHTML = `Switched to mode ${this._mode}`;
-    }).catch(() => {
-      this._dom.status.innerHTML = 'Unable to switch mode';
-    });
+    if (this._isActive === true) {
+      this._sendAction().then(() => {
+        this._dom.status.innerHTML = `Switched to mode ${this._mode}`;
+      }).catch(() => {
+        this._dom.status.innerHTML = 'Unable to switch mode';
+      });
+    }
   }
 
 
@@ -334,11 +336,14 @@ class LightFever440 {
     event.target.classList.add('selected');
     this._effect = event.target.dataset.effect;
     options[this._effect].style.display = 'block';
-    this._sendAction().then(() => {
-      this._dom.status.innerHTML = `Effect ${this._effect} activated`;
-    }).catch(() => {
-      this._dom.status.innerHTML = `Unable to set effect ${this._effect}`;
-    });
+
+    if (this._isActive === true) {
+      this._sendAction().then(() => {
+        this._dom.status.innerHTML = `Effect ${this._effect} activated`;
+      }).catch(() => {
+        this._dom.status.innerHTML = `Unable to set effect ${this._effect}`;
+      });
+    }
   }
 
 
@@ -355,11 +360,14 @@ class LightFever440 {
       this._previousEffect = this._effect;
       this._dom.globalButtons.STROBOSCOPE.classList.add('selected');
       this._effect = 'STROBOSCOPE';
-      this._sendAction().then(() => {
-        this._dom.status.innerHTML = 'Stroboscope activated';
-      }).catch(() => {
-        this._dom.status.innerHTML = 'Unable to start stroboscope';
-      });
+
+      if (this._isActive === true) {
+        this._sendAction().then(() => {
+          this._dom.status.innerHTML = 'Stroboscope activated';
+        }).catch(() => {
+          this._dom.status.innerHTML = 'Unable to start stroboscope';
+        });
+      }
     }
   }
 
@@ -374,11 +382,14 @@ class LightFever440 {
     this._effect = this._previousEffect;
     this._previousEffect = null;
     this._dom.globalButtons.STROBOSCOPE.classList.remove('selected');
-    this._sendAction().then(() => {
-      this._dom.status.innerHTML = 'Stroboscope deactivated';
-    }).catch(() => {
-      this._dom.status.innerHTML = 'Unable to stop stroboscope';
-    });
+
+    if (this._isActive === true) {
+      this._sendAction().then(() => {
+        this._dom.status.innerHTML = 'Stroboscope deactivated';
+      }).catch(() => {
+        this._dom.status.innerHTML = 'Unable to stop stroboscope';
+      });
+    }
   }
 
 
