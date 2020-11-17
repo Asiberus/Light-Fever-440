@@ -1,3 +1,6 @@
+import '../css/app.scss';
+
+
 class LightFever440 {
 
 

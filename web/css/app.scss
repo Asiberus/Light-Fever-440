@@ -1,0 +1,10 @@
+@import 'variables.scss';
+
+.dummy {
+  color: var(--color-black);
+  font-size: 12px;
+
+  .zeaz {
+    color: black;
+  }
+}

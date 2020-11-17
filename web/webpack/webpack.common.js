@@ -7,7 +7,8 @@ module.exports = {
   entry: ['./js/LightFever440.js'],
   module: {
     rules: [
-      loaders.JSLoader
+      loaders.JSLoader,
+      loaders.CSSLoader
     ]
   },
   output: {
@@ -20,6 +21,8 @@ module.exports = {
   plugins: [
     new webpack.ProgressPlugin(),
     plugins.CleanWebpackPlugin,
-    plugins.ESLintPlugin
+    //plugins.ESLintPlugin,
+    plugins.StyleLintPlugin,
+    plugins.MiniCssExtractPlugin
   ]
 };
