@@ -1,3 +1,43 @@
 :root {
-  --color-black: rgb(0, 0, 0);
+  /* Dimension variable */
+  --header-height: 7rem;
+  --tabs-height: 3rem;
+  --status-height: 3rem;
+  --global-height: 5rem;
+}
+
+.dark-theme {
+  --background-color: rgb(65, 74, 111);
+  --background-dark-color: rgb(34, 38, 57);
+  --text-alpha-color: rgba(255, 255, 255, .2);
+  --text-color: white;
+  --accent-color: rgb(147, 247, 233);
+  --green-color: rgb(86, 212, 91);
+  --red-color: rgb(255, 107, 103);
+  /* Body gradient background */
+  --gradient-min-color: rgb(6, 6, 9);
+  --gradient-max-color: rgb(60, 64, 93);
+  /* Title animated gradient */
+  --gradient-color1: rgb(234, 141, 228);
+  --gradient-color2: rgb(215, 127, 127);
+  --gradient-color3: rgb(227, 216, 124);
+  --gradient-color4: rgb(107, 221, 147);
+}
+
+.light-theme {
+  --background-color: rgb(189, 189, 189);
+  --background-dark-color: rgb(222, 222, 222);
+  --text-alpha-color: rgba(0, 0, 0, .2);
+  --text-color: black;
+  --accent-color: rgb(147, 247, 233);
+  --green-color: rgb(86, 212, 91);
+  --red-color: rgb(255, 107, 103);
+  /* Body gradient background */
+  --gradient-min-color: rgb(170, 170, 204);
+  --gradient-max-color: rgb(231, 233, 239);
+  /* Title animated gradient */
+  --gradient-color1: rgb(234, 141, 228);
+  --gradient-color2: rgb(215, 127, 127);
+  --gradient-color3: rgb(227, 216, 124);
+  --gradient-color4: rgb(107, 221, 147);  
 }

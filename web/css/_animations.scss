@@ -1,0 +1,24 @@
+@keyframes shine-on-text {
+  to {
+    background-position: 200% center;
+  }
+}
+
+h1.activated,
+h2.activated {
+  background: linear-gradient(
+    -45deg,
+    var(--text-color) 5%,
+    var(--gradient-color1),
+    var(--gradient-color2),
+    var(--gradient-color3),
+    var(--gradient-color4),
+    var(--text-color) 95%
+  );
+
+  animation: shine-on-text 3s linear infinite;
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

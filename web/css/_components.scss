@@ -1,0 +1,44 @@
+/* Checkbox switch */
+
+.switch-wrapper {
+  align-items: center;
+	display: flex;
+  flex: 1;
+	height: 100%;
+  justify-content: center;
+  max-width: 5rem;
+  width: 5rem;
+}
+
+input[type="checkbox"].switch {
+  appearance: none;
+	height: calc(1.5rem + 2px);
+	background-color: var(--red-color);
+  border: solid 1px grey;
+	border-radius: 3rem;
+	position: relative;
+	outline: none;
+  width: 4rem;
+	transition: all .2s ease-in-out;
+
+  &:checked {
+  	background-color: var(--green-color);
+
+    &::after {
+    	left: calc(100% - 1.5rem);
+    }
+  }
+
+  &::after {
+    content: '';
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 .25rem rgba(0, 0, 0, .9);
+  	height: 1.5rem;
+    left: 0;
+    position: absolute;
+    transform: scale(.7);
+    width: 1.5rem;
+  	transition: all .2s ease-in-out;
+  }
+}
