@@ -187,9 +187,9 @@ class LightFever440 {
         }
         // Update effect toggled
         buttons[response.effect].classList.add('selected');
-        options[respone.effect].style.display = 'block';
-        this._effect = response.effect;
+        options[response.effect].style.display = 'block';
       }
+      this._effect = response.effect;
     }).catch(error => {
       this._dom.status.innerHTML = 'Unable to load state';
     });
@@ -390,17 +390,17 @@ class LightFever440 {
   _setOptionsForEffect() {
     if (this._effect === 'UNIFORM') {
       this._options = {
-        COLOR: [255, 255, 255]
+        color: [255, 255, 255]
       };
     } else if (this._effect === 'CHASE') {
       this._options = {
-        COLOR: [255, 255, 255],
-        DELAY: 50 // ms
+        color: [255, 255, 255],
+        delay: 50 // ms
       };
     } else if (this._effect === 'STROBOSCOPE') {
       this._options = {
-        COLOR: this._hexToRgb(this._dom.modal.stroboscope.color.value),
-        DELAY: parseInt(this._dom.modal.stroboscope.delay.value) || 50 // ms
+        color: this._hexToRgb(this._dom.modal.stroboscope.color.value),
+        delay: parseInt(this._dom.modal.stroboscope.delay.value) || 50 // ms
       };
     }
   }
