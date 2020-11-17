@@ -448,7 +448,7 @@ class LightFever440 {
 
     if (this._effect === 'STROBOSCOPE') {
       this._options = {
-        color: this._hexToRgb(this._dom.modal.stroboscope.color.value),
+        color: this._hexToRgb(window.localStorage.getItem('strob-color')) || [255, 255, 255],
         delay: parseInt(this._dom.modal.stroboscope.delay.value) || 50 // ms
       };
     }
@@ -498,30 +498,35 @@ class LightFever440 {
       this._dom.modal.stroboscope.delayText.innerHTML = event.target.value;
       window.localStorage.setItem('strob-delay', event.target.value);
     };
-    // Update color
-    let color = event => {
-      this._dom.modal.stroboscope.color.value = event.target.value;
-      window.localStorage.setItem('strob-color', event.target.value);
-    };
     // Close modal internal metohd
     let close = event => {
       if (event.target.id === 'strob-modal-close' || event.target.id === 'modal-overlay') {
         this._dom.modal.overlay.classList.remove('visible');
         this._dom.modal.stroboscope.container.classList.remove('visible');
         this._dom.modal.stroboscope.delay.removeEventListener('click', range);
-        this._dom.modal.stroboscope.color.removeEventListener('input', color);
         this._dom.modal.overlay.removeEventListener('click', close);
         document.getElementById('strob-modal-close').removeEventListener('click', close);
       }
     };
     // Binding now to be able to remove events properly
     range = range.bind(this);
-    color = color.bind(this);
     close = close.bind(this);
-    this._dom.modal.stroboscope.color.value = window.localStorage.getItem('strob-color') || '#FFFFFF';
+
+    const colorPicker = new KellyColorPicker({
+      place : 'color-picker',
+      color : window.localStorage.getItem('strob-color') || '#ffffff',
+      changeCursor: false,
+      userEvents: {
+        change: self => {
+          const color = self.getCurColorRgb();
+          window.localStorage.setItem('strob-color', self.getCurColorHex());
+          document.getElementById('strob-color').value = self.getCurColorHex();
+        }
+      }
+    });
+    document.getElementById('strob-color').addEventListener('click', event => { event.preventDefault(); });
     // Event listeners for modal
     this._dom.modal.stroboscope.delay.addEventListener('input', range);
-    this._dom.modal.stroboscope.color.addEventListener('input', color);
     this._dom.modal.overlay.addEventListener('click', close);
     document.getElementById('strob-modal-close').addEventListener('click', close);
   }
