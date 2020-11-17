@@ -210,6 +210,37 @@ h2.activated {
   width: 90%;
 }
 
+.single-option {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: .5rem 0;
+  position: relative;
+}
+
+.single-option label {
+  font-size: 1.2rem;
+  max-width: 25%;
+}
+
+.single-option input[type="color"] {
+  height: calc(1.5rem + 2px);
+  max-width: 5rem;
+  margin: 0;
+  padding: .1rem;
+  width: 5rem;
+}
+
+.range-wrapper {
+  align-items: center;
+	display: flex;
+  flex: 1;
+	height: 100%;
+  justify-content: center;
+  max-width: 75%;
+  width: 75%;
+}
+
 .btn {
   background-color: transparent;
   border: solid 1px var(--text-color);
@@ -286,6 +317,7 @@ svg {
   border-top: solid 1px grey;
   display: flex;
   height: var(--status-height);
+  justify-content: space-between;
   width: 100%;
 }
 
@@ -294,7 +326,6 @@ svg {
   height: 1.3rem;
   margin-right: .5rem;
   text-align: right;
-  width: calc(100% - 5rem);
 }
 
 /* Switch */
@@ -305,6 +336,7 @@ svg {
   flex: 1;
 	height: 100%;
   justify-content: center;
+  max-width: 5rem;
   width: 5rem;
 }
 

@@ -34,8 +34,10 @@
         <div class="option-container">
           <p>Options</p>
           <div id="manual-uniform-options" class="option-type" data-effect="UNIFORM" style="display:block;">
-            <label for="">Color</label>
-            <input id="" class="btn" type="color" name="input-color" value="#FFFFFF">
+            <div class="single-option">
+              <label for="">Color</label>
+              <input id="" class="btn" type="color" name="input-color" value="#FFFFFF">
+            </div>
           </div>
           <div id="manual-chase-options" class="option-type" data-effect="CHASE"></div>
           <div id="manual-rainbow-options" class="option-type" data-effect="RAINBOW"></div>
@@ -48,19 +50,47 @@
           <div class="effect-type">
             <button id="auto-uniform" class="btn selected" name="button" data-effect="UNIFORM">UNIFORM</button>
             <button id="auto-progressive" class="btn" name="button" data-effect="PROGRESSIVE">PROGRESSIVE</button>
-            <button id="auto-progressive-mirror" class="btn" name="button" data-effect="PROGRESSIVE_MIRROR">MIRROR</button>
             <button id="auto-pulse" class="btn" name="button" data-effect="PULSE">PULSE</button>
+            <button id="auto-progressive-mirror" class="btn" name="button" data-effect="PROGRESSIVE_MIRROR">MIRROR</button>
           </div>
         </div>
         <div class="option-container">
           <p>Options</p>
           <div id="auto-uniform-options" class="option-type" data-effect="UNIFORM" style="display:block;">
-            <label for="">Color</label>
-            <input id="" class="btn" type="color" name="input-color" value="#FFFFFF">
+            <div class="single-option">
+              <label for="auto-uniform-peak-detection">Peak detection</label>
+              <div class="switch-wrapper">
+          			<input id="auto-uniform-peak-detection" type="checkbox" class="switch">
+          		</div>
+            </div>
           </div>
-          <div id="auto-progressive-options" class="option-type" data-effect="PROGRESSIVE"></div>
+          <div id="auto-progressive-options" class="option-type" data-effect="PROGRESSIVE">
+            <div class="single-option">
+              <label for="auto-progressive-led">Lights per batch (<span id="auto-progressive-led-value">5</span>)</label>
+              <div class="range-wrapper">
+                <input id="auto-progressive-led" type="range" name="strob-delay" value="5" step="1" min="1" max="30" data-rangeslider>
+              </div>
+            </div>
+            <div class="single-option">
+              <label for="auto-progressive-reverse">Reverse</label>
+              <div class="switch-wrapper">
+          			<input id="auto-progressive-reverse" type="checkbox" class="switch">
+          		</div>
+            </div>
+          </div>
+          <div id="auto-pulse-options" class="option-type" data-effect="PULSE">
+            <div class="single-option">
+              <label for="auto-pusle-length">Pulse length (<span id="auto-pusle-length-value">100</span>%)</label>
+              <div class="range-wrapper">
+                <input id="auto-pusle-length" type="range" name="strob-delay" value="100" step="1" min="1" max="100" data-rangeslider>
+              </div>
+            </div>
+            <div class="single-option">
+              <label for="">Color</label>
+              <input id="" class="btn" type="color" name="input-color" value="#FFFFFF">
+            </div>
+          </div>
           <div id="auto-progressive-mirror-options" class="option-type" data-effect="PROGRESSIVE_MIRROR"></div>
-          <div id="auto-pulse-options" class="option-type" data-effect="PULSE"></div>
         </div>
       </div>
     </div>
@@ -98,6 +128,7 @@
     </div>
   </div>
   <script type="text/javascript" src="lib/rangeslider-js.min.js"></script>
+  <script type="text/javascript" src="lib/vanilla-picker.min.js"></script>
   <script type="text/javascript" src="dist/LightFever440.bundle.js"></script>
 </body>
 </html>

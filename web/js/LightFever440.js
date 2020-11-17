@@ -46,7 +46,11 @@ class LightFever440 {
         UNIFORM: document.getElementById('auto-uniform-options'),
         PROGRESSIVE: document.getElementById('auto-progressive-options'),
         PROGRESSIVE_MIRROR: document.getElementById('auto-progressive-mirror-options'),
-        PULSE: document.getElementById('auto-pulse-options')
+        PULSE: document.getElementById('auto-pulse-options'),
+        opts: {
+          lightNumber: document.getElementById('auto-progressive-led'),
+          maxPulse: document.getElementById('auto-pusle-length')
+        }
       },
       globalButtons: { // Buttons that are available in both modes, and that overrides selected effect for given mode
         STROBOSCOPE: document.getElementById('global-stroboscope'),
@@ -127,6 +131,15 @@ class LightFever440 {
     this._dom.globalButtons.STROBOSCOPE.addEventListener('touchstart', this._startStroboscope.bind(this));
     this._dom.globalButtons.STROBOSCOPE.addEventListener('touchend', this._stopStroboscope.bind(this));
     this._dom.globalButtons.strobOpts.addEventListener('click', this._strobOptionsModal.bind(this));
+    // Options slider etc events
+    this._dom.autoOptions.opts.lightNumber.addEventListener('input', () => {
+      document.getElementById('auto-progressive-led-value').innerHTML = this._dom.autoOptions.opts.lightNumber.value;
+      window.localStorage.setItem('auto-progressive-led', this._dom.autoOptions.opts.lightNumber.value);
+    });
+    this._dom.autoOptions.opts.maxPulse.addEventListener('input', () => {
+      document.getElementById('auto-pusle-length-value').innerHTML = this._dom.autoOptions.opts.maxPulse.value;
+      window.localStorage.setItem('auto-pusle-length', this._dom.autoOptions.opts.maxPulse.value);
+    });
   }
 
 
@@ -149,6 +162,10 @@ class LightFever440 {
     }
     // Update version number
     this._dom.version.innerHTML = this._version;
+    // Declare range sliders to make input range touch friendly
+    rangesliderJs.create(this._dom.modal.stroboscope.delay, { value: window.localStorage.getItem('strob-delay') || '50' });
+    rangesliderJs.create(this._dom.autoOptions.opts.lightNumber, { value: window.localStorage.getItem('auto-progressive-led') || '5' });
+    rangesliderJs.create(this._dom.autoOptions.opts.maxPulse, { value: window.localStorage.getItem('auto-pusle-length') || '100' });
     // Perform async call to retrieve LightFever440 state
     this._getState().then(response => {
       this._dom.status.innerHTML = 'Set Light Fever 440 state';
@@ -400,16 +417,36 @@ class LightFever440 {
    * @description <blockquote>Internal method to be called before any sendAction for a given effect. It will send options that are
    * related to the selected effect, and use the inputs values that matches the effect.</blockquote> **/
   _setOptionsForEffect() {
-    if (this._effect === 'UNIFORM') {
-      this._options = {
-        color: [255, 255, 255]
-      };
-    } else if (this._effect === 'CHASE') {
-      this._options = {
-        color: [255, 255, 255],
-        delay: 50 // ms
-      };
-    } else if (this._effect === 'STROBOSCOPE') {
+    if (this._mode === 'MANUAL') {
+      if (this._effect === 'UNIFORM') {
+        this._options = {
+          color: [255, 255, 255]
+        };
+      } else if (this._effect === 'CHASE') {
+        this._options = {
+          color: [255, 255, 255],
+          delay: 50 // ms
+        };
+      }
+    } else {
+      if (this._effect === 'UNIFORM') {
+        this._options = {
+          peak: document.getElementById('auto-uniform-peak-detection').checked
+        };
+      } else if (this._effect === 'PROGRESSIVE') {
+        this._options = {
+          led: this._dom.autoOptions.opts.lightNumber.value || 5,
+          reverse: document.getElementById('auto-progressive-reverse').checked
+        };
+      } else if (this._effect === 'PULSE') {
+        this._options = {
+          color: [255, 255, 255],
+          maxPulse: this._dom.autoOptions.opts.maxPulse.value
+        };
+      }
+    }
+
+    if (this._effect === 'STROBOSCOPE') {
       this._options = {
         color: this._hexToRgb(this._dom.modal.stroboscope.color.value),
         delay: parseInt(this._dom.modal.stroboscope.delay.value) || 50 // ms
@@ -482,8 +519,6 @@ class LightFever440 {
     color = color.bind(this);
     close = close.bind(this);
     this._dom.modal.stroboscope.color.value = window.localStorage.getItem('strob-color') || '#FFFFFF';
-    // Using range slider to make input range touch friendly
-    rangesliderJs.create(this._dom.modal.stroboscope.delay, { value: window.localStorage.getItem('strob-delay') || '50' });
     // Event listeners for modal
     this._dom.modal.stroboscope.delay.addEventListener('input', range);
     this._dom.modal.stroboscope.color.addEventListener('input', color);
