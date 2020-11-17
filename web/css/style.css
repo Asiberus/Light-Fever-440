@@ -50,33 +50,6 @@ body {
   z-index: 500;
 }
 
-/* Background animation */
-
-@keyframes gradient {
-	0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
-}
-
-body.activated {
-  /* Gradient colors */
-  --gradient-color1: rgb(111, 65, 108);
-  --gradient-color2: rgb(111, 65, 65);
-  --gradient-color3: rgb(111, 106, 65);
-  --gradient-color4: rgb(65, 111, 81);
-  --gradient-color5: var(--background-color);
-
-  animation: gradient 15s ease infinite;
-  background: linear-gradient(-90deg, var(--gradient-color1), var(--gradient-color2), var(--gradient-color3), var(--gradient-color4), var(--gradient-color5));
-	background-size: 300% 100%;
-}
-
 /* Header section (both page and modal header/footer)*/
 
 .header,
@@ -97,6 +70,51 @@ body.activated {
 .header h2 {
   font-size: 1.3rem;
   font-style: italic;
+}
+
+/* Title animation */
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+h1.activated,
+h2.activated {
+  /* Gradient colors */
+  --gradient-color1: rgb(234, 141, 228);
+  --gradient-color2: rgb(215, 127, 127);
+  --gradient-color3: rgb(227, 216, 124);
+  --gradient-color4: rgb(107, 221, 147);
+
+  background: linear-gradient(
+    -45deg,
+    var(--text-color) 5%,
+    var(--gradient-color1),
+    var(--gradient-color2),
+    var(--gradient-color3),
+    var(--gradient-color4),
+    var(--text-color) 95%
+  );
+
+  animation: shine 3s linear infinite;
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
 }
 
 /* Tabs */
@@ -159,6 +177,7 @@ body.activated {
 
 .effect-container,
 .option-container {
+  align-items: center;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -168,19 +187,27 @@ body.activated {
 .option-container p {
   font-style: italic;
   font-weight: bold;
-  margin-top: 1.6rem;
+  margin: 1.6rem 0;
   text-align: center;
 }
 
-.effect-type,
-.option-type {
+.effect-type {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 1.6rem;
 }
 
-button.btn {
+.option-type {
+  background-color: var(--background-dark-color);
+  border: solid 1px grey;
+  border-radius: 3px;
+  display: none;
+  padding: 1rem;
+  width: 90%;
+}
+
+.btn {
   background-color: transparent;
   border: solid 1px var(--text-color);
   border-radius: .3rem;
@@ -191,24 +218,30 @@ button.btn {
   margin: .5rem;
 }
 
-button.btn.selected {
+.btn.selected {
   background-color: var(--text-alpha-color);
   font-weight: bold;
 }
 
-button.btn .opts {
-  left: -3rem;
+.btn .opts {
+  left: -2.5rem;
   position: absolute;
-  width: 2.5rem;
-  height: 2.5rem;
-  top: .75rem;
+  width: 2rem;
+  height: 2rem;
+  top: 1rem;
 }
 
 button.btn svg {
   fill: var(--accent-color);
 }
 
-/* Status Bar */
+input[type="color"] {
+  height: 3rem;
+  padding: .5rem;
+  width: calc(100% - 1rem);
+}
+
+/* Global controls */
 
 .global-controls {
   align-items: center;
@@ -238,7 +271,6 @@ button.btn svg {
 .light-fever-off {
   background-color: var(--red-color);
 }
-
 
 /* Status Bar */
 

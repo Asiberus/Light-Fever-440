@@ -12,7 +12,7 @@
 <body class="dark-theme">
   <div class="app-wrapper">
     <div class="header">
-      <h1>Light Fever 440</h1>
+      <h1 id="title">Light Fever 440</h1>
       <h2 id="version">0.0.1</h2>
     </div>
     <div class="tabs">
@@ -33,7 +33,13 @@
         </div>
         <div class="option-container">
           <p>Options</p>
-          <div class="option-type"></div>
+          <div id="manual-uniform-options" class="option-type" data-effect="UNIFORM" style="display:block;">
+            <label for="">Color</label>
+            <input id="" class="btn" type="color" name="input-color" value="#FFFFFF">
+          </div>
+          <div id="manual-chase-options" class="option-type" data-effect="CHASE"></div>
+          <div id="manual-rainbow-options" class="option-type" data-effect="RAINBOW"></div>
+          <div id="manual-chase-rainbow-options" class="option-type" data-effect="CHASE_RAINBOW"></div>
         </div>
       </div>
       <div id="auto-container" class="auto-container">
@@ -48,7 +54,13 @@
         </div>
         <div class="option-container">
           <p>Options</p>
-          <div class="option-type"></div>
+          <div id="auto-uniform-options" class="option-type" data-effect="UNIFORM" style="display:block;">
+            <label for="">Color</label>
+            <input id="" class="btn" type="color" name="input-color" value="#FFFFFF">
+          </div>
+          <div id="auto-progressive-options" class="option-type" data-effect="PROGRESSIVE"></div>
+          <div id="auto-progressive-mirror-options" class="option-type" data-effect="PROGRESSIVE_MIRROR"></div>
+          <div id="auto-pulse-options" class="option-type" data-effect="PULSE"></div>
         </div>
       </div>
     </div>
@@ -78,7 +90,7 @@
         <label for="strob-delay">Delay between on and off for led (<span id="strob-delay-value">50</span> ms)</label>
         <input id="strob-delay" type="range" name="strob-delay" value="50" step="10" min="10" max="1000" data-rangeslider>
         <label for="strob-color">Stroboscope color</label>
-        <input id="strob-color" type="color" name="input-color" value="#FFFFFF">
+        <input id="strob-color" class="btn" type="color" name="input-color" value="#FFFFFF">
       </div>
       <div class="footer">
         <button id="strob-modal-close" class="btn" type="button" name="button">CLOSE</button>
