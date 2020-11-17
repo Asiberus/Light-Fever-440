@@ -1,14 +1,64 @@
-class LightFever440 {
 
 
-  /** @summary <h1>Light Fever 440 web controller</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: LightFever440.js | Light Fever 440</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="">
+        
+            <img src="img/toast-ui.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Light Fever 440</a></h1>
+        
+            <span class="version">v0.0.1</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+    <div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="LightFever440.html">LightFever440</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="LightFever440_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="LightFever440.html#_dom">_dom</a></li><li><a href="LightFever440.html#_effect">_effect</a></li><li><a href="LightFever440.html#_isActive">_isActive</a></li><li><a href="LightFever440.html#_isDark">_isDark</a></li><li><a href="LightFever440.html#_mode">_mode</a></li><li><a href="LightFever440.html#_options">_options</a></li><li><a href="LightFever440.html#_previousEffect">_previousEffect</a></li><li><a href="LightFever440.html#_state">_state</a></li><li><a href="LightFever440.html#_version">_version</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="LightFever440.html#._ajax">_ajax</a></li><li><a href="LightFever440.html#._getState">_getState</a></li><li><a href="LightFever440.html#._hexToRgb">_hexToRgb</a></li><li><a href="LightFever440.html#._initEvents">_initEvents</a></li><li><a href="LightFever440.html#._initState">_initState</a></li><li><a href="LightFever440.html#._sendAction">_sendAction</a></li><li><a href="LightFever440.html#._setOptionsForEffect">_setOptionsForEffect</a></li><li><a href="LightFever440.html#._startLightFever">_startLightFever</a></li><li><a href="LightFever440.html#._startStroboscope">_startStroboscope</a></li><li><a href="LightFever440.html#._stopLightFever">_stopLightFever</a></li><li><a href="LightFever440.html#._stopStroboscope">_stopStroboscope</a></li><li><a href="LightFever440.html#._strobOptionsModal">_strobOptionsModal</a></li><li><a href="LightFever440.html#._switchMode">_switchMode</a></li><li><a href="LightFever440.html#._switchTheme">_switchTheme</a></li><li><a href="LightFever440.html#._toggleLightFever">_toggleLightFever</a></li><li><a href="LightFever440.html#._updateEffect">_updateEffect</a></li></ul></div></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>class LightFever440 {
+
+
+  /** @summary &lt;h1>Light Fever 440 web controller&lt;/h1>
    * @author Arthur Beaulieu, Raphaël Beekmann
    * @since November 2020
-   * @description <blockquote>This module is made to abstract the Light Fever 440 script hosted on the Py web server.
+   * @description &lt;blockquote>This module is made to abstract the Light Fever 440 script hosted on the Py web server.
    * The localhost is the entrypoint for such controller. All methods described here are made to switch from exposed
    * modes, to set effect in action and to provide options for these efects. This constructor doesn't take any arguments
-   * and is made to work standalone, without any external libraries or class. See the <code>README.md</code> file to know
-   * how to set up this project on your Raspberry.</blockquote> */
+   * and is made to work standalone, without any external libraries or class. See the &lt;code>README.md&lt;/code> file to know
+   * how to set up this project on your Raspberry.&lt;/blockquote> */
   constructor() {
     /*  ---------------------------------------  DOM internal attributes  --------------------------------------------  */
     /** @private
@@ -70,7 +120,7 @@ class LightFever440 {
      * @member {string} - The Light Fever 440 mode (either MANUAL/AUDIO_ANALYSE) */
     this._mode = 'MANUAL';
     /** @private
-     * @member {string} - The Light Fever 440 effect (depends on the selected mode, see <code>README.md</code> for the detailled API) */
+     * @member {string} - The Light Fever 440 effect (depends on the selected mode, see &lt;code>README.md&lt;/code> for the detailled API) */
     this._effect = null;
     /** @private
      * @member {object} - The options to apply to a given effect */
@@ -92,8 +142,8 @@ class LightFever440 {
    * @name _initEvents
    * @private
    * @memberof LightFever440
-   * @description <blockquote>Subscribe to all DOM element that can interact with the web server to modify the Light Fever 440
-   * state, mode, effect and options. There are also events to control the UI aspect.</blockquote> **/
+   * @description &lt;blockquote>Subscribe to all DOM element that can interact with the web server to modify the Light Fever 440
+   * state, mode, effect and options. There are also events to control the UI aspect.&lt;/blockquote> **/
   _initEvents() {
     this._dom.toggle.addEventListener('click', this._toggleLightFever.bind(this));
     this._dom.manual.addEventListener('click', this._switchMode.bind(this));
@@ -120,8 +170,8 @@ class LightFever440 {
    * @name _initState
    * @private
    * @memberof LightFever440
-   * @description <blockquote>Retrieve the Light Fever 440 state and apply its parameters to the UI so it matches this state.
-   * This is made to update the UI if the LightFever440 was previously launched, to avoid the UI to be inconsistent.</blockquote> **/
+   * @description &lt;blockquote>Retrieve the Light Fever 440 state and apply its parameters to the UI so it matches this state.
+   * This is made to update the UI if the LightFever440 was previously launched, to avoid the UI to be inconsistent.&lt;/blockquote> **/
   _initState() {
     // Apply theme if saved in local storage
     const theme = window.localStorage.getItem('theme');
@@ -186,7 +236,7 @@ class LightFever440 {
    * @name _toggleLightFever
    * @private
    * @memberof LightFever440
-   * @description <blockquote>Toggle the Light Fever 440 state depending on its previous state. Can be either ON or OFF.</blockquote> **/
+   * @description &lt;blockquote>Toggle the Light Fever 440 state depending on its previous state. Can be either ON or OFF.&lt;/blockquote> **/
   _toggleLightFever() {
     if (this._isActive === false) {
       this._isActive = true;
@@ -208,7 +258,7 @@ class LightFever440 {
    * @name _startLightFever
    * @private
    * @memberof LightFever440
-   * @description <blockquote>Explicit method to set the Light Fever 440 state at ON.</blockquote> **/
+   * @description &lt;blockquote>Explicit method to set the Light Fever 440 state at ON.&lt;/blockquote> **/
   _startLightFever() {
     document.body.classList.add('activated');
     this._state = 'ON';
@@ -224,7 +274,7 @@ class LightFever440 {
    * @name _stopLightFever
    * @private
    * @memberof LightFever440
-   * @description <blockquote>Explicit method to set the Light Fever 440 state at OFF.</blockquote> **/
+   * @description &lt;blockquote>Explicit method to set the Light Fever 440 state at OFF.&lt;/blockquote> **/
   _stopLightFever() {
     document.body.classList.remove('activated');
     this._state = 'OFF';
@@ -240,7 +290,7 @@ class LightFever440 {
    * @name _switchMode
    * @private
    * @memberof LightFever440
-   * @description <blockquote>Switch the Light Fever 440 in MANUAL or AUTO_ANALYSE mode and update UI accordingly.</blockquote>
+   * @description &lt;blockquote>Switch the Light Fever 440 in MANUAL or AUTO_ANALYSE mode and update UI accordingly.&lt;/blockquote>
    * @param {object} event - The event data (click) to retrieve the event target and update it **/
   _switchMode(event) {
     if (event.target.dataset.manual === 'false') {
@@ -287,8 +337,8 @@ class LightFever440 {
    * @name _updateEffect
    * @private
    * @memberof LightFever440
-   * @description <blockquote>Switch the Light Fever 440 effect using the HTML data-effect set on each of the concerned buttons.
-   * See <code>README.md</code> for the detailled API description.</blockquote>
+   * @description &lt;blockquote>Switch the Light Fever 440 effect using the HTML data-effect set on each of the concerned buttons.
+   * See &lt;code>README.md&lt;/code> for the detailled API description.&lt;/blockquote>
    * @param {object} event - The event data (click) to retrieve the event target and update it **/
   _updateEffect(event) {
     // First we unselect all buttons
@@ -317,8 +367,8 @@ class LightFever440 {
    * @name _startStroboscope
    * @private
    * @memberof LightFever440
-   * @description <blockquote>Explicit method to start the global stroboscope effect. It will override any selected effect and
-   * will be active while the user hold the button. On release, the previous selected effect is restored.</blockquote>
+   * @description &lt;blockquote>Explicit method to start the global stroboscope effect. It will override any selected effect and
+   * will be active while the user hold the button. On release, the previous selected effect is restored.&lt;/blockquote>
    * @param {object} event - The event data (touchdown) to avoid default behavior on hold (ctx menu) **/
   _startStroboscope(event) {
     if (event.target.id === 'global-stroboscope') {
@@ -339,8 +389,8 @@ class LightFever440 {
    * @name _stopStroboscope
    * @private
    * @memberof LightFever440
-   * @description <blockquote>Explicit method to stop the global stroboscope effect. Called when the button is released,
-   * the previous selected effect will be restored.</blockquote> **/
+   * @description &lt;blockquote>Explicit method to stop the global stroboscope effect. Called when the button is released,
+   * the previous selected effect will be restored.&lt;/blockquote> **/
   _stopStroboscope() {
     this._effect = this._previousEffect;
     this._previousEffect = null;
@@ -357,8 +407,8 @@ class LightFever440 {
    * @name _setOptionsForEffect
    * @private
    * @memberof LightFever440
-   * @description <blockquote>Internal method to be called before any sendAction for a given effect. It will send options that are
-   * related to the selected effect, and use the inputs values that matches the effect.</blockquote> **/
+   * @description &lt;blockquote>Internal method to be called before any sendAction for a given effect. It will send options that are
+   * related to the selected effect, and use the inputs values that matches the effect.&lt;/blockquote> **/
   _setOptionsForEffect() {
     if (this._effect === 'UNIFORM') {
       this._options = {
@@ -387,8 +437,8 @@ class LightFever440 {
    * @name _switchTheme
    * @private
    * @memberof LightFever440
-   * @description <blockquote>Switch the UI theme between light or dark theme. Those are defined in the CSS file. This value
-   * is stored in the local storage, to be restored when the user opens a new session.</blockquote>
+   * @description &lt;blockquote>Switch the UI theme between light or dark theme. Those are defined in the CSS file. This value
+   * is stored in the local storage, to be restored when the user opens a new session.&lt;/blockquote>
    * @param {object} event - The event data (click) to retrieve the event target and update it **/
   _switchTheme(event) {
     if (event.target.checked === true) {
@@ -411,7 +461,7 @@ class LightFever440 {
    * @name _strobOptionsModal
    * @private
    * @memberof LightFever440
-   * @description <blockquote>Open the stroboscope options modal and handle its interactivity (the whole lifecycle).</blockquote> **/
+   * @description &lt;blockquote>Open the stroboscope options modal and handle its interactivity (the whole lifecycle).&lt;/blockquote> **/
   _strobOptionsModal() {
     // Make modal visible
     this._dom.modal.overlay.classList.add('visible');
@@ -458,9 +508,9 @@ class LightFever440 {
    * @name _getState
    * @private
    * @memberof LightFever440
-   * @description <blockquote>This method will perform a GET call to the Py web server, to retrieve the activated mode, effect and
-   * options, in order to initialize the UI accordingly.</blockquote>
-   * @returns {promise} The request <code>Promise</code>, format response as JSON on resolve, as error code string on reject **/
+   * @description &lt;blockquote>This method will perform a GET call to the Py web server, to retrieve the activated mode, effect and
+   * options, in order to initialize the UI accordingly.&lt;/blockquote>
+   * @returns {promise} The request &lt;code>Promise&lt;/code>, format response as JSON on resolve, as error code string on reject **/
   _getState() {
     return new Promise((resolve, reject) => {
       this._ajax('state').then(resolve).catch(reject);
@@ -472,12 +522,12 @@ class LightFever440 {
    * @name _sendAction
    * @private
    * @memberof LightFever440
-   * @description <blockquote>This method will perform a POST call to the Py web server, to update the Light Fever 440 mode, effect
-   * and options, so it matches the UI state.</blockquote>
-   * @returns {promise} The request <code>Promise</code>, format response as JSON on resolve, as error code string on reject **/
+   * @description &lt;blockquote>This method will perform a POST call to the Py web server, to update the Light Fever 440 mode, effect
+   * and options, so it matches the UI state.&lt;/blockquote>
+   * @returns {promise} The request &lt;code>Promise&lt;/code>, format response as JSON on resolve, as error code string on reject **/
   _sendAction() {
     return new Promise((resolve, reject) => {
-      this._setOptionsForEffect(); // Always update the option object before calling <code>action</code>
+      this._setOptionsForEffect(); // Always update the option object before calling &lt;code>action&lt;/code>
       this._ajax('action', {
         state: this._state,
         mode: this._mode,
@@ -492,11 +542,11 @@ class LightFever440 {
    * @name _ajax
    * @private
    * @memberof LightFever440
-   * @description <blockquote>Server call abstraction method that will dispatch a GET or a POST request to
-   * the server, depending on the given parameters. It covers both the _getState and the _sendAction method.</blockquote>
-   * @param {string} url - The url to reach, either <code>state</code> (GET) or <code>action</code> (POST)
-   * @param {object} data - The data to attach to the <code>action</code> calls. No required for <code>state</code> call
-   * @returns {promise} The request <code>Promise</code>, format response as JSON on resolve, as error code string on reject **/
+   * @description &lt;blockquote>Server call abstraction method that will dispatch a GET or a POST request to
+   * the server, depending on the given parameters. It covers both the _getState and the _sendAction method.&lt;/blockquote>
+   * @param {string} url - The url to reach, either &lt;code>state&lt;/code> (GET) or &lt;code>action&lt;/code> (POST)
+   * @param {object} data - The data to attach to the &lt;code>action&lt;/code> calls. No required for &lt;code>state&lt;/code> call
+   * @returns {promise} The request &lt;code>Promise&lt;/code>, format response as JSON on resolve, as error code string on reject **/
   _ajax(url, data) {
     return new Promise((resolve, reject) => {
       // Prepare sent options with proper verb, headers and body (for POST only)
@@ -530,7 +580,7 @@ class LightFever440 {
    * @name _hexToRgb
    * @private
    * @memberof LightFever440
-   * @description <blockquote>Useful method to convert hexadecimal string into a RGB array of numbers.</blockquote>
+   * @description &lt;blockquote>Useful method to convert hexadecimal string into a RGB array of numbers.&lt;/blockquote>
    * @param {string} hex - The hexadecimal string to convert in RGB
    * @return {number[]} - The converted RGB array **/
   _hexToRgb(hex) {
@@ -545,3 +595,33 @@ class LightFever440 {
 
 window.LF440 = new LightFever440(); // Instantiate a controller here to avoid any additionnal code in HTML markup
 export default LightFever440; // Default module export
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="img/toast-ui.png" style="">
+    <div class="footer-text">Light Fever 440 - Version 0.0.1</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>
