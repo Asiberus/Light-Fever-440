@@ -85,7 +85,7 @@ class LightFever440 {
     this._mode = 'MANUAL';
     /** @private
      * @member {string} - The Light Fever 440 effect (depends on the selected mode, see <code>README.md</code> for the detailled API) */
-    this._effect = null;
+    this._effect = 'UNIFORM';
     /** @private
      * @member {object} - The options to apply to a given effect */
     this._options = null;
@@ -189,6 +189,7 @@ class LightFever440 {
         buttons[response.effect].classList.add('selected');
         options[response.effect].style.display = 'block';
       }
+      // Save effect in local
       this._effect = response.effect;
     }).catch(error => {
       this._dom.status.innerHTML = 'Unable to load state';

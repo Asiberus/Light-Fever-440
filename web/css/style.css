@@ -223,18 +223,6 @@ h2.activated {
   font-weight: bold;
 }
 
-.btn .opts {
-  left: -2.5rem;
-  position: absolute;
-  width: 2rem;
-  height: 2rem;
-  top: 1rem;
-}
-
-button.btn svg {
-  fill: var(--accent-color);
-}
-
 input[type="color"] {
   height: 3rem;
   padding: .5rem;
@@ -270,6 +258,21 @@ input[type="color"] {
 
 .light-fever-off {
   background-color: var(--red-color);
+}
+
+.strob-wrapper {
+  align-items: center;
+  display: flex;
+}
+
+.opts {
+  width: 2rem;
+  height: 2rem;
+  top: 1rem;
+}
+
+svg {
+  fill: var(--accent-color);
 }
 
 /* Status Bar */
