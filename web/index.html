@@ -35,11 +35,16 @@
           <p>Options</p>
           <div id="manual-uniform-options" class="option-type" data-effect="UNIFORM" style="display:block;">
             <div class="single-option">
-              <label for="">Color</label>
-              <input id="" class="btn" type="color" name="input-color" value="#FFFFFF">
+              <label for="manual-uniform-color">Color</label>
+              <input id="manual-uniform-color" class="btn" type="color" name="input-color" value="#FFFFFF">
             </div>
           </div>
-          <div id="manual-chase-options" class="option-type" data-effect="CHASE"></div>
+          <div id="manual-chase-options" class="option-type" data-effect="CHASE">
+            <div class="single-option">
+              <label for="manual-chase-color">Color</label>
+              <input id="manual-chase-color" class="btn" type="color" name="input-color" value="#FFFFFF">
+            </div>
+          </div>
           <div id="manual-rainbow-options" class="option-type" data-effect="RAINBOW"></div>
           <div id="manual-chase-rainbow-options" class="option-type" data-effect="CHASE_RAINBOW"></div>
         </div>
@@ -86,8 +91,8 @@
               </div>
             </div>
             <div class="single-option">
-              <label for="">Color</label>
-              <input id="" class="btn" type="color" name="input-color" value="#FFFFFF">
+              <label for="auto-pulse-color">Color</label>
+              <input id="auto-pulse-color" class="btn" type="color" name="input-color" value="#FFFFFF">
             </div>
           </div>
           <div id="auto-progressive-mirror-options" class="option-type" data-effect="PROGRESSIVE_MIRROR"></div>
@@ -117,14 +122,36 @@
         <h2>Available options</h2>
       </div>
       <div class="content">
-        <label for="strob-delay">Delay between on and off for led (<span id="strob-delay-value">50</span> ms)</label>
-        <input id="strob-delay" type="range" name="strob-delay" value="50" step="10" min="10" max="1000" data-rangeslider>
-        <label for="strob-color">Stroboscope color</label>
-        <input id="strob-color" class="btn" type="color" name="input-color" value="#FFFFFF">
-        <canvas id="color-picker"></canvas>
+        <div class="single-option">
+          <label for="strob-delay">Delay (<span id="strob-delay-value">50</span>ms)</label>
+          <div class="range-wrapper">
+            <input id="strob-delay" type="range" name="strob-delay" value="50" step="10" min="10" max="1000" data-rangeslider>
+          </div>
+        </div>
+        <div class="single-option">
+          <label for="strob-color">Color</label>
+          <input id="strob-color" class="btn" type="color" name="input-color" value="#FFFFFF">
+        </div>
+        <canvas id="strob-color-picker"></canvas>
       </div>
       <div class="footer">
         <button id="strob-modal-close" class="btn" type="button" name="button">CLOSE</button>
+      </div>
+    </div>
+    <div id="color-picker-modal" class="modal">
+      <div class="header">
+        <h1>Color picker</h1>
+        <h2>Select a color using the wheel</h2>
+      </div>
+      <div class="content">
+        <div class="single-option">
+          <label for="output-color">Color</label>
+          <input id="output-color" class="btn" type="color" name="input-color" value="#FFFFFF">
+        </div>
+        <canvas id="color-picker"></canvas>
+      </div>
+      <div class="footer">
+        <button id="color-picker-modal-close" class="btn" type="button" name="button">CLOSE</button>
       </div>
     </div>
   </div>

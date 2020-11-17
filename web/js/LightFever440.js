@@ -34,7 +34,11 @@ class LightFever440 {
         UNIFORM: document.getElementById('manual-uniform-options'),
         CHASE: document.getElementById('manual-chase-options'),
         RAINBOW: document.getElementById('manual-rainbow-options'),
-        CHASE_RAINBOW: document.getElementById('manual-chase-rainbow-options')
+        CHASE_RAINBOW: document.getElementById('manual-chase-rainbow-options'),
+        opts: {
+          uniformColor: document.getElementById('manual-uniform-color'),
+          chaseColor: document.getElementById('manual-chase-color')
+        }
       },
       autoButtons: { // Buttons that are only available in auto analyse mode
         UNIFORM: document.getElementById('auto-uniform'),
@@ -49,7 +53,8 @@ class LightFever440 {
         PULSE: document.getElementById('auto-pulse-options'),
         opts: {
           lightNumber: document.getElementById('auto-progressive-led'),
-          maxPulse: document.getElementById('auto-pusle-length')
+          maxPulse: document.getElementById('auto-pusle-length'),
+          colorPulse: document.getElementById('auto-pulse-color')
         }
       },
       globalButtons: { // Buttons that are available in both modes, and that overrides selected effect for given mode
@@ -63,6 +68,9 @@ class LightFever440 {
           delay: document.getElementById('strob-delay'),
           delayText: document.getElementById('strob-delay-value'),
           color: document.getElementById('strob-color')
+        },
+        colorPicker: {
+          container: document.getElementById('color-picker-modal'),
         }
       }
     };
@@ -132,6 +140,18 @@ class LightFever440 {
     this._dom.globalButtons.STROBOSCOPE.addEventListener('touchend', this._stopStroboscope.bind(this));
     this._dom.globalButtons.strobOpts.addEventListener('click', this._strobOptionsModal.bind(this));
     // Options slider etc events
+    this._dom.manualOptions.opts.uniformColor.addEventListener('click', () => {
+      event.preventDefault();
+      this._colorPickerModal('uniform-color', color => {
+        this._dom.manualOptions.opts.uniformColor.value = color
+      });
+    });
+    this._dom.manualOptions.opts.chaseColor.addEventListener('click', () => {
+      event.preventDefault();
+      this._colorPickerModal('chase-color', color => {
+        this._dom.manualOptions.opts.chaseColor.value = color
+      });
+    });
     this._dom.autoOptions.opts.lightNumber.addEventListener('input', () => {
       document.getElementById('auto-progressive-led-value').innerHTML = this._dom.autoOptions.opts.lightNumber.value;
       window.localStorage.setItem('auto-progressive-led', this._dom.autoOptions.opts.lightNumber.value);
@@ -139,6 +159,12 @@ class LightFever440 {
     this._dom.autoOptions.opts.maxPulse.addEventListener('input', () => {
       document.getElementById('auto-pusle-length-value').innerHTML = this._dom.autoOptions.opts.maxPulse.value;
       window.localStorage.setItem('auto-pusle-length', this._dom.autoOptions.opts.maxPulse.value);
+    });
+    this._dom.autoOptions.opts.colorPulse.addEventListener('click', event => {
+      event.preventDefault();
+      this._colorPickerModal('pulse-color', color => {
+        this._dom.autoOptions.opts.colorPulse.value = color
+      });
     });
   }
 
@@ -420,11 +446,11 @@ class LightFever440 {
     if (this._mode === 'MANUAL') {
       if (this._effect === 'UNIFORM') {
         this._options = {
-          color: [255, 255, 255]
+          color: this._hexToRgb(window.localStorage.getItem('uniform-color'))
         };
       } else if (this._effect === 'CHASE') {
         this._options = {
-          color: [255, 255, 255],
+          color: this._hexToRgb(window.localStorage.getItem('chase-color')),
           delay: 50 // ms
         };
       }
@@ -440,7 +466,7 @@ class LightFever440 {
         };
       } else if (this._effect === 'PULSE') {
         this._options = {
-          color: [255, 255, 255],
+          color: this._hexToRgb(window.localStorage.getItem('pulse-color')),
           maxPulse: this._dom.autoOptions.opts.maxPulse.value
         };
       }
@@ -448,7 +474,7 @@ class LightFever440 {
 
     if (this._effect === 'STROBOSCOPE') {
       this._options = {
-        color: this._hexToRgb(window.localStorage.getItem('strob-color')) || [255, 255, 255],
+        color: this._hexToRgb(window.localStorage.getItem('strob-color')),
         delay: parseInt(this._dom.modal.stroboscope.delay.value) || 50 // ms
       };
     }
@@ -513,7 +539,7 @@ class LightFever440 {
     close = close.bind(this);
 
     const colorPicker = new KellyColorPicker({
-      place : 'color-picker',
+      place : 'strob-color-picker',
       color : window.localStorage.getItem('strob-color') || '#ffffff',
       changeCursor: false,
       userEvents: {
@@ -529,6 +555,41 @@ class LightFever440 {
     this._dom.modal.stroboscope.delay.addEventListener('input', range);
     this._dom.modal.overlay.addEventListener('click', close);
     document.getElementById('strob-modal-close').addEventListener('click', close);
+  }
+
+
+  _colorPickerModal(localStorageKey, callback) {
+    // Make modal visible
+    this._dom.modal.overlay.classList.add('visible');
+    this._dom.modal.colorPicker.container.classList.add('visible');
+    // Close modal internal metohd
+    let close = event => {
+      if (event.target.id === 'color-picker-modal-close' || event.target.id === 'modal-overlay') {
+        this._dom.modal.overlay.classList.remove('visible');
+        this._dom.modal.colorPicker.container.classList.remove('visible');
+        this._dom.modal.overlay.removeEventListener('click', close);
+        document.getElementById('color-picker-modal-close').removeEventListener('click', close);
+        callback(colorPicker.getCurColorHex());
+      }
+    };
+
+    close = close.bind(this);
+
+    const colorPicker = new KellyColorPicker({
+      place : 'color-picker',
+      color : window.localStorage.getItem(localStorageKey) || '#ffffff',
+      changeCursor: false,
+      userEvents: {
+        change: self => {
+          const color = self.getCurColorRgb();
+          window.localStorage.setItem(localStorageKey, self.getCurColorHex());
+          document.getElementById('output-color').value = self.getCurColorHex();
+        }
+      }
+    });
+
+    this._dom.modal.overlay.addEventListener('click', close);
+    document.getElementById('color-picker-modal-close').addEventListener('click', close);
   }
 
 
