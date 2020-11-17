@@ -11,6 +11,8 @@
   --accent-color: rgb(147, 247, 233);
   --green-color: rgb(86, 212, 91);
   --red-color: rgb(255, 107, 103);
+  --gradient-min-color: rgb(6, 6, 9);
+  --gradient-max-color: rgb(60, 64, 93);
 }
 
 .light-theme {
@@ -21,6 +23,8 @@
   --accent-color: rgb(147, 247, 233);
   --green-color: rgb(86, 212, 91);
   --red-color: rgb(255, 107, 103);
+  --gradient-min-color: rgb(170, 170, 204);
+  --gradient-max-color: rgb(231, 233, 239);
 }
 
 html, body {
@@ -30,7 +34,7 @@ html, body {
   --status-height: 3rem;
   --global-height: 5rem;
 
-  background-color: var(--background-color);
+  background: linear-gradient(var(--gradient-max-color), var(--gradient-min-color) 85%);
   color: var(--text-color);
   font-family: sans-serif;
   font-size: 62.5%;
@@ -195,7 +199,6 @@ h2.activated {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 1.6rem;
 }
 
 .option-type {
