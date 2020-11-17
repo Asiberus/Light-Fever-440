@@ -21,14 +21,6 @@ input[type="checkbox"].switch {
   width: 4rem;
 	transition: all .2s ease-in-out;
 
-  &:checked {
-  	background-color: var(--green-color);
-
-    &::after {
-    	left: calc(100% - 1.5rem);
-    }
-  }
-
   &::after {
     content: '';
     background: white;
@@ -40,5 +32,13 @@ input[type="checkbox"].switch {
     transform: scale(.7);
     width: 1.5rem;
   	transition: all .2s ease-in-out;
+  }
+
+  &:checked {
+  	background-color: var(--green-color);
+
+    &::after {
+    	left: calc(100% - 1.5rem);
+    }
   }
 }
