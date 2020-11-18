@@ -38,11 +38,6 @@ class AnalyzerController {
 
 
   _initEvents() {
-    // Listeners for auto analyse effects
-    this._dom.UNIFORM.button.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.PROGRESSIVE.button.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.PULSE.button.addEventListener('click', this._updateEffect.bind(this));
-
     this._dom.UNIFORM.colorSwitch.addEventListener('input', () => {
       window.localStorage.setItem('auto-uniform-color-switch', this._dom.UNIFORM.colorSwitch.checked);
       if (this._dom.UNIFORM.colorSwitch.checked) {
@@ -56,7 +51,8 @@ class AnalyzerController {
       if (this._dom.UNIFORM.colorSwitch.checked === true) {
         Utils.colorPickerModal(window.localStorage.getItem('auto-uniform-color'), color => {
           window.localStorage.setItem('auto-uniform-color', color);
-          this._dom.UNIFORM.color.value = color
+          this._dom.UNIFORM.color.value = color;
+          this._updateEffect('UNIFORM');
         });
       }
     });
@@ -84,13 +80,24 @@ class AnalyzerController {
     });
     this._dom.PULSE.color.addEventListener('click', event => {
       event.preventDefault();
-      Utils.colorPickerModal('pulse-color', color => {
-        this._dom.PULSE.color.value = color
+      Utils.colorPickerModal(window.localStorage.getItem('auto-pulse-color'), color => {
+        window.localStorage.setItem('auto-pulse-color', color);
+        this._dom.PULSE.color.value = color;
+        this._updateEffect('PULSE');
       });
     });
-
+    // Listeners for auto analyse effects button (update Light Fever 440 when arriving to a new effect)
+    this._dom.UNIFORM.button.addEventListener('click', this._updateEffect.bind(this, 'UNIFORM'));
+    this._dom.PROGRESSIVE.button.addEventListener('click', this._updateEffect.bind(this, 'PROGRESSIVE'));
+    this._dom.PULSE.button.addEventListener('click', this._updateEffect.bind(this, 'PULSE'));
+    // Mouse release the input, to send action for all manual effects
+    this._dom.UNIFORM.peakDetection.addEventListener('change', this._updateEffect.bind(this, 'UNIFORM'));
     this._dom.UNIFORM.peakSensitivity.addEventListener('change', this._updateEffect.bind(this, 'UNIFORM'));
+    this._dom.UNIFORM.colorSwitch.addEventListener('change', this._updateEffect.bind(this, 'UNIFORM'));
+    this._dom.PROGRESSIVE.reverse.addEventListener('change', this._updateEffect.bind(this, 'PROGRESSIVE'));
+    this._dom.PROGRESSIVE.size.addEventListener('change', this._updateEffect.bind(this, 'PROGRESSIVE'));
     this._dom.PULSE.maxLength.addEventListener('change', this._updateEffect.bind(this, 'PULSE'));
+    this._dom.PULSE.colorSwitch.addEventListener('change', this._updateEffect.bind(this, 'PULSE'));
   }
 
 

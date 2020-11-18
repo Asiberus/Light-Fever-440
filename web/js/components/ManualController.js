@@ -185,7 +185,7 @@ class ManualController {
         color: Utils.hexToRgb(window.localStorage.getItem('manual-chase-color')),
         delay: parseInt(this._dom.CHASE.delay.value),
         size: parseInt(this._dom.CHASE.size.value),
-        spacing: parseInt(this._dom.CHASE.delay.value),
+        spacing: parseInt(this._dom.CHASE.spacing.value),
         rainbow: this._dom.CHASE.rainbow.checked
       };
     } else if (window.LF440.effect === 'RAINBOW') {
