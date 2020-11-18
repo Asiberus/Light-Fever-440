@@ -1,4 +1,8 @@
 import '../css/LightFever440.scss';
+import ManualController from './components/ManualController.js';
+import AnalyzerController from './components/AnalyzerController.js';
+import ModalFactory from './components/ModalFactory.js';
+import * as Utils from './components/Utils.js';
 
 
 class LightFever440 {
@@ -27,54 +31,9 @@ class LightFever440 {
       autoContainer: document.getElementById('auto-container'),
       themeSwitch: document.getElementById('theme-switch'),
       status: document.getElementById('status-text'),
-      manualButtons: { // Buttons that are only available in manual mode
-        UNIFORM: document.getElementById('manual-uniform'),
-        CHASE: document.getElementById('manual-chase'),
-        RAINBOW: document.getElementById('manual-rainbow'),
-        CHASE_RAINBOW: document.getElementById('manual-chase-rainbow')
-      },
-      manualOptions: {
-        UNIFORM: document.getElementById('manual-uniform-options'),
-        CHASE: document.getElementById('manual-chase-options'),
-        RAINBOW: document.getElementById('manual-rainbow-options'),
-        CHASE_RAINBOW: document.getElementById('manual-chase-rainbow-options'),
-        opts: {
-          uniformColor: document.getElementById('manual-uniform-color'),
-          chaseColor: document.getElementById('manual-chase-color')
-        }
-      },
-      autoButtons: { // Buttons that are only available in auto analyse mode
-        UNIFORM: document.getElementById('auto-uniform'),
-        PROGRESSIVE: document.getElementById('auto-progressive'),
-        PROGRESSIVE_MIRROR: document.getElementById('auto-progressive-mirror'),
-        PULSE: document.getElementById('auto-pulse')
-      },
-      autoOptions: {
-        UNIFORM: document.getElementById('auto-uniform-options'),
-        PROGRESSIVE: document.getElementById('auto-progressive-options'),
-        PROGRESSIVE_MIRROR: document.getElementById('auto-progressive-mirror-options'),
-        PULSE: document.getElementById('auto-pulse-options'),
-        opts: {
-          lightNumber: document.getElementById('auto-progressive-led'),
-          maxPulse: document.getElementById('auto-pusle-length'),
-          colorPulse: document.getElementById('auto-pulse-color')
-        }
-      },
       globalButtons: { // Buttons that are available in both modes, and that overrides selected effect for given mode
         STROBOSCOPE: document.getElementById('global-stroboscope'),
         strobOpts: document.getElementById('strob-opts')
-      },
-      modal: {
-        overlay: document.getElementById('modal-overlay'),
-        stroboscope: {
-          container: document.getElementById('stroboscope-modal'),
-          delay: document.getElementById('strob-delay'),
-          delayText: document.getElementById('strob-delay-value'),
-          color: document.getElementById('strob-color')
-        },
-        colorPicker: {
-          container: document.getElementById('color-picker-modal'),
-        }
       }
     };
     /*  -------------------------------------  Internal usefull attributes  ------------------------------------------  */
@@ -104,6 +63,9 @@ class LightFever440 {
     /** @private
      * @member {object} - The options to apply to a given effect */
     this._options = null;
+    /*  ------------------------------------------  Mode controllers  ------------------------------------------------  */
+    this._mc = new ManualController();
+    this._ac = new AnalyzerController();
     /*  --------------------------------------  Controller initialization  -------------------------------------------  */
     // Make UI interactive by listening to user actions
     this._initEvents();
@@ -128,47 +90,10 @@ class LightFever440 {
     this._dom.manual.addEventListener('click', this._switchMode.bind(this));
     this._dom.analyzer.addEventListener('click', this._switchMode.bind(this));
     this._dom.themeSwitch.addEventListener('click', this._switchTheme.bind(this));
-    // Listeners for manual effects
-    this._dom.manualButtons.UNIFORM.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.manualButtons.CHASE.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.manualButtons.RAINBOW.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.manualButtons.CHASE_RAINBOW.addEventListener('click', this._updateEffect.bind(this));
-    // Listeners for auto analyse effects
-    this._dom.autoButtons.UNIFORM.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.autoButtons.PROGRESSIVE.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.autoButtons.PROGRESSIVE_MIRROR.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.autoButtons.PULSE.addEventListener('click', this._updateEffect.bind(this));
     // Listeners for global effects
     this._dom.globalButtons.STROBOSCOPE.addEventListener('touchstart', this._startStroboscope.bind(this));
     this._dom.globalButtons.STROBOSCOPE.addEventListener('touchend', this._stopStroboscope.bind(this));
-    this._dom.globalButtons.strobOpts.addEventListener('click', this._strobOptionsModal.bind(this));
-    // Options slider etc events
-    this._dom.manualOptions.opts.uniformColor.addEventListener('click', () => {
-      event.preventDefault();
-      this._colorPickerModal('uniform-color', color => {
-        this._dom.manualOptions.opts.uniformColor.value = color
-      });
-    });
-    this._dom.manualOptions.opts.chaseColor.addEventListener('click', () => {
-      event.preventDefault();
-      this._colorPickerModal('chase-color', color => {
-        this._dom.manualOptions.opts.chaseColor.value = color
-      });
-    });
-    this._dom.autoOptions.opts.lightNumber.addEventListener('input', () => {
-      document.getElementById('auto-progressive-led-value').innerHTML = this._dom.autoOptions.opts.lightNumber.value;
-      window.localStorage.setItem('auto-progressive-led', this._dom.autoOptions.opts.lightNumber.value);
-    });
-    this._dom.autoOptions.opts.maxPulse.addEventListener('input', () => {
-      document.getElementById('auto-pusle-length-value').innerHTML = this._dom.autoOptions.opts.maxPulse.value;
-      window.localStorage.setItem('auto-pusle-length', this._dom.autoOptions.opts.maxPulse.value);
-    });
-    this._dom.autoOptions.opts.colorPulse.addEventListener('click', event => {
-      event.preventDefault();
-      this._colorPickerModal('pulse-color', color => {
-        this._dom.autoOptions.opts.colorPulse.value = color
-      });
-    });
+    this._dom.globalButtons.strobOpts.addEventListener('click', this._stroboscopeModal.bind(this));
   }
 
 
@@ -191,10 +116,6 @@ class LightFever440 {
     }
     // Update version number
     this._dom.version.innerHTML = this._version;
-    // Declare range sliders to make input range touch friendly
-    rangesliderJs.create(this._dom.modal.stroboscope.delay, { value: window.localStorage.getItem('strob-delay') || '50' });
-    rangesliderJs.create(this._dom.autoOptions.opts.lightNumber, { value: window.localStorage.getItem('auto-progressive-led') || '5' });
-    rangesliderJs.create(this._dom.autoOptions.opts.maxPulse, { value: window.localStorage.getItem('auto-pusle-length') || '100' });
     // Perform async call to retrieve LightFever440 state
     this._getState().then(response => {
       this._dom.status.innerHTML = 'Set Light Fever 440 state';
@@ -214,31 +135,21 @@ class LightFever440 {
         this._dom.autoContainer.style.left = '0';
         this._mode = 'AUDIO_ANALYSE';
       }
-      // Same with effect, UNIFORM is the default one
+      // Same with effect, UNIFORM is the default one for both modes
       if (response.effect !== 'UNIFORM') {
-        let buttons = {};
-        let options = {};
         // Select the buttons object to match the activated mode
         if (this._mode === 'MANUAL') {
-          buttons = this._dom.manualButtons;
-          options = this._dom.manualOptions;
+          this._mc.initEffect(response.effect);
         } else {
-          buttons = this._dom.autoButtons;
-          options = this._dom.autoOptions;
+          this._ac.initEffect(response.effect);
         }
-        // Unselect all buttons
-        for (const [key, value] of Object.entries(buttons)) {
-          buttons[key].classList.remove('selected');
-          options[key].style.display = 'none';
-        }
-        // Update effect toggled
-        buttons[response.effect].classList.add('selected');
-        options[response.effect].style.display = 'block';
       }
       // Save effect in local
       this._effect = response.effect;
+      console.error('LightFever440 : Light system state preoperly loaded');
     }).catch(error => {
       this._dom.status.innerHTML = 'Unable to load state';
+      console.error('LightFever440 : Unable to load light system state', error);
     });
   }
 
@@ -279,10 +190,12 @@ class LightFever440 {
     this._dom.title.classList.add('activated');
     this._dom.version.classList.add('activated');
     this._state = 'ON';
-    this._sendAction().then(() => {
+    this.sendAction().then(() => {
       this._dom.status.innerHTML = 'Light Fever 440 started';
-    }).catch(() => {
+      console.log('LightFever440 : Light system successfully started');
+    }).catch(error => {
       this._dom.status.innerHTML = 'Unable to start Light Fever 440';
+      console.error('LightFever440 : Unable to start light system', error);
     });
   }
 
@@ -296,10 +209,12 @@ class LightFever440 {
     this._dom.title.classList.remove('activated');
     this._dom.version.classList.remove('activated');
     this._state = 'OFF';
-    this._sendAction().then(() => {
+    this.sendAction().then(() => {
       this._dom.status.innerHTML = 'Light Fever 440 stopped';
-    }).catch(() => {
+      console.log('LightFever440 : Light system successfully stopped');
+    }).catch(error => {
       this._dom.status.innerHTML = 'Unable to stop Light Fever 440';
+      console.error('LightFever440 : Unable to stop light system', error);
     });
   }
 
@@ -319,14 +234,7 @@ class LightFever440 {
       this._dom.autoContainer.style.left = '0';
       this._mode = 'AUDIO_ANALYSE';
       this._dom.status.innerHTML = 'Audio analyzer activated';
-      // Find selected effect in destination mode
-      for (const [key, value] of Object.entries(this._dom.autoButtons)) {
-        if (this._dom.autoButtons[key].classList.contains('selected')) {
-          this._effect = this._dom.autoButtons[key].dataset.effect;
-          this._dom.autoOptions[key].style.display = 'block';
-          break;
-        }
-      }
+      this._effect = this._ac.getActiveEffect();
     } else {
       this._dom.analyzer.classList.remove('selected');
       this._dom.manual.classList.add('selected');
@@ -335,59 +243,16 @@ class LightFever440 {
       this._dom.autoContainer.style.left = '100%';
       this._mode = 'MANUAL';
       this._dom.status.innerHTML = 'Manual control activated';
-      // Find selected effect in destination mode
-      for (const [key, value] of Object.entries(this._dom.manualButtons)) {
-        if (this._dom.manualButtons[key].classList.contains('selected')) {
-          this._effect = this._dom.manualButtons[key].dataset.effect;
-          this._dom.manualOptions[key].style.display = 'block';
-          break;
-        }
-      }
+      this._effect = this._mc.getActiveEffect();
     }
     // Update light fever script with new internals
     if (this._isActive === true) {
-      this._sendAction().then(() => {
+      this.sendAction().then(() => {
         this._dom.status.innerHTML = `Switched to mode ${this._mode}`;
-      }).catch(() => {
+        console.log('LightFever440 : Light system mode successfully switched');
+      }).catch(error => {
         this._dom.status.innerHTML = 'Unable to switch mode';
-      });
-    }
-  }
-
-
-  /** @method
-   * @name _updateEffect
-   * @private
-   * @memberof LightFever440
-   * @description <blockquote>Switch the Light Fever 440 effect using the HTML data-effect set on each of the concerned buttons.
-   * See <code>README.md</code> for the detailled API description.</blockquote>
-   * @param {object} event - The event data (click) to retrieve the event target and update it **/
-  _updateEffect(event) {
-    // First we unselect all buttons
-    let buttons = {};
-    let options = {};
-    if (this._mode === 'MANUAL') {
-      buttons = this._dom.manualButtons;
-      options = this._dom.manualOptions;
-    } else {
-      buttons = this._dom.autoButtons;
-      options = this._dom.autoOptions;
-    }
-    // Unselect all buttons
-    for (const [key, value] of Object.entries(buttons)) {
-      buttons[key].classList.remove('selected');
-      options[key].style.display = 'none';
-    }
-    // Then use target as current selection
-    event.target.classList.add('selected');
-    this._effect = event.target.dataset.effect;
-    options[this._effect].style.display = 'block';
-
-    if (this._isActive === true) {
-      this._sendAction().then(() => {
-        this._dom.status.innerHTML = `Effect ${this._effect} activated`;
-      }).catch(() => {
-        this._dom.status.innerHTML = `Unable to set effect ${this._effect}`;
+        console.error('LightFever440 : Unable to switch the light system mode', error);
       });
     }
   }
@@ -408,10 +273,12 @@ class LightFever440 {
       this._effect = 'STROBOSCOPE';
 
       if (this._isActive === true) {
-        this._sendAction().then(() => {
+        this.sendAction().then(() => {
           this._dom.status.innerHTML = 'Stroboscope activated';
-        }).catch(() => {
+          console.log('LightFever440 : Light system stroboscope successfully started');
+        }).catch(error => {
           this._dom.status.innerHTML = 'Unable to start stroboscope';
+          console.error('LightFever440 : Unable to start the stroboscope effect', error);
         });
       }
     }
@@ -430,10 +297,12 @@ class LightFever440 {
     this._dom.globalButtons.STROBOSCOPE.classList.remove('selected');
 
     if (this._isActive === true) {
-      this._sendAction().then(() => {
+      this.sendAction().then(() => {
         this._dom.status.innerHTML = 'Stroboscope deactivated';
-      }).catch(() => {
+        console.log('LightFever440 : Light system stroboscope successfully stopped');
+      }).catch(error => {
         this._dom.status.innerHTML = 'Unable to stop stroboscope';
+        console.error('LightFever440 : Unable to stop the stroboscope effect', error);
       });
     }
   }
@@ -447,40 +316,19 @@ class LightFever440 {
    * related to the selected effect, and use the inputs values that matches the effect.</blockquote> **/
   _setOptionsForEffect() {
     if (this._mode === 'MANUAL') {
-      if (this._effect === 'UNIFORM') {
-        this._options = {
-          color: this._hexToRgb(window.localStorage.getItem('uniform-color'))
-        };
-      } else if (this._effect === 'CHASE') {
-        this._options = {
-          color: this._hexToRgb(window.localStorage.getItem('chase-color')),
-          delay: 50 // ms
-        };
-      }
+      this._options = this._mc.getOptions();
     } else {
-      if (this._effect === 'UNIFORM') {
-        this._options = {
-          peak: document.getElementById('auto-uniform-peak-detection').checked
-        };
-      } else if (this._effect === 'PROGRESSIVE') {
-        this._options = {
-          led: this._dom.autoOptions.opts.lightNumber.value || 5,
-          reverse: document.getElementById('auto-progressive-reverse').checked
-        };
-      } else if (this._effect === 'PULSE') {
-        this._options = {
-          color: this._hexToRgb(window.localStorage.getItem('pulse-color')),
-          maxPulse: this._dom.autoOptions.opts.maxPulse.value
-        };
-      }
+      this._options = this._ac.getOptions();
     }
 
     if (this._effect === 'STROBOSCOPE') {
       this._options = {
-        color: this._hexToRgb(window.localStorage.getItem('strob-color')),
-        delay: parseInt(this._dom.modal.stroboscope.delay.value) || 50 // ms
+        color: Utils.hexToRgb(window.localStorage.getItem('strob-color')),
+        delay: parseInt(window.localStorage.getItem('strob-delay')) || 50 // ms
       };
     }
+
+    console.log(`LightFever440 : Effect ${this._effect}, Options`, this._options);
   }
 
 
@@ -518,81 +366,8 @@ class LightFever440 {
    * @private
    * @memberof LightFever440
    * @description <blockquote>Open the stroboscope options modal and handle its interactivity (the whole lifecycle).</blockquote> **/
-  _strobOptionsModal() {
-    // Make modal visible
-    this._dom.modal.overlay.classList.add('visible');
-    this._dom.modal.stroboscope.container.classList.add('visible');
-    // Update range
-    let range = event => {
-      this._dom.modal.stroboscope.delayText.innerHTML = event.target.value;
-      window.localStorage.setItem('strob-delay', event.target.value);
-    };
-    // Close modal internal metohd
-    let close = event => {
-      if (event.target.id === 'strob-modal-close' || event.target.id === 'modal-overlay') {
-        this._dom.modal.overlay.classList.remove('visible');
-        this._dom.modal.stroboscope.container.classList.remove('visible');
-        this._dom.modal.stroboscope.delay.removeEventListener('click', range);
-        this._dom.modal.overlay.removeEventListener('click', close);
-        document.getElementById('strob-modal-close').removeEventListener('click', close);
-      }
-    };
-    // Binding now to be able to remove events properly
-    range = range.bind(this);
-    close = close.bind(this);
-
-    const colorPicker = new KellyColorPicker({
-      place : 'strob-color-picker',
-      color : window.localStorage.getItem('strob-color') || '#ffffff',
-      changeCursor: false,
-      userEvents: {
-        change: self => {
-          const color = self.getCurColorRgb();
-          window.localStorage.setItem('strob-color', self.getCurColorHex());
-          document.getElementById('strob-color').value = self.getCurColorHex();
-        }
-      }
-    });
-    document.getElementById('strob-color').addEventListener('click', event => { event.preventDefault(); });
-    // Event listeners for modal
-    this._dom.modal.stroboscope.delay.addEventListener('input', range);
-    this._dom.modal.overlay.addEventListener('click', close);
-    document.getElementById('strob-modal-close').addEventListener('click', close);
-  }
-
-
-  _colorPickerModal(localStorageKey, callback) {
-    // Make modal visible
-    this._dom.modal.overlay.classList.add('visible');
-    this._dom.modal.colorPicker.container.classList.add('visible');
-    // Close modal internal metohd
-    let close = event => {
-      if (event.target.id === 'color-picker-modal-close' || event.target.id === 'modal-overlay') {
-        this._dom.modal.overlay.classList.remove('visible');
-        this._dom.modal.colorPicker.container.classList.remove('visible');
-        this._dom.modal.overlay.removeEventListener('click', close);
-        document.getElementById('color-picker-modal-close').removeEventListener('click', close);
-        callback(colorPicker.getCurColorHex());
-      }
-    };
-
-    close = close.bind(this);
-
-    const colorPicker = new KellyColorPicker({
-      place : 'color-picker',
-      color : window.localStorage.getItem(localStorageKey) || '#ffffff',
-      changeCursor: false,
-      userEvents: {
-        change: self => {
-          const color = self.getCurColorRgb();
-          window.localStorage.setItem(localStorageKey, self.getCurColorHex());
-          document.getElementById('output-color').value = self.getCurColorHex();
-        }
-      }
-    });
-
-    this._dom.modal.overlay.addEventListener('click', close);
-    document.getElementById('color-picker-modal-close').addEventListener('click', close);
+  _stroboscopeModal() {
+    const modal = new ModalFactory('STROBOSCOPE');
   }
 
 
@@ -610,22 +385,22 @@ class LightFever440 {
    * @returns {promise} The request <code>Promise</code>, format response as JSON on resolve, as error code string on reject **/
   _getState() {
     return new Promise((resolve, reject) => {
-      this._ajax('state').then(resolve).catch(reject);
+      Utils.ajax('state').then(resolve).catch(reject);
     });
   }
 
 
   /** @method
-   * @name _sendAction
+   * @name sendAction
    * @private
    * @memberof LightFever440
    * @description <blockquote>This method will perform a POST call to the Py web server, to update the Light Fever 440 mode, effect
    * and options, so it matches the UI state.</blockquote>
    * @returns {promise} The request <code>Promise</code>, format response as JSON on resolve, as error code string on reject **/
-  _sendAction() {
+  sendAction() {
     return new Promise((resolve, reject) => {
       this._setOptionsForEffect(); // Always update the option object before calling <code>action</code>
-      this._ajax('action', {
+      Utils.ajax('action', {
         state: this._state,
         mode: this._mode,
         effect: this._effect,
@@ -635,55 +410,28 @@ class LightFever440 {
   }
 
 
-  /** @method
-   * @name _ajax
-   * @private
-   * @memberof LightFever440
-   * @description <blockquote>Server call abstraction method that will dispatch a GET or a POST request to
-   * the server, depending on the given parameters. It covers both the _getState and the _sendAction method.</blockquote>
-   * @param {string} url - The url to reach, either <code>state</code> (GET) or <code>action</code> (POST)
-   * @param {object} data - The data to attach to the <code>action</code> calls. No required for <code>state</code> call
-   * @returns {promise} The request <code>Promise</code>, format response as JSON on resolve, as error code string on reject **/
-  _ajax(url, data) {
-    return new Promise((resolve, reject) => {
-      // Prepare sent options with proper verb, headers and body (for POST only)
-      const options = {
-        method: data ? 'POST' : 'GET',
-        headers: new Headers([['Content-Type','application/json; charset=UTF-8'],['Accept','application/json']]),
-        body: JSON.stringify(data)
-      };
-      // Perform fetch call and handle its output
-      fetch(url, options).then(response => {
-        if (response) {
-          if (response.ok) {
-            resolve(response.json());
-          } else {
-            reject(`ERROR_${response.status}`);
-          }
-        } else {
-          reject('ERROR_MISSING_ARGUMENT');
-        }
-      }).catch(reject);
-    });
+  /*  --------------------------------------------------------------------------------------------------------------- */
+  /*  --------------------------------------------  GETTER / SETTER  -----------------------------------------------  */
+  /*  --------------------------------------------------------------------------------------------------------------- */
+
+
+  get isActive() {
+    return this._isActive;
   }
 
 
-  /*  --------------------------------------------------------------------------------------------------------------- */
-  /*  ---------------------------------------------  GLOBAL UTILS  -------------------------------------------------  */
-  /*  --------------------------------------------------------------------------------------------------------------- */
+  get effect() {
+    return this._effect;
+  }
 
 
-  /** @method
-   * @name _hexToRgb
-   * @private
-   * @memberof LightFever440
-   * @description <blockquote>Useful method to convert hexadecimal string into a RGB array of numbers.</blockquote>
-   * @param {string} hex - The hexadecimal string to convert in RGB
-   * @return {number[]} - The converted RGB array **/
-  _hexToRgb(hex) {
-    // Real MV : https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb/5624139#5624139
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : [255, 255, 255];
+  set effect(effect) {
+    this._effect = effect;
+  }
+
+
+  set status(status) {
+    this._dom.status.innerHTML = status;
   }
 
 
