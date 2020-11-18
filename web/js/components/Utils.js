@@ -48,14 +48,13 @@ export function ajax(url, data) {
 }
 
 
-export function colorPickerModal(localStorageKey, callback) {
+export function colorPickerModal(color, callback) {
   const intermediateCallback = hex => {
-    modal = null;
     callback(hex);
   };
 
-  let modal = new ModalFactory('COLOR_PICKER', {
-    localStorageKey: localStorageKey,
+  return new ModalFactory('COLOR_PICKER', {
+    color: color,
     callback: intermediateCallback
   });
 }

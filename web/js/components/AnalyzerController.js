@@ -62,8 +62,8 @@ class AnalyzerController {
 
   _initState() {
     // Initialize range sliders with saved values
-    rangesliderJs.create(this._dom.PROGRESSIVE.lightNumber, { value: window.localStorage.getItem('auto-progressive-led') || '5' });
-    rangesliderJs.create(this._dom.PULSE.maxLength, { value: window.localStorage.getItem('auto-pulse-length') || '100' });
+    window.rangesliderJs.create(this._dom.PROGRESSIVE.lightNumber, { value: window.localStorage.getItem('auto-progressive-led') || '5' });
+    window.rangesliderJs.create(this._dom.PULSE.maxLength, { value: window.localStorage.getItem('auto-pulse-length') || '100' });
   }
 
 
@@ -78,27 +78,27 @@ class AnalyzerController {
     this._unselectAllEffect();
     // Then use target as current selection
     event.target.classList.add('selected');
-    LF440.effect = event.target.dataset.effect;
-    this._dom[LF440.effect].container.style.display = 'block';
+    window.LF440.effect = event.target.dataset.effect;
+    this._dom[window.LF440.effect].container.style.display = 'block';
 
-    if (LF440.isActive === true) {
-      LF440.sendAction().then(() => {
-        LF440.status = `Effect ${LF440.effect} activated`;
-        console.log(`AnalyzerController : Successfully activate effect ${LF440.effect}`);
+    if (window.LF440.isActive === true) {
+      window.LF440.sendAction().then(() => {
+        window.F440.status = `Effect ${window.LF440.effect} activated`;
+        console.log(`AnalyzerController : Successfully activate effect ${window.LF440.effect}`);
       }).catch(() => {
-        LF440.status = `Unable to set effect ${LF440.effect}`;
-        console.error(`AnalyzerController : Failed to activate effect ${LF440.effect}`);
+        window.LF440.status = `Unable to set effect ${window.LF440.effect}`;
+        console.error(`AnalyzerController : Failed to activate effect ${window.LF440.effect}`);
       });
     } else {
-      LF440.status = `Please start LightFever440`;
-      console.error(`AnalyzerController : Failed to activate effect ${LF440.effect}, LightFever440 isn't activated`);
+      window.LF440.status = `Please start LightFever440`;
+      console.error(`AnalyzerController : Failed to activate effect ${window.LF440.effect}, LightFever440 isn't activated`);
     }
   }
 
 
   _unselectAllEffect() {
     // Unselect all buttons and hide all associated options
-    for (const [key, value] of Object.entries(this._dom)) {
+    for (const [key] of Object.entries(this._dom)) {
       this._dom[key].button.classList.remove('selected');
       this._dom[key].container.style.display = 'none';
     }
@@ -115,7 +115,7 @@ class AnalyzerController {
 
   getActiveEffect() {
     // Find selected effect in destination mode
-    for (const [key, value] of Object.entries(this._dom)) {
+    for (const [key] of Object.entries(this._dom)) {
       if (this._dom[key].button.classList.contains('selected')) {
         this._dom[key].container.style.display = 'block';
         return this._dom[key].button.dataset.effect;
@@ -128,16 +128,16 @@ class AnalyzerController {
 
   getOptions() {
     let options = {};
-    if (LF440.effect === 'UNIFORM') {
+    if (window.LF440.effect === 'UNIFORM') {
       options = {
         peakDetection: this._dom.UNIFORM.peakDetection.checked
       };
-    } else if (LF440.effect === 'PROGRESSIVE') {
+    } else if (window.LF440.effect === 'PROGRESSIVE') {
       options = {
         lightNumber: parseInt(this._dom.PROGRESSIVE.lightNumber.value),
         reverse: this._dom.PROGRESSIVE.reverse.checked
       };
-    } else if (LF440.effect === 'PULSE') {
+    } else if (window.LF440.effect === 'PULSE') {
       options = {
         color: Utils.hexToRgb(this._dom.PULSE.color),
         maxLength: parseInt(this._dom.PULSE.maxLength.value)

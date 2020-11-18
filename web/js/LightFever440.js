@@ -368,7 +368,7 @@ class LightFever440 {
    * @memberof LightFever440
    * @description <blockquote>Open the stroboscope options modal and handle its interactivity (the whole lifecycle).</blockquote> **/
   _stroboscopeModal() {
-    const modal = new ModalFactory('STROBOSCOPE');
+    new ModalFactory('STROBOSCOPE');
   }
 
 

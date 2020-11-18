@@ -17,10 +17,10 @@ class ModalFactory {
 
     if (type === 'STROBOSCOPE') {
       // Declare range sliders to make input range touch friendly
-      rangesliderJs.create(this._dom.stroboscope.delay, { value: window.localStorage.getItem('strob-delay') || '50' });
+      window.rangesliderJs.create(this._dom.stroboscope.delay, { value: window.localStorage.getItem('strob-delay') || '50' });
       this._stroboscopeModal();
     } else if (type === 'COLOR_PICKER') {
-      this._colorPickerModal(options.localStorageKey, options.callback)
+      this._colorPickerModal(options.color, options.callback)
     }
   }
 
@@ -42,19 +42,19 @@ class ModalFactory {
         this._dom.stroboscope.delay.removeEventListener('click', range);
         this._dom.overlay.removeEventListener('click', close);
         document.getElementById('strob-modal-close').removeEventListener('click', close);
+        colorPicker.destroy();
       }
     };
     // Binding now to be able to remove events properly
     range = range.bind(this);
     close = close.bind(this);
 
-    const colorPicker = new KellyColorPicker({
+    const colorPicker = new window.KellyColorPicker({
       place : 'strob-color-picker',
       color : window.localStorage.getItem('strob-color') || '#ffffff',
       changeCursor: false,
       userEvents: {
         change: self => {
-          const color = self.getCurColorRgb();
           window.localStorage.setItem('strob-color', self.getCurColorHex());
           document.getElementById('strob-color').value = self.getCurColorHex();
         }
@@ -68,7 +68,7 @@ class ModalFactory {
   }
 
 
-  _colorPickerModal(localStorageKey, callback) {
+  _colorPickerModal(color, callback) {
     // Make modal visible
     this._dom.overlay.classList.add('visible');
     this._dom.colorPicker.container.classList.add('visible');
@@ -85,14 +85,12 @@ class ModalFactory {
 
     close = close.bind(this);
 
-    const colorPicker = new KellyColorPicker({
+    const colorPicker = new window.KellyColorPicker({
       place : 'color-picker',
-      color : window.localStorage.getItem(localStorageKey) || '#ffffff',
+      color : color || '#ffffff',
       changeCursor: false,
       userEvents: {
         change: self => {
-          const color = self.getCurColorRgb();
-          window.localStorage.setItem(localStorageKey, self.getCurColorHex());
           document.getElementById('output-color').value = self.getCurColorHex();
         }
       }
