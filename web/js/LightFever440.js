@@ -17,6 +17,9 @@ class LightFever440 {
    * and is made to work standalone, without any external libraries or class. See the <code>README.md</code> file to know
    * how to set up this project on your Raspberry.</blockquote> */
   constructor() {
+    /** @public
+     * @member {string} - The application version number */
+    this.VERSION = '0.0.1';
     /*  ---------------------------------------  DOM internal attributes  --------------------------------------------  */
     /** @private
      * @member {object} - All DOM elements used for interaction in the app */
@@ -46,10 +49,7 @@ class LightFever440 {
     this._isDark = true;
     /** @private
      * @member {object} - The previous applied effect when global effect is toggled, for proper restoration */
-    this._previousEffect = null; // Used with stroboscope bypass
-    /** @private
-     * @member {string} - The application version number */
-    this._version = '0.0.1';
+    this._previousEffect = null;
     /*  ---------------------------  Ajax parametrs (send on each /action POST call)  --------------------------------  */
     /** @private
      * @member {string} - The Light Fever 440 state (either ON/OFF) */
@@ -67,6 +67,7 @@ class LightFever440 {
     this._mc = new ManualController();
     this._ac = new AnalyzerController();
     /*  --------------------------------------  Controller initialization  -------------------------------------------  */
+    console.log(`LightFever440.js - Version ${this.VERSION}`);
     // Make UI interactive by listening to user actions
     this._initEvents();
     // Init web view from Light Fever 440 state
@@ -115,7 +116,7 @@ class LightFever440 {
       this._dom.status.innerHTML = 'Switched to light theme';
     }
     // Update version number
-    this._dom.version.innerHTML = this._version;
+    this._dom.version.innerHTML = this.VERSION;
     // Perform async call to retrieve LightFever440 state
     this._getState().then(response => {
       this._dom.status.innerHTML = 'Set Light Fever 440 state';
