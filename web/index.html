@@ -28,7 +28,6 @@
             <button id="manual-uniform" class="btn selected" name="button" data-effect="UNIFORM">UNIFORM</button>
             <button id="manual-chase" class="btn" name="button" data-effect="CHASE">CHASE</button>
             <button id="manual-rainbow" class="btn" name="button" data-effect="RAINBOW">RAINBOW</button>
-            <button id="manual-chase-rainbow" class="btn" name="button" data-effect="CHASE_RAINBOW">RAINBOW CHASE</button>
           </div>
         </div>
         <div class="option-container">
@@ -38,15 +37,51 @@
               <label for="manual-uniform-color">Color</label>
               <input id="manual-uniform-color" class="btn" type="color" name="input-color" value="#FFFFFF">
             </div>
+            <div class="single-option">
+              <label for="manual-uniform-wave-delta">Wave delta (<span id="manual-uniform-wave-delta-value">0</span>)</label>
+              <div class="range-wrapper">
+                <input id="manual-uniform-wave-delta" type="range" name="strob-delay" value="0" step="1" min="0" max="100" data-rangeslider>
+              </div>
+            </div>
           </div>
           <div id="manual-chase-options" class="option-type" data-effect="CHASE">
             <div class="single-option">
               <label for="manual-chase-color">Color</label>
               <input id="manual-chase-color" class="btn" type="color" name="input-color" value="#FFFFFF">
             </div>
+            <div class="single-option">
+              <label for="manual-chase-delay">Delay (<span id="manual-chase-delay-value">50ms</span>)</label>
+              <div class="range-wrapper">
+                <input id="manual-chase-delay" type="range" name="strob-delay" value="50" step="1" min="0" max="999" data-rangeslider>
+              </div>
+            </div>
+            <div class="single-option">
+              <label for="manual-chase-size">Size (<span id="manual-chase-size-value">1</span>)</label>
+              <div class="range-wrapper">
+                <input id="manual-chase-size" type="range" name="strob-delay" value="1" step="1" min="1" max="30" data-rangeslider>
+              </div>
+            </div>
+            <div class="single-option">
+              <label for="manual-chase-spacing">Spacing (<span id="manual-chase-spacing-value">2</span>)</label>
+              <div class="range-wrapper">
+                <input id="manual-chase-spacing" type="range" name="strob-delay" value="2" step="1" min="1" max="30" data-rangeslider>
+              </div>
+            </div>
+            <div class="single-option">
+              <label for="manual-chase-rainbow">Rainbow</label>
+              <div class="switch-wrapper">
+          			<input id="manual-chase-rainbow" type="checkbox" class="switch">
+          		</div>
+            </div>
           </div>
-          <div id="manual-rainbow-options" class="option-type" data-effect="RAINBOW"></div>
-          <div id="manual-chase-rainbow-options" class="option-type" data-effect="CHASE_RAINBOW"></div>
+          <div id="manual-rainbow-options" class="option-type" data-effect="RAINBOW">
+            <div class="single-option">
+              <label for="manual-rainbow-speed">Speed (<span id="manual-rainbow-speed-value">50</span>)</label>
+              <div class="range-wrapper">
+                <input id="manual-rainbow-speed" type="range" name="strob-delay" value="50" step="1" min="0" max="100" data-rangeslider>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div id="auto-container" class="auto-container">

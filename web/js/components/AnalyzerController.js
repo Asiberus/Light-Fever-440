@@ -15,15 +15,15 @@ class AnalyzerController {
         button: document.getElementById('auto-progressive'),
         container: document.getElementById('auto-progressive-options'),
         lightNumber: document.getElementById('auto-progressive-led'),
-        reverse: document.getElementById('auto-progressive-reverse'),
-        lightNumberText: document.getElementById('auto-progressive-led-value')
+        lightNumberText: document.getElementById('auto-progressive-led-value'),
+        reverse: document.getElementById('auto-progressive-reverse')
       },
       PULSE: {
         button: document.getElementById('auto-pulse'),
         container: document.getElementById('auto-pulse-options'),
         maxLength: document.getElementById('auto-pulse-length'),
-        color: document.getElementById('auto-pulse-color'),
-        maxLengthText: document.getElementById('auto-pulse-length-value')
+        maxLengthText: document.getElementById('auto-pulse-length-value'),
+        color: document.getElementById('auto-pulse-color')
       },
       PROGRESSIVE_MIRROR: {
         button: document.getElementById('auto-progressive-mirror'),
@@ -31,8 +31,8 @@ class AnalyzerController {
       }
     };
 
-    this._initEvents();
     this._initState();
+    this._initEvents();
   }
 
 
@@ -62,8 +62,8 @@ class AnalyzerController {
 
   _initState() {
     // Initialize range sliders with saved values
-    window.rangesliderJs.create(this._dom.PROGRESSIVE.lightNumber, { value: window.localStorage.getItem('auto-progressive-led') || '5' });
-    window.rangesliderJs.create(this._dom.PULSE.maxLength, { value: window.localStorage.getItem('auto-pulse-length') || '100' });
+    window.rangesliderJs.create(this._dom.PROGRESSIVE.lightNumber, { value: window.localStorage.getItem('auto-progressive-led') });
+    window.rangesliderJs.create(this._dom.PULSE.maxLength, { value: window.localStorage.getItem('auto-pulse-length') });
   }
 
 
