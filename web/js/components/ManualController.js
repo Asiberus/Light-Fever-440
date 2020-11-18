@@ -56,9 +56,6 @@ class ManualController {
       this._dom.UNIFORM.waveDeltaText.innerHTML = this._dom.UNIFORM.waveDelta.value;
       window.localStorage.setItem('manual-uniform-wave-delta', this._dom.UNIFORM.waveDelta.value);
     });
-    this._dom.UNIFORM.waveDelta.addEventListener('change', () => { // Mouse release the progress cursor
-      this._updateEffect('UNIFORM');
-    });
 
     this._dom.CHASE.color.addEventListener('click', () => {
       event.preventDefault();
@@ -72,40 +69,45 @@ class ManualController {
       this._dom.CHASE.delayText.innerHTML = this._dom.CHASE.delay.value;
       window.localStorage.setItem('manual-chase-delay', this._dom.CHASE.delay.value);
     });
-    this._dom.CHASE.delay.addEventListener('change', () => { // Mouse release the progress cursor
-      this._updateEffect('CHASE');
-    });
     this._dom.CHASE.size.addEventListener('input', () => {
       this._dom.CHASE.sizeText.innerHTML = this._dom.CHASE.size.value;
       window.localStorage.setItem('manual-chase-size', this._dom.CHASE.size.value);
     });
-    this._dom.CHASE.size.addEventListener('change', () => { // Mouse release the progress cursor
-      this._updateEffect('CHASE');
-    });
+
     this._dom.CHASE.spacing.addEventListener('input', () => {
       this._dom.CHASE.spacingText.innerHTML = this._dom.CHASE.spacing.value;
       window.localStorage.setItem('manual-chase-spacing', this._dom.CHASE.spacing.value);
     });
-    this._dom.CHASE.spacing.addEventListener('change', () => { // Mouse release the progress cursor
-      this._updateEffect('CHASE');
-    });
-    this._dom.CHASE.rainbow.addEventListener('change', () => {
-      this._updateEffect('CHASE');
+
+    this._dom.CHASE.rainbow.addEventListener('input', () => {
+      window.localStorage.setItem('manual-chase-rainbow', this._dom.CHASE.rainbow.checked);
     });
 
     this._dom.RAINBOW.speed.addEventListener('input', () => {
       this._dom.RAINBOW.speedText.innerHTML = this._dom.RAINBOW.speed.value;
       window.localStorage.setItem('manual-rainbow-speed', this._dom.RAINBOW.speed.value);
     });
-    this._dom.RAINBOW.speed.addEventListener('change', () => { // Mouse release the progress cursor
-      this._updateEffect('RAINBOW');
-    });
+    // Mouse release the input, to send action for all manual effects
+    this._dom.UNIFORM.waveDelta.addEventListener('change', this._updateEffect.bind(this, 'UNIFORM'));
+    this._dom.CHASE.delay.addEventListener('change', this._updateEffect.bind(this, 'CHASE'));
+    this._dom.CHASE.size.addEventListener('change', this._updateEffect.bind(this, 'CHASE'));
+    this._dom.CHASE.spacing.addEventListener('change', this._updateEffect.bind(this, 'CHASE'));
+    this._dom.CHASE.rainbow.addEventListener('change', this._updateEffect.bind(this, 'CHASE'));
+    this._dom.RAINBOW.speed.addEventListener('change', this._updateEffect.bind(this, 'RAINBOW'));
   }
 
 
   _initState() {
+    /* Init all input and progress with local storage state or default values */
     this._dom.UNIFORM.color.value = window.localStorage.getItem('manual-uniform-color') || '#FFFFFF';
     this._dom.CHASE.color.value = window.localStorage.getItem('manual-chase-color') || '#FFFFFF';
+    this._dom.UNIFORM.waveDeltaText.innerHTML = window.localStorage.getItem('manual-uniform-wave-delta') || '0';
+    this._dom.CHASE.delayText.innerHTML = window.localStorage.getItem('manual-chase-delay') || '50';
+    this._dom.CHASE.sizeText.innerHTML = window.localStorage.getItem('manual-chase-size') || '1';
+    this._dom.CHASE.spacingText.innerHTML = window.localStorage.getItem('manual-chase-spacing') || '2';
+    this._dom.CHASE.rainbow.checked = window.localStorage.getItem('manual-chase-rainbow') === 'true';
+    this._dom.RAINBOW.speedText.innerHTML = window.localStorage.getItem('manual-rainbow-speed') || '50';
+    /* Init manual mode sliders */
     window.rangesliderJs.create(this._dom.UNIFORM.waveDelta, { value: window.localStorage.getItem('manual-uniform-wave-delta') || '0' });
     window.rangesliderJs.create(this._dom.CHASE.delay, { value: window.localStorage.getItem('manual-chase-delay') || '50' });
     window.rangesliderJs.create(this._dom.CHASE.size, { value: window.localStorage.getItem('manual-chase-size') || '1' });

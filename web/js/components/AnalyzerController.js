@@ -9,13 +9,15 @@ class AnalyzerController {
       UNIFORM: {
         button: document.getElementById('auto-uniform'),
         container: document.getElementById('auto-uniform-options'),
-        peakDetection: document.getElementById('auto-uniform-peak-detection')
+        peakDetection: document.getElementById('auto-uniform-peak-detection'),
+        peakSensitivity: document.getElementById('auto-uniform-peak-sensitivity'),
+        peakSensitivityText: document.getElementById('auto-uniform-peak-sensitivity-value')
       },
       PROGRESSIVE: {
         button: document.getElementById('auto-progressive'),
         container: document.getElementById('auto-progressive-options'),
-        lightNumber: document.getElementById('auto-progressive-led'),
-        lightNumberText: document.getElementById('auto-progressive-led-value'),
+        lightNumber: document.getElementById('auto-progressive-size'),
+        lightNumberText: document.getElementById('auto-progressive-size-value'),
         reverse: document.getElementById('auto-progressive-reverse')
       },
       PULSE: {
@@ -24,10 +26,6 @@ class AnalyzerController {
         maxLength: document.getElementById('auto-pulse-length'),
         maxLengthText: document.getElementById('auto-pulse-length-value'),
         color: document.getElementById('auto-pulse-color')
-      },
-      PROGRESSIVE_MIRROR: {
-        button: document.getElementById('auto-progressive-mirror'),
-        container: document.getElementById('auto-progressive-mirror-options')
       }
     };
 
@@ -41,28 +39,37 @@ class AnalyzerController {
     this._dom.UNIFORM.button.addEventListener('click', this._updateEffect.bind(this));
     this._dom.PROGRESSIVE.button.addEventListener('click', this._updateEffect.bind(this));
     this._dom.PULSE.button.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.PROGRESSIVE_MIRROR.button.addEventListener('click', this._updateEffect.bind(this));
+
+    this._dom.UNIFORM.peakSensitivity.addEventListener('input', () => {
+      this._dom.UNIFORM.peakSensitivityText.innerHTML = this._dom.UNIFORM.peakSensitivity.value;
+      window.localStorage.setItem('auto-uniform-peak-sensitivity', this._dom.UNIFORM.peakSensitivity.value);
+    });
 
     this._dom.PROGRESSIVE.lightNumber.addEventListener('input', () => {
       this._dom.PROGRESSIVE.lightNumberText.innerHTML = this._dom.PROGRESSIVE.lightNumber.value;
-      window.localStorage.setItem('auto-progressive-led', this._dom.PROGRESSIVE.lightNumber.value);
+      window.localStorage.setItem('auto-progressive-size', this._dom.PROGRESSIVE.lightNumber.value);
     });
-    this._dom.PULSE.maxLength.addEventListener('input', () => {
-      this._dom.PULSE.maxLengthText.innerHTML = this._dom.PULSE.maxLength.value;
-      window.localStorage.setItem('auto-pulse-length', this._dom.PULSE.maxLength.value);
-    });
+
     this._dom.PULSE.color.addEventListener('click', event => {
       event.preventDefault();
       Utils.colorPickerModal('pulse-color', color => {
         this._dom.PULSE.color.value = color
       });
     });
+    this._dom.PULSE.maxLength.addEventListener('input', () => {
+      this._dom.PULSE.maxLengthText.innerHTML = this._dom.PULSE.maxLength.value;
+      window.localStorage.setItem('auto-pulse-length', this._dom.PULSE.maxLength.value);
+    });
+
+    this._dom.UNIFORM.peakSensitivity.addEventListener('change', this._updateEffect.bind(this, 'UNIFORM'));
+    this._dom.PULSE.maxLength.addEventListener('change', this._updateEffect.bind(this, 'PULSE'));
   }
 
 
   _initState() {
     // Initialize range sliders with saved values
-    window.rangesliderJs.create(this._dom.PROGRESSIVE.lightNumber, { value: window.localStorage.getItem('auto-progressive-led') });
+    window.rangesliderJs.create(this._dom.UNIFORM.peakSensitivity, { value: window.localStorage.getItem('auto-uniform-peak-sensitivity') });
+    window.rangesliderJs.create(this._dom.PROGRESSIVE.lightNumber, { value: window.localStorage.getItem('auto-progressive-size') });
     window.rangesliderJs.create(this._dom.PULSE.maxLength, { value: window.localStorage.getItem('auto-pulse-length') });
   }
 
@@ -74,12 +81,17 @@ class AnalyzerController {
    * @description <blockquote>Switch the Light Fever 440 effect using the HTML data-effect set on each of the concerned buttons.
    * See <code>README.md</code> for the detailled API description.</blockquote>
    * @param {object} event - The event data (click) to retrieve the event target and update it **/
-  _updateEffect(event) {
+  _updateEffect(arg) {
+    let effect = arg; // Init with presumed string
+    if (typeof arg !== 'string') {
+      effect = arg.target.dataset.effect; // Update effect with event target specific effect info
+    }
+
     this._unselectAllEffect();
     // Then use target as current selection
-    event.target.classList.add('selected');
-    window.LF440.effect = event.target.dataset.effect;
+    window.LF440.effect = effect;
     this._dom[window.LF440.effect].container.style.display = 'block';
+    this._dom[window.LF440.effect].button.classList.add('selected');
 
     if (window.LF440.isActive === true) {
       window.LF440.sendAction().then(() => {
@@ -130,7 +142,8 @@ class AnalyzerController {
     let options = {};
     if (window.LF440.effect === 'UNIFORM') {
       options = {
-        peakDetection: this._dom.UNIFORM.peakDetection.checked
+        peakDetection: this._dom.UNIFORM.peakDetection.checked,
+        peakSensitivity: parseInt(this._dom.UNIFORM.peakSensitivity.value) / 100
       };
     } else if (window.LF440.effect === 'PROGRESSIVE') {
       options = {

@@ -91,7 +91,6 @@
             <button id="auto-uniform" class="btn selected" name="button" data-effect="UNIFORM">UNIFORM</button>
             <button id="auto-progressive" class="btn" name="button" data-effect="PROGRESSIVE">PROGRESSIVE</button>
             <button id="auto-pulse" class="btn" name="button" data-effect="PULSE">PULSE</button>
-            <button id="auto-progressive-mirror" class="btn" name="button" data-effect="PROGRESSIVE_MIRROR">MIRROR</button>
           </div>
         </div>
         <div class="option-container">
@@ -103,34 +102,39 @@
           			<input id="auto-uniform-peak-detection" type="checkbox" class="switch">
           		</div>
             </div>
-          </div>
-          <div id="auto-progressive-options" class="option-type" data-effect="PROGRESSIVE">
             <div class="single-option">
-              <label for="auto-progressive-led">Lights per batch (<span id="auto-progressive-led-value">5</span>)</label>
+              <label for="auto-uniform-peak-sensitivity">Sensitivity (<span id="auto-uniform-peak-sensitivity-value">0</span>)</label>
               <div class="range-wrapper">
-                <input id="auto-progressive-led" type="range" name="strob-delay" value="5" step="1" min="1" max="30" data-rangeslider>
+                <input id="auto-uniform-peak-sensitivity" type="range" name="strob-delay" value="0" step="1" min="0" max="100" data-rangeslider>
               </div>
             </div>
+          </div>
+          <div id="auto-progressive-options" class="option-type" data-effect="PROGRESSIVE">
             <div class="single-option">
               <label for="auto-progressive-reverse">Reverse</label>
               <div class="switch-wrapper">
           			<input id="auto-progressive-reverse" type="checkbox" class="switch">
           		</div>
             </div>
-          </div>
-          <div id="auto-pulse-options" class="option-type" data-effect="PULSE">
             <div class="single-option">
-              <label for="auto-pulse-length">Pulse length (<span id="auto-pulse-length-value">100</span>%)</label>
+              <label for="auto-progressive-size">Size (<span id="auto-progressive-size-value">5</span>)</label>
               <div class="range-wrapper">
-                <input id="auto-pulse-length" type="range" name="strob-delay" value="100" step="1" min="1" max="100" data-rangeslider>
+                <input id="auto-progressive-size" type="range" name="strob-delay" value="5" step="1" min="1" max="30" data-rangeslider>
               </div>
             </div>
+          </div>
+          <div id="auto-pulse-options" class="option-type" data-effect="PULSE">
             <div class="single-option">
               <label for="auto-pulse-color">Color</label>
               <input id="auto-pulse-color" class="btn" type="color" name="input-color" value="#FFFFFF">
             </div>
+            <div class="single-option">
+              <label for="auto-pulse-length">Max (<span id="auto-pulse-length-value">100%</span>)</label>
+              <div class="range-wrapper">
+                <input id="auto-pulse-length" type="range" name="strob-delay" value="100" step="1" min="1" max="100" data-rangeslider>
+              </div>
+            </div>
           </div>
-          <div id="auto-progressive-mirror-options" class="option-type" data-effect="PROGRESSIVE_MIRROR"></div>
         </div>
       </div>
     </div>
