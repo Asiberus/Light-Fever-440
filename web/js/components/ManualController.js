@@ -47,12 +47,13 @@ class ManualController {
   _initState() {
     /* Init all input and progress with local storage state or default values */
     this._dom.UNIFORM.color.value = window.localStorage.getItem('manual-uniform-color') || '#FFFFFF';
-    this._dom.CHASE.color.value = window.localStorage.getItem('manual-chase-color') || '#FFFFFF';
     this._dom.UNIFORM.waveDeltaText.innerHTML = window.localStorage.getItem('manual-uniform-wave-delta') || '0';
+    this._dom.UNIFORM.waveDelta.value = window.localStorage.getItem('manual-uniform-wave-delta') || '0';
+    this._dom.CHASE.color.value = window.localStorage.getItem('manual-chase-color') || '#FFFFFF';
     this._dom.CHASE.delayText.innerHTML = window.localStorage.getItem('manual-chase-delay') || '50';
     this._dom.CHASE.sizeText.innerHTML = window.localStorage.getItem('manual-chase-size') || '1';
     this._dom.CHASE.spacingText.innerHTML = window.localStorage.getItem('manual-chase-spacing') || '2';
-    this._dom.CHASE.rainbow.checked = window.localStorage.getItem('manual-chase-rainbow') === 'true';
+    this._dom.CHASE.rainbow.checked = window.localStorage.getItem('manual-chase-rainbow') === true;
     this._dom.RAINBOW.speedText.innerHTML = window.localStorage.getItem('manual-rainbow-speed') || '50';
   }
 
