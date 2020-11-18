@@ -1,3 +1,4 @@
+import InputFactory from './InputFactory.js';
 import * as Utils from './Utils.js';
 
 
@@ -33,67 +34,13 @@ class ManualController {
       }
     };
 
+    this._inputFactory = new InputFactory({
+      scope: this,
+      update: this._updateEffect
+    });
+
     this._initState();
     this._initEvents();
-  }
-
-
-  _initEvents() {
-    // Listeners for manual effects
-    this._dom.UNIFORM.button.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.CHASE.button.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.RAINBOW.button.addEventListener('click', this._updateEffect.bind(this));
-
-    this._dom.UNIFORM.color.addEventListener('click', event => {
-      event.preventDefault();
-      Utils.colorPickerModal(window.localStorage.getItem('manual-uniform-color'), color => {
-        window.localStorage.setItem('manual-uniform-color', color);
-        this._dom.UNIFORM.color.value = color;
-        this._updateEffect('UNIFORM');
-      });
-    });
-    this._dom.UNIFORM.waveDelta.addEventListener('input', () => {
-      this._dom.UNIFORM.waveDeltaText.innerHTML = this._dom.UNIFORM.waveDelta.value;
-      window.localStorage.setItem('manual-uniform-wave-delta', this._dom.UNIFORM.waveDelta.value);
-    });
-
-    this._dom.CHASE.color.addEventListener('click', () => {
-      event.preventDefault();
-      Utils.colorPickerModal(window.localStorage.getItem('manual-chase-color'), color => {
-        window.localStorage.setItem('manual-chase-color', color);
-        this._dom.CHASE.color.value = color;
-        this._updateEffect('CHASE');
-      });
-    });
-    this._dom.CHASE.delay.addEventListener('input', () => {
-      this._dom.CHASE.delayText.innerHTML = this._dom.CHASE.delay.value;
-      window.localStorage.setItem('manual-chase-delay', this._dom.CHASE.delay.value);
-    });
-    this._dom.CHASE.size.addEventListener('input', () => {
-      this._dom.CHASE.sizeText.innerHTML = this._dom.CHASE.size.value;
-      window.localStorage.setItem('manual-chase-size', this._dom.CHASE.size.value);
-    });
-
-    this._dom.CHASE.spacing.addEventListener('input', () => {
-      this._dom.CHASE.spacingText.innerHTML = this._dom.CHASE.spacing.value;
-      window.localStorage.setItem('manual-chase-spacing', this._dom.CHASE.spacing.value);
-    });
-
-    this._dom.CHASE.rainbow.addEventListener('input', () => {
-      window.localStorage.setItem('manual-chase-rainbow', this._dom.CHASE.rainbow.checked);
-    });
-
-    this._dom.RAINBOW.speed.addEventListener('input', () => {
-      this._dom.RAINBOW.speedText.innerHTML = this._dom.RAINBOW.speed.value;
-      window.localStorage.setItem('manual-rainbow-speed', this._dom.RAINBOW.speed.value);
-    });
-    // Mouse release the input, to send action for all manual effects
-    this._dom.UNIFORM.waveDelta.addEventListener('change', this._updateEffect.bind(this, 'UNIFORM'));
-    this._dom.CHASE.delay.addEventListener('change', this._updateEffect.bind(this, 'CHASE'));
-    this._dom.CHASE.size.addEventListener('change', this._updateEffect.bind(this, 'CHASE'));
-    this._dom.CHASE.spacing.addEventListener('change', this._updateEffect.bind(this, 'CHASE'));
-    this._dom.CHASE.rainbow.addEventListener('change', this._updateEffect.bind(this, 'CHASE'));
-    this._dom.RAINBOW.speed.addEventListener('change', this._updateEffect.bind(this, 'RAINBOW'));
   }
 
 
@@ -107,12 +54,75 @@ class ManualController {
     this._dom.CHASE.spacingText.innerHTML = window.localStorage.getItem('manual-chase-spacing') || '2';
     this._dom.CHASE.rainbow.checked = window.localStorage.getItem('manual-chase-rainbow') === 'true';
     this._dom.RAINBOW.speedText.innerHTML = window.localStorage.getItem('manual-rainbow-speed') || '50';
-    /* Init manual mode sliders */
-    window.rangesliderJs.create(this._dom.UNIFORM.waveDelta, { value: window.localStorage.getItem('manual-uniform-wave-delta') || '0' });
-    window.rangesliderJs.create(this._dom.CHASE.delay, { value: window.localStorage.getItem('manual-chase-delay') || '50' });
-    window.rangesliderJs.create(this._dom.CHASE.size, { value: window.localStorage.getItem('manual-chase-size') || '1' });
-    window.rangesliderJs.create(this._dom.CHASE.spacing, { value: window.localStorage.getItem('manual-chase-spacing') || '2' });
-    window.rangesliderJs.create(this._dom.RAINBOW.speed, { value: window.localStorage.getItem('manual-rainbow-speed') || '50' });
+  }
+
+
+  _initEvents() {
+    /* Uniform effect options */
+    this._inputFactory.new('CLICK', {
+      effect: 'UNIFORM',
+      element: this._dom.UNIFORM.button
+    });
+    this._inputFactory.new('COLOR', {
+      effect: 'UNIFORM',
+      element: this._dom.UNIFORM.color,
+      lsKey: 'manual-uniform-color'
+    });
+    this._inputFactory.new('SLIDER', {
+      effect: 'UNIFORM',
+      element: this._dom.UNIFORM.waveDelta,
+      label: this._dom.UNIFORM.waveDeltaText,
+      default: '0',
+      lsKey: 'manual-uniform-wave-delta'
+    });
+    /* Chase effect options */
+    this._inputFactory.new('CLICK', {
+      effect: 'CHASE',
+      element: this._dom.CHASE.button
+    });
+    this._inputFactory.new('COLOR', {
+      effect: 'CHASE',
+      element: this._dom.CHASE.color,
+      lsKey: 'manual-chase-color'
+    });
+    this._inputFactory.new('SLIDER', {
+      effect: 'CHASE',
+      element: this._dom.CHASE.delay,
+      label: this._dom.CHASE.delayText,
+      default: '0',
+      lsKey: 'manual-chase-delay'
+    });
+    this._inputFactory.new('SLIDER', {
+      effect: 'CHASE',
+      element: this._dom.CHASE.size,
+      label: this._dom.CHASE.sizeText,
+      default: '0',
+      lsKey: 'manual-chase-size'
+    });
+    this._inputFactory.new('SLIDER', {
+      effect: 'CHASE',
+      element: this._dom.CHASE.spacing,
+      label: this._dom.CHASE.spacingText,
+      default: '0',
+      lsKey: 'manual-chase-spacing'
+    });
+    this._inputFactory.new('SWITCH', {
+      effect: 'CHASE',
+      element: this._dom.CHASE.rainbow,
+      lsKey: 'manual-chase-rainbow'
+    });
+    /* Rainbow effect options */
+    this._inputFactory.new('CLICK', {
+      effect: 'RAINBOW',
+      element: this._dom.RAINBOW.button
+    });
+    this._inputFactory.new('SLIDER', {
+      effect: 'RAINBOW',
+      element: this._dom.RAINBOW.speed,
+      label: this._dom.RAINBOW.speedText,
+      default: '0',
+      lsKey: 'manual-rainbow-speed'
+    });
   }
 
 

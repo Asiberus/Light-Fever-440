@@ -1,3 +1,4 @@
+import InputFactory from './InputFactory.js';
 import * as Utils from './Utils.js';
 
 
@@ -32,80 +33,80 @@ class AnalyzerController {
       }
     };
 
+    this._inputFactory = new InputFactory({
+      scope: this,
+      update: this._updateEffect
+    });
+
     this._initState();
     this._initEvents();
   }
 
 
-  _initEvents() {
-    this._dom.UNIFORM.colorSwitch.addEventListener('input', () => {
-      window.localStorage.setItem('auto-uniform-color-switch', this._dom.UNIFORM.colorSwitch.checked);
-      if (this._dom.UNIFORM.colorSwitch.checked) {
-        this._dom.UNIFORM.color.parentNode.style.filter = 'opacity(1)';
-      } else {
-        this._dom.UNIFORM.color.parentNode.style.filter = 'opacity(0.1)';
-      }
-    });
-    this._dom.UNIFORM.color.addEventListener('click', event => {
-      event.preventDefault();
-      if (this._dom.UNIFORM.colorSwitch.checked === true) {
-        Utils.colorPickerModal(window.localStorage.getItem('auto-uniform-color'), color => {
-          window.localStorage.setItem('auto-uniform-color', color);
-          this._dom.UNIFORM.color.value = color;
-          this._updateEffect('UNIFORM');
-        });
-      }
-    });
-    this._dom.UNIFORM.peakSensitivity.addEventListener('input', () => {
-      this._dom.UNIFORM.peakSensitivityText.innerHTML = this._dom.UNIFORM.peakSensitivity.value;
-      window.localStorage.setItem('auto-uniform-peak-sensitivity', this._dom.UNIFORM.peakSensitivity.value);
-    });
-
-    this._dom.PROGRESSIVE.size.addEventListener('input', () => {
-      this._dom.PROGRESSIVE.sizeText.innerHTML = this._dom.PROGRESSIVE.size.value;
-      window.localStorage.setItem('auto-progressive-size', this._dom.PROGRESSIVE.size.value);
-    });
-
-    this._dom.PULSE.maxLength.addEventListener('input', () => {
-      this._dom.PULSE.maxLengthText.innerHTML = this._dom.PULSE.maxLength.value;
-      window.localStorage.setItem('auto-pulse-length', this._dom.PULSE.maxLength.value);
-    });
-    this._dom.PULSE.colorSwitch.addEventListener('input', () => {
-      window.localStorage.setItem('auto-pulse-color-switch', this._dom.PULSE.colorSwitch.checked);
-      if (this._dom.PULSE.colorSwitch.checked) {
-        this._dom.PULSE.color.parentNode.style.filter = 'opacity(1)';
-      } else {
-        this._dom.PULSE.color.parentNode.style.filter = 'opacity(0.1)';
-      }
-    });
-    this._dom.PULSE.color.addEventListener('click', event => {
-      event.preventDefault();
-      Utils.colorPickerModal(window.localStorage.getItem('auto-pulse-color'), color => {
-        window.localStorage.setItem('auto-pulse-color', color);
-        this._dom.PULSE.color.value = color;
-        this._updateEffect('PULSE');
-      });
-    });
-    // Listeners for auto analyse effects button (update Light Fever 440 when arriving to a new effect)
-    this._dom.UNIFORM.button.addEventListener('click', this._updateEffect.bind(this, 'UNIFORM'));
-    this._dom.PROGRESSIVE.button.addEventListener('click', this._updateEffect.bind(this, 'PROGRESSIVE'));
-    this._dom.PULSE.button.addEventListener('click', this._updateEffect.bind(this, 'PULSE'));
-    // Mouse release the input, to send action for all manual effects
-    this._dom.UNIFORM.peakDetection.addEventListener('change', this._updateEffect.bind(this, 'UNIFORM'));
-    this._dom.UNIFORM.peakSensitivity.addEventListener('change', this._updateEffect.bind(this, 'UNIFORM'));
-    this._dom.UNIFORM.colorSwitch.addEventListener('change', this._updateEffect.bind(this, 'UNIFORM'));
-    this._dom.PROGRESSIVE.reverse.addEventListener('change', this._updateEffect.bind(this, 'PROGRESSIVE'));
-    this._dom.PROGRESSIVE.size.addEventListener('change', this._updateEffect.bind(this, 'PROGRESSIVE'));
-    this._dom.PULSE.maxLength.addEventListener('change', this._updateEffect.bind(this, 'PULSE'));
-    this._dom.PULSE.colorSwitch.addEventListener('change', this._updateEffect.bind(this, 'PULSE'));
+  _initState() {
+    // TODO init input with ls value
   }
 
 
-  _initState() {
-    // Initialize range sliders with saved values
-    window.rangesliderJs.create(this._dom.UNIFORM.peakSensitivity, { value: window.localStorage.getItem('auto-uniform-peak-sensitivity') });
-    window.rangesliderJs.create(this._dom.PROGRESSIVE.size, { value: window.localStorage.getItem('auto-progressive-size') });
-    window.rangesliderJs.create(this._dom.PULSE.maxLength, { value: window.localStorage.getItem('auto-pulse-length') });
+  _initEvents() {
+    /* Uniform effect options */
+    this._inputFactory.new('CLICK', {
+      effect: 'UNIFORM',
+      element: this._dom.UNIFORM.button
+    });
+    this._inputFactory.new('SWITCH', {
+      effect: 'UNIFORM',
+      element: this._dom.UNIFORM.peakDetection,
+      lsKey: 'auto-uniform-peak-detection'
+    });
+    this._inputFactory.new('SLIDER', {
+      effect: 'UNIFORM',
+      element: this._dom.UNIFORM.peakSensitivity,
+      label: this._dom.UNIFORM.peakSensitivityText,
+      default: '0',
+      lsKey: 'auto-uniform-peak-sensitivity'
+    });
+    this._inputFactory.new('COLOR_OVERRIDE', {
+      effect: 'UNIFORM',
+      element: this._dom.UNIFORM.colorSwitch,
+      color: this._dom.UNIFORM.color,
+      lsKey: 'auto-uniform-color'
+    });
+    /* Progressive effect options */
+    this._inputFactory.new('CLICK', {
+      effect: 'PROGRESSIVE',
+      element: this._dom.PROGRESSIVE.button
+    });
+    this._inputFactory.new('SWITCH', {
+      effect: 'PROGRESSIVE',
+      element: this._dom.PROGRESSIVE.reverse,
+      lsKey: 'auto-progressive-reverse'
+    });
+    this._inputFactory.new('SLIDER', {
+      effect: 'PROGRESSIVE',
+      element: this._dom.PROGRESSIVE.size,
+      label: this._dom.PROGRESSIVE.sizeText,
+      default: '5',
+      lsKey: 'auto-progressive-size'
+    });
+    /* Pulse effect options */
+    this._inputFactory.new('CLICK', {
+      effect: 'PULSE',
+      element: this._dom.PULSE.button
+    });
+    this._inputFactory.new('SLIDER', {
+      effect: 'PULSE',
+      element: this._dom.PULSE.maxLength,
+      label: this._dom.PULSE.maxLengthText,
+      default: '100',
+      lsKey: 'auto-pulse-length'
+    });
+    this._inputFactory.new('COLOR_OVERRIDE', {
+      effect: 'PULSE',
+      element: this._dom.PULSE.colorSwitch,
+      color: this._dom.PULSE.color,
+      lsKey: 'auto-pulse-color'
+    });
   }
 
 
