@@ -1,0 +1,116 @@
+.app-wrapper {
+  /* Base font-size is 16pt */
+  font-size: var(--font-size);
+  height: 100%;
+  width: 100%;
+}
+
+/* Header section */
+
+.header {
+  align-items: center;
+  background-color: var(--background-dark-color);
+  display: flex;
+  flex-direction: column;
+  height: var(--header-height);
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+/* Mode tabs (Manual, Auto) */
+
+.tabs {
+  align-items: center;
+  background-color: var(--background-dark-color);
+  border-bottom: solid 1px var(--border-color);
+  display: flex;
+  height: var(--tabs-height);
+  position: relative;
+
+  p {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    width: 50%; /* Two tabs of 50% width */
+
+    &.selected {
+      font-weight: bold;
+    }
+  }
+
+  .border {
+    bottom: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    left: 0; /* This position is modified in Js when mode is switched */
+    position: absolute;
+    width: 50%;
+    transition: left .2s ease-in-out;
+  }
+}
+
+/* Main container */
+
+@import 'container.scss';
+
+/* Global controls */
+
+.global-controls {
+  align-items: center;
+  display: flex;
+  height: var(--global-height);
+  justify-content: space-between;
+  width: 100%;
+
+  .light-fever-on,
+  .light-fever-off {
+    border: solid 1px var(--border-color);
+    border-radius: 5px;
+    color: var(--text-color);
+    height: var(--button-size);
+    margin: .5rem;
+    padding: 0;
+    right: 1rem;
+    width: var(--button-size);
+    transition: background-color .2s;
+  }
+
+  .light-fever-on {
+    background-color: var(--green-color);
+  }
+
+  .light-fever-off {
+    background-color: var(--red-color);
+  }
+
+  .strob-wrapper {
+    align-items: center;
+    display: flex;
+
+    .gear-options {
+      width: 2rem;
+      height: 2rem;
+      top: 1rem;
+    }
+  }
+}
+
+/* Status Bar */
+
+.status-bar {
+  align-items: center;
+  background-color: var(--background-dark-color);
+  border-top: solid 1px var(--border-color);
+  display: flex;
+  height: var(--status-height);
+  justify-content: space-between;
+  width: 100%;
+
+  .status-text {
+    font-size: 1.3rem;
+    line-height: 1.3rem;
+    margin-right: .5rem;
+    text-align: right;
+  }
+}

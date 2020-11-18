@@ -1,0 +1,87 @@
+/* Container */
+
+.container {
+  height: calc(100% - var(--header-height) - var(--tabs-height) - var(--status-height) - var(--global-height));
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.manual-container,
+.auto-container {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  transition: left .2s ease-in-out;
+}
+
+.manual-container {
+  left: 0;
+}
+
+.auto-container {
+  left: 100%;
+}
+
+.effect-container,
+.option-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.effect-container p,
+.option-container p {
+  font-style: italic;
+  font-weight: bold;
+  margin: var(--font-size) 0;
+  text-align: center;
+}
+
+.effect-type {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.option-type {
+  background-color: var(--background-dark-color);
+  border: solid 1px grey;
+  border-radius: 3px;
+  display: none;
+  padding: 1rem;
+  width: 90%;
+}
+
+.single-option {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: .5rem 0;
+  position: relative;
+  width: 100%;
+}
+
+.single-option label {
+  font-size: 1.2rem;
+  max-width: 33%;
+}
+
+.single-option input[type="color"] {
+  height: calc(1.5rem + 2px);
+  max-width: 5rem;
+  margin: 0;
+  padding: .1rem;
+  width: 5rem;
+}
+
+.range-wrapper {
+  align-items: center;
+	display: flex;
+  flex: 1;
+	height: 100%;
+  justify-content: center;
+  max-width: 67%;
+  width: 67%;
+}

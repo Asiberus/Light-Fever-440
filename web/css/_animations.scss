@@ -1,11 +1,11 @@
+/* Associated keyframe with shine gradient on text effect */
 @keyframes shine-on-text {
   to {
     background-position: 200% center;
   }
 }
-
-h1.activated,
-h2.activated {
+/* Shining text animation (for title and subtitle when LightFever440 is ON) */
+h1.activated, h2.activated {
   background: linear-gradient(
     -45deg,
     var(--text-color) 5%,
@@ -19,6 +19,5 @@ h2.activated {
   animation: shine-on-text 3s linear infinite;
   background-size: 200% auto;
   background-clip: text;
-  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

@@ -20,7 +20,7 @@
 
 .modal {
   background-color: var(--background-color);
-  border: solid 1px grey;
+  border: solid 1px var(--border-color);
   border-radius: 5px;
   display: none;
   opacity: 0;
@@ -34,6 +34,17 @@
     visibility: visible;
   }
 
+  .header,
+  .footer {
+    align-items: center;
+    background-color: var(--background-dark-color);
+    display: flex;
+    flex-direction: column;
+    height: var(--header-height);
+    justify-content: space-evenly;
+    width: 100%;
+  }
+
   .content {
     align-items: center;
     display: flex;
@@ -44,7 +55,7 @@
   }
 
   input {
-    margin-bottom: 1.6rem;
+    margin-bottom: var(--font-size);
 
     &:last-child {
       margin-bottom: 0;

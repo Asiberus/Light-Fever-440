@@ -1,4 +1,4 @@
-import '../css/app.scss';
+import '../css/LightFever440.scss';
 
 
 class LightFever440 {

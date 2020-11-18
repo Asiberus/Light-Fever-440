@@ -1,3 +1,21 @@
+/* Button */
+
+.btn {
+  background-color: transparent;
+  border: solid 1px var(--text-color);
+  border-radius: .3rem;
+  color: var(--text-color);
+  height: var(--button-size);
+  padding: .5rem 1rem;
+  position: relative;
+  margin: .5rem;
+
+  &.selected {
+    background-color: var(--text-alpha-color);
+    font-weight: bold;
+  }
+}
+
 /* Checkbox switch */
 
 .switch-wrapper {
@@ -18,7 +36,7 @@ input[type="checkbox"].switch {
 	border-radius: 3rem;
 	position: relative;
 	outline: none;
-  width: 4rem;
+  width: var(--button-size);
 	transition: all .2s ease-in-out;
 
   &::after {
@@ -40,5 +58,53 @@ input[type="checkbox"].switch {
     &::after {
     	left: calc(100% - 1.5rem);
     }
+  }
+}
+
+/* Range slider (taken and adapted from https://github.com/stbaer/rangeslider-js) */
+
+.rangeslider {
+  cursor: pointer;
+  display: block;
+  height: 25px;
+  position: relative;
+  width: 100%;
+
+  .rangeslider__fill,
+  .rangeslider__fill__bg,
+  .rangeslider__handle {
+    border-radius: 10px;
+    background: #29e;
+    display: block;
+    height: 2px;
+    position: absolute;
+    top: 50%;
+    will-change: width;
+    z-index: 2;
+  }
+
+  .rangeslider__handle {
+    border: solid 2px #fff;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    height: 14px;
+    width: 14px;
+    will-change: width, height, top;
+    z-index: 3;
+    transition: width .1s ease-in-out, height .1s ease-in-out, top .1s ease-in-out;
+  }
+
+  .rangeslider__handle:active {
+    background: #107ecd;
+  }
+
+  .rangeslider__fill__bg {
+    background: #ccc;
+    width: 100%;
+  }
+
+  .rangeslider--disabled {
+    opacity: .4;
   }
 }
