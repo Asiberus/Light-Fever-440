@@ -21,8 +21,8 @@ class WebServer(object):
     @cherrypy.tools.json_out()
     def action(self):
         data = cherrypy.request.json
-        self.light_fever.handle_action(data)
-        return {'success': True}
+        success, message = self.light_fever.handle_action(data)
+        return {'success': success, 'message': message}
     
 
 if __name__ == '__main__':

@@ -16,7 +16,7 @@ class LightFever(object):
         self.is_manual_mode_running = False
         self.TIMER = 50
 
-        self.state = { 'state': 'OFF', 'mode': 'MANUAL', 'effect': 'UNIFORM', 'options': None }
+        self.state = {'state': 'OFF', 'mode': 'MANUAL', 'effect': 'UNIFORM', 'options': None }
 
     def get_state(self):
         return self.state
@@ -27,30 +27,39 @@ class LightFever(object):
         effect = action.get('effect', None)
         options = action.get('options', None)
 
-        if state == 'ON':
-            if mode == 'MANUAL':
-                if self.is_audio_analyse_running:
-                    self.stop_audio_analyse()
-                self.start_manual_mode(effect, options)
+        print(action)
+        try:
+            message = ''
+            if state == 'ON':
+                if mode == 'MANUAL':
+                    if self.is_audio_analyse_running:
+                        self.stop_audio_analyse()
+                    self.start_manual_mode(effect, options)
 
-            elif mode == 'AUDIO_ANALYSE':
-                if self.is_manual_mode_running:
-                    self.stop_manual_mode()
-                self.start_audio_analyse(effect)
+                elif mode == 'AUDIO_ANALYSE':
+                    if self.is_manual_mode_running:
+                        self.stop_manual_mode()
+                    self.start_audio_analyse(effect, options)
+                
+                message = '{0} started'.format(effect.capitalize().replace('_', ' '))
 
-        elif state == 'OFF':
-            self.stop_audio_analyse()
-            self.stop_manual_mode()
-            self.strip.switch_off_strip()
+            elif state == 'OFF':
+                self.stop_audio_analyse()
+                self.stop_manual_mode()
+                self.strip.switch_off_strip()
+                message = 'Light Fever has stopped'
 
-        self.state['state'] = state
-        self.state['mode'] = mode
-        self.state['effect'] = effect
-        self.state['options'] = options
+            self.state['state'] = state
+            self.state['mode'] = mode
+            self.state['effect'] = effect
+            self.state['options'] = options
+            return True, message
+        except:
+            return False, 'An error occured'
 
-
-    def start_audio_analyse(self, effect):
+    def start_audio_analyse(self, effect, options):
         self.strip_color_effect = self.get_audio_analyse_strip_effect(effect)
+        self.audio_analyse_options = options
 
         if not self.is_audio_analyse_running:
             self.is_audio_analyse_running = True
@@ -67,13 +76,13 @@ class LightFever(object):
 
     def get_audio_analyse_strip_effect(self, effect):
         if effect == 'UNIFORM':
-            return self.strip.set_uniform_color
+            return self.strip.audio_uniform
         elif effect == 'PROGRESSIVE':
-            return self.strip.set_progressive_color
-        elif effect == 'PROGRESSIVE_MIRROR':
-            return self.strip.set_progressive_mirror_color
+            return self.strip.progressive_color
         elif effect == 'PULSE':
             return self.strip.pulse
+        elif effect == 'PULSE_PROGRESSIVE':
+            return self.strip.pulse_progressive
         else:
             return self.strip.switch_off_strip
 
@@ -81,18 +90,10 @@ class LightFever(object):
         while self.is_audio_analyse_running:
             data = self.audio_visualizer.get_color_from_analysis()
             if data['color']:
-                self.strip_color_effect(data)
+                self.strip_color_effect(data, self.audio_analyse_options)
             time.sleep(self.TIMER/1000.0)
 
     def start_manual_mode(self, effect, options):
-        if effect == 'UNIFORM':
-            if self.is_manual_mode_running:
-                self.stop_manual_mode()
-
-            # red, green, blue = options.get('color', (127, 127, 127))
-            self.strip.set_uniform_color(options)
-            return
-
         self.strip_color_effect = self.get_manual_strip_effect(effect)
         self.manual_options = options
 
@@ -107,23 +108,23 @@ class LightFever(object):
             self.manual_mode_thread.join()
 
     def get_manual_strip_effect(self, effect):
-        if effect == 'STROBOSCOPE':
+        if effect == 'UNIFORM':
+            return self.strip.manual_uniform
+        elif effect == 'STROBOSCOPE':
             return self.strip.stroboscope
-        elif effect == 'THEATER_CHASE':
-            return self.strip.theater_chase
-        elif effect == 'RAINBOW_CYCLE':
-            return self.strip.rainbow_cycle
-        elif effect == 'THEATER_CHASE_RAINBOW':
-            return self.strip.theater_chase_rainbow
+        elif effect == 'CHASE':
+            return self.strip.chase
+        elif effect == 'RAINBOW':
+            return self.strip.rainbow
+        elif effect == 'CHASE_RAINBOW':
+            return self.strip.chase_rainbow
         else:
             return self.strip.switch_off_strip
 
     def manual_mode(self):
         while self.is_manual_mode_running:
-            if self.manual_options:
-                self.strip_color_effect(self.manual_options)
-            else:
-                self.strip_color_effect()
+            self.strip_color_effect(self.manual_options)
+        
 
 
 

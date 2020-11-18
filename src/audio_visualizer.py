@@ -18,7 +18,7 @@ class AudioVisualizer(object):
     self.hue_offset = 0
     self.previous_spectrum = collections.deque(maxlen=10)
 
-    self.peak_history = collections.deque(maxlen=250)
+    self.peak_history = collections.deque(maxlen=1000)
 
     self.recorder = MicrophoneRecorder(sample_rate=self.RATE, chunksize=self.CHUNKSIZE)
 
