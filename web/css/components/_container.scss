@@ -24,7 +24,8 @@
 }
 
 .effect-container,
-.option-container {
+.option-container,
+.preset-container {
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -32,7 +33,8 @@
 }
 
 .effect-container p,
-.option-container p {
+.option-container p,
+.preset-container p {
   font-style: italic;
   font-weight: bold;
   margin: var(--font-size) 0;
@@ -45,13 +47,52 @@
   justify-content: center;
 }
 
-.option-type {
+.option-type,
+.preset-type {
   background-color: var(--background-dark-color);
   border: solid 1px grey;
   border-radius: 3px;
   display: none;
   padding: 1rem;
   width: 90%;
+}
+
+.preset-type {
+  .preset-control-wrapper {
+    display: flex;
+    justify-content: center;
+
+    .preset-control {
+      height: 2rem;
+      margin: 0 .6rem;
+      width: 2rem;
+    }
+  }
+
+  .preset-bank {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 1rem;
+
+    .single-preset {
+      align-items: center;
+      border: solid 1px grey;
+      border-radius: 3px;
+      display: flex;
+      height: 3rem;
+      justify-content: center;
+      width: 3rem;
+
+      &.selected {
+        background-color: var(--text-alpha-color);
+        font-weight: bold;
+      }
+
+      &.saved {
+        border-color: red;
+      }
+    }
+  }
 }
 
 .single-option {

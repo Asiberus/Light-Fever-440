@@ -109,14 +109,14 @@ class InputFactory {
 
 
   _createSwitchOverride(options) {
-    options.element.checked = (window.localStorage.getItem(`${options.lsKey}-switch`) === 'true');
+    options.element.checked = (window.localStorage.getItem(`${options.lsKeySwitch}`) === 'true');
     if (options.element.checked === true) {
       options.color.parentNode.style.filter = 'opacity(0.1)';
     }
 
     this._event('change', options, false);
     options.element.addEventListener('input', () => {
-      window.localStorage.setItem(`${options.lsKey}-switch`, options.element.checked);
+      window.localStorage.setItem(`${options.lsKeySwitch}`, options.element.checked);
       if (options.element.checked === false) {
         options.color.parentNode.style.filter = 'opacity(1)';
       } else {
