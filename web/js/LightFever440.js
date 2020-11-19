@@ -147,7 +147,7 @@ class LightFever440 {
       }
       // Save effect in local
       this._effect = response.effect;
-      console.error('LightFever440 : Light system state preoperly loaded');
+      console.log('LightFever440 : Light system state properly loaded');
     }).catch(error => {
       this._dom.status.innerHTML = 'Unable to load state';
       console.error('LightFever440 : Unable to load light system state', error);

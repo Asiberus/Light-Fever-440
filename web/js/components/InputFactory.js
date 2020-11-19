@@ -93,6 +93,7 @@ class InputFactory {
 
     this._event('change', options, false);
     options.element.addEventListener('input', () => {
+      this._changeEventLock = true;
       window.localStorage.setItem(`${options.lsKey}-switch`, options.element.checked);
       if (options.element.checked === true) {
         options.color.parentNode.style.filter = 'opacity(1)';
@@ -123,6 +124,7 @@ class InputFactory {
 
     this._event('change', options, false);
     options.element.addEventListener('input', () => {
+      this._changeEventLock = true;
       window.localStorage.setItem(`${options.lsKeySwitch}`, options.element.checked);
       if (options.element.checked === false) {
         options.color.parentNode.style.filter = 'opacity(1)';
