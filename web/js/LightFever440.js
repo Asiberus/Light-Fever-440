@@ -269,8 +269,8 @@ class LightFever440 {
   _startStroboscope(event) {
     if (event.target.id === 'global-stroboscope') {
       event.preventDefault(); // Avoid context to open when keeping touch down
-      this._previousEffect = this._effect;
       this._dom.globalButtons.STROBOSCOPE.classList.add('selected');
+      this._previousEffect = this._effect;
       this._effect = 'STROBOSCOPE';
 
       if (this._isActive === true) {
@@ -292,19 +292,22 @@ class LightFever440 {
    * @memberof LightFever440
    * @description <blockquote>Explicit method to stop the global stroboscope effect. Called when the button is released,
    * the previous selected effect will be restored.</blockquote> **/
-  _stopStroboscope() {
-    this._effect = this._previousEffect;
-    this._previousEffect = null;
-    this._dom.globalButtons.STROBOSCOPE.classList.remove('selected');
+  _stopStroboscope(event) {
+    event.preventDefault();
+    if (event.target.id === 'global-stroboscope') {
+      this._dom.globalButtons.STROBOSCOPE.classList.remove('selected');
+      this._effect = this._previousEffect;
+      this._previousEffect = null;
 
-    if (this._isActive === true) {
-      this.sendAction().then(() => {
-        this._dom.status.innerHTML = 'Stroboscope deactivated';
-        console.log('LightFever440 : Light system stroboscope successfully stopped');
-      }).catch(error => {
-        this._dom.status.innerHTML = 'Unable to stop stroboscope';
-        console.error('LightFever440 : Unable to stop the stroboscope effect', error);
-      });
+      if (this._isActive === true) {
+        this.sendAction().then(() => {
+          this._dom.status.innerHTML = 'Stroboscope deactivated';
+          console.log('LightFever440 : Light system stroboscope successfully stopped');
+        }).catch(error => {
+          this._dom.status.innerHTML = 'Unable to stop stroboscope';
+          console.error('LightFever440 : Unable to stop the stroboscope effect', error);
+        });
+      }
     }
   }
 

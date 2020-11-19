@@ -113,12 +113,7 @@ class AnalyzerController {
    * @description <blockquote>Switch the Light Fever 440 effect using the HTML data-effect set on each of the concerned buttons.
    * See <code>README.md</code> for the detailled API description.</blockquote>
    * @param {object} event - The event data (click) to retrieve the event target and update it **/
-  _updateEffect(arg) {
-    let effect = arg; // Init with presumed string
-    if (typeof arg !== 'string') {
-      effect = arg.target.dataset.effect; // Update effect with event target specific effect info
-    }
-
+  _updateEffect(effect) {
     this._unselectAllEffect();
     // Then use target as current selection
     window.LF440.effect = effect;
@@ -177,6 +172,7 @@ class AnalyzerController {
         peakDetection: this._dom.UNIFORM.peakDetection.checked,
         peakSensitivity: parseInt(this._dom.UNIFORM.peakSensitivity.value) / 100
       };
+
       if (this._dom.UNIFORM.colorSwitch.checked) {
         options.color = Utils.hexToRgb(this._dom.UNIFORM.color.value);
       }
@@ -189,6 +185,7 @@ class AnalyzerController {
       options = {
         max: parseInt(this._dom.PULSE.maxLength.value) / 100
       };
+
       if (this._dom.PULSE.colorSwitch.checked) {
         options.color = Utils.hexToRgb(this._dom.PULSE.color.value);
       }

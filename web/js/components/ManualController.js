@@ -110,12 +110,7 @@ class ManualController {
   }
 
 
-  _updateEffect(arg) { // Either event or string
-    let effect = arg; // Init with presumed string
-    if (typeof arg !== 'string') {
-      effect = arg.target.dataset.effect; // Update effect with event target specific effect info
-    }
-
+  _updateEffect(effect) { // Either event or string
     this._unselectAllEffect();
     // Then use target as current selection
     window.LF440.effect = effect;
@@ -183,7 +178,7 @@ class ManualController {
       };
 
       if (this._dom.CHASE.rainbow.checked) {
-        delete options.color
+        delete options.color;
         options.rainbow = this._dom.CHASE.rainbow.checked;
       }
     } else if (window.LF440.effect === 'RAINBOW') {
