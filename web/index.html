@@ -121,6 +121,7 @@
             <button id="auto-uniform" class="btn selected" name="auto-uniform-button" data-effect="UNIFORM">UNIFORM</button>
             <button id="auto-progressive" class="btn" name="auto-progressive-button" data-effect="PROGRESSIVE">PROGRESSIVE</button>
             <button id="auto-pulse" class="btn" name="auto-pulse-button" data-effect="PULSE">PULSE</button>
+            <button id="auto-progressive-pulse" class="btn" name="auto-progressive-pulse" data-effect="PROGRESSIVE_PULSE">PROG PULSE</button>
           </div>
         </div>
         <div class="option-container">
@@ -173,6 +174,30 @@
             <div class="single-option" style="filter:opacity(0.1)">
               <label for="auto-pulse-color">Color</label>
               <input id="auto-pulse-color" class="btn" type="color" name="auto-pulse-color-picker">
+            </div>
+          </div>
+          <div id="auto-progressive-pulse-options" class="option-type" data-effect="PROGRESSIVE_PULSE">
+            <div class="single-option">
+              <label for="auto-progressive-pulse-reverse">Reverse</label>
+              <div class="switch-wrapper">
+                <input id="auto-progressive-pulse-reverse" class="switch" type="checkbox" name="auto-progressive-pulse-reverse-checkbox">
+              </div>
+            </div>
+            <div class="single-option">
+              <label for="auto-progressive-pulse-color-switch">Color override</label>
+              <div class="switch-wrapper">
+          			<input id="auto-progressive-pulse-color-switch" class="switch" type="checkbox" name="auto-progressive-pulse-color-switch-checkbox">
+          		</div>
+            </div>
+            <div class="single-option" style="filter:opacity(0.1)">
+              <label for="auto-progressive-pulse-color">Color</label>
+              <input id="auto-progressive-pulse-color" class="btn" type="color" name="auto-progressive-pulse-color-picker">
+            </div>
+            <div class="single-option">
+              <label for="auto-progressive-pulse-size">Size (<span id="auto-progressive-pulse-size-value"></span>)</label>
+              <div class="range-wrapper">
+                <input id="auto-progressive-pulse-size" type="range" name="auto-progressive-pulse-size-range" step="1" min="1" max="30" data-rangeslider>
+              </div>
             </div>
           </div>
         </div>

@@ -171,6 +171,8 @@ class ManualController {
     } else if (window.LF440.effect === 'RAINBOW') {
       this._dom.RAINBOW.speed['rangeslider-js'].update({ value: options.speed });
     }
+
+    this._updateEffect(window.LF440.effect);
   }
 
 

@@ -30,6 +30,15 @@ class AnalyzerController {
         maxLengthText: document.getElementById('auto-pulse-length-value'),
         colorSwitch: document.getElementById('auto-pulse-color-switch'),
         color: document.getElementById('auto-pulse-color')
+      },
+      PROGRESSIVE_PULSE: {
+        button: document.getElementById('auto-progressive-pulse'),
+        container: document.getElementById('auto-progressive-pulse-options'),
+        size: document.getElementById('auto-progressive-pulse-size'),
+        sizeText: document.getElementById('auto-progressive-pulse-size-value'),
+        reverse: document.getElementById('auto-progressive-pulse-reverse'),
+        colorSwitch: document.getElementById('auto-progressive-pulse-color-switch'),
+        color: document.getElementById('auto-progressive-pulse-color')
       }
     };
 
@@ -105,6 +114,30 @@ class AnalyzerController {
       default: '#FFFFFF',
       lsKey: 'auto-pulse-color'
     });
+    /* Progressive pulse */
+    this._inputFactory.new('CLICK', {
+      effect: 'PROGRESSIVE_PULSE',
+      element: this._dom.PROGRESSIVE_PULSE.button
+    });
+    this._inputFactory.new('SWITCH', {
+      effect: 'PROGRESSIVE_PULSE',
+      element: this._dom.PROGRESSIVE_PULSE.reverse,
+      lsKey: 'auto-progressive-pulse-reverse'
+    });
+    this._inputFactory.new('SLIDER', {
+      effect: 'PROGRESSIVE_PULSE',
+      element: this._dom.PROGRESSIVE_PULSE.size,
+      label: this._dom.PROGRESSIVE_PULSE.sizeText,
+      default: '5',
+      lsKey: 'auto-progressive-pulse-size'
+    });
+    this._inputFactory.new('COLOR_OVERRIDE', {
+      effect: 'PROGRESSIVE_PULSE',
+      element: this._dom.PROGRESSIVE_PULSE.colorSwitch,
+      color: this._dom.PROGRESSIVE_PULSE.color,
+      default: '#FFFFFF',
+      lsKey: 'auto-progressive-pulse-color'
+    });
   }
 
 
@@ -174,7 +207,23 @@ class AnalyzerController {
         this._dom.PULSE.colorSwitch.checked = false;
         this._dom.PULSE.color.parentNode.style.filter = 'opacity(0.1)';
       }
+    } else if (window.LF440.effect === 'PROGRESSIVE_PULSE') {
+      this._dom.PROGRESSIVE_PULSE.size['rangeslider-js'].update({ value: options.size });
+      if (options.reverse === true) {
+        this._dom.PROGRESSIVE_PULSE.reverse.checked = true;
+      } else {
+        this._dom.PROGRESSIVE_PULSE.reverse.checked = false;
+      }
+      if (options.color) {
+        this._dom.PROGRESSIVE_PULSE.colorSwitch.checked = true;
+        this._dom.PROGRESSIVE_PULSE.color.parentNode.style.filter = 'opacity(1)';
+      } else {
+        this._dom.PROGRESSIVE_PULSE.colorSwitch.checked = false;
+        this._dom.PROGRESSIVE_PULSE.color.parentNode.style.filter = 'opacity(0.1)';
+      }
     }
+    
+    this._updateEffect(window.LF440.effect);
   }
 
 
@@ -221,6 +270,15 @@ class AnalyzerController {
 
       if (this._dom.PULSE.colorSwitch.checked) {
         options.color = Utils.hexToRgb(this._dom.PULSE.color.value);
+      }
+    } else if (window.LF440.effect === 'PROGRESSIVE_PULSE') {
+      options = {
+        size: parseInt(this._dom.PROGRESSIVE_PULSE.size.value),
+        reverse: this._dom.PROGRESSIVE_PULSE.reverse.checked
+      };
+
+      if (this._dom.PROGRESSIVE_PULSE.colorSwitch.checked) {
+        options.color = Utils.hexToRgb(this._dom.PROGRESSIVE_PULSE.color.value);
       }
     }
 
