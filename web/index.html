@@ -35,37 +35,19 @@
           <div id="manual-uniform-options" class="option-type" style="display:block;" data-effect="UNIFORM">
             <div class="single-option">
               <label for="manual-uniform-color">Color</label>
-              <input id="manual-uniform-color" class="btn" type="color" name="manual-uniform-color-picker" value="#FFFFFF">
+              <input id="manual-uniform-color" class="btn" type="color" name="manual-uniform-color-picker">
             </div>
             <div class="single-option">
-              <label for="manual-uniform-wave-delta">Wave delta (<span id="manual-uniform-wave-delta-value">0</span>)</label>
+              <label for="manual-uniform-wave-delta">Wave delta (<span id="manual-uniform-wave-delta-value"></span>)</label>
               <div class="range-wrapper">
-                <input id="manual-uniform-wave-delta" type="range" name="manual-uniform-wave-delta-range" value="0" step="1" min="0" max="100" data-rangeslider>
+                <input id="manual-uniform-wave-delta" type="range" name="manual-uniform-wave-delta-range" step="1" min="0" max="100" data-rangeslider>
               </div>
             </div>
           </div>
           <div id="manual-chase-options" class="option-type" data-effect="CHASE">
             <div class="single-option">
               <label for="manual-chase-color">Color</label>
-              <input id="manual-chase-color" class="btn" type="color" name="manual-chase-color-picker" value="#FFFFFF">
-            </div>
-            <div class="single-option">
-              <label for="manual-chase-delay">Delay (<span id="manual-chase-delay-value">50ms</span>)</label>
-              <div class="range-wrapper">
-                <input id="manual-chase-delay" type="range" name="manual-chase-delay-range" value="50" step="1" min="0" max="999" data-rangeslider>
-              </div>
-            </div>
-            <div class="single-option">
-              <label for="manual-chase-size">Size (<span id="manual-chase-size-value">1</span>)</label>
-              <div class="range-wrapper">
-                <input id="manual-chase-size" type="range" name="manual-chase-size-range" value="1" step="1" min="1" max="30" data-rangeslider>
-              </div>
-            </div>
-            <div class="single-option">
-              <label for="manual-chase-spacing">Spacing (<span id="manual-chase-spacing-value">2</span>)</label>
-              <div class="range-wrapper">
-                <input id="manual-chase-spacing" type="range" name="manual-chase-spacing-range" value="2" step="1" min="1" max="30" data-rangeslider>
-              </div>
+              <input id="manual-chase-color" class="btn" type="color" name="manual-chase-color-picker">
             </div>
             <div class="single-option">
               <label for="manual-chase-rainbow">Rainbow</label>
@@ -73,12 +55,30 @@
           			<input id="manual-chase-rainbow" class="switch" type="checkbox" name="manual-chase-rainbow-checkbox">
           		</div>
             </div>
+            <div class="single-option">
+              <label for="manual-chase-speed">Speed (<span id="manual-chase-speed-value"></span>%)</label>
+              <div class="range-wrapper">
+                <input id="manual-chase-speed" type="range" name="manual-chase-speed-range" step="1" min="0" max="100" data-rangeslider>
+              </div>
+            </div>
+            <div class="single-option">
+              <label for="manual-chase-size">Size (<span id="manual-chase-size-value"></span>)</label>
+              <div class="range-wrapper">
+                <input id="manual-chase-size" type="range" name="manual-chase-size-range" step="1" min="1" max="30" data-rangeslider>
+              </div>
+            </div>
+            <div class="single-option">
+              <label for="manual-chase-spacing">Spacing (<span id="manual-chase-spacing-value"></span>)</label>
+              <div class="range-wrapper">
+                <input id="manual-chase-spacing" type="range" name="manual-chase-spacing-range" step="1" min="1" max="30" data-rangeslider>
+              </div>
+            </div>
           </div>
           <div id="manual-rainbow-options" class="option-type" data-effect="RAINBOW">
             <div class="single-option">
-              <label for="manual-rainbow-speed">Speed (<span id="manual-rainbow-speed-value">50</span>)</label>
+              <label for="manual-rainbow-speed">Speed (<span id="manual-rainbow-speed-value"></span>)</label>
               <div class="range-wrapper">
-                <input id="manual-rainbow-speed" type="range" name="manual-rainbow-speed-range" value="50" step="1" min="0" max="100" data-rangeslider>
+                <input id="manual-rainbow-speed" type="range" name="manual-rainbow-speed-range" step="1" min="0" max="100" data-rangeslider>
               </div>
             </div>
           </div>
@@ -103,9 +103,9 @@
           		</div>
             </div>
             <div class="single-option">
-              <label for="auto-uniform-peak-sensitivity">Sensitivity (<span id="auto-uniform-peak-sensitivity-value">0</span>)</label>
+              <label for="auto-uniform-peak-sensitivity">Sensitivity (<span id="auto-uniform-peak-sensitivity-value"></span>)</label>
               <div class="range-wrapper">
-                <input id="auto-uniform-peak-sensitivity" type="range" name="auto-uniform-peak-sensitivity-range" value="0" step="1" min="0" max="100" data-rangeslider>
+                <input id="auto-uniform-peak-sensitivity" type="range" name="auto-uniform-peak-sensitivity-range" step="1" min="0" max="100" data-rangeslider>
               </div>
             </div>
             <div class="single-option">
@@ -116,7 +116,7 @@
             </div>
             <div class="single-option" style="filter:opacity(0.1)">
               <label for="auto-uniform-color">Color</label>
-              <input id="auto-uniform-color" class="btn" type="color" name="auto-uniform-color-picker" value="#FFFFFF">
+              <input id="auto-uniform-color" class="btn" type="color" name="auto-uniform-color-picker">
             </div>
           </div>
           <div id="auto-progressive-options" class="option-type" data-effect="PROGRESSIVE">
@@ -127,17 +127,17 @@
           		</div>
             </div>
             <div class="single-option">
-              <label for="auto-progressive-size">Size (<span id="auto-progressive-size-value">5</span>)</label>
+              <label for="auto-progressive-size">Size (<span id="auto-progressive-size-value"></span>)</label>
               <div class="range-wrapper">
-                <input id="auto-progressive-size" type="range" name="auto-progressive-size-range" value="5" step="1" min="1" max="30" data-rangeslider>
+                <input id="auto-progressive-size" type="range" name="auto-progressive-size-range" step="1" min="1" max="30" data-rangeslider>
               </div>
             </div>
           </div>
           <div id="auto-pulse-options" class="option-type" data-effect="PULSE">
             <div class="single-option">
-              <label for="auto-pulse-length">Max (<span id="auto-pulse-length-value">100%</span>)</label>
+              <label for="auto-pulse-length">Max (<span id="auto-pulse-length-value"></span>%)</label>
               <div class="range-wrapper">
-                <input id="auto-pulse-length" type="range" name="auto-pulse-length-range" value="100" step="1" min="1" max="100" data-rangeslider>
+                <input id="auto-pulse-length" type="range" name="auto-pulse-length-range" step="1" min="1" max="100" data-rangeslider>
               </div>
             </div>
             <div class="single-option">
@@ -148,7 +148,7 @@
             </div>
             <div class="single-option" style="filter:opacity(0.1)">
               <label for="auto-pulse-color">Color</label>
-              <input id="auto-pulse-color" class="btn" type="color" name="auto-pulse-color-picker" value="#FFFFFF">
+              <input id="auto-pulse-color" class="btn" type="color" name="auto-pulse-color-picker">
             </div>
           </div>
         </div>
@@ -179,19 +179,19 @@
       </div>
       <div class="content">
         <div class="single-option">
-          <label for="strob-delay">Delay (<span id="strob-delay-value">50</span>ms)</label>
+          <label for="stroboscope-delay">Delay (<span id="stroboscope-delay-value">50</span>ms)</label>
           <div class="range-wrapper">
-            <input id="strob-delay" type="range" name="strob-delay" value="50" step="10" min="10" max="1000" data-rangeslider>
+            <input id="stroboscope-delay" type="range" name="stroboscope-delay" value="50" step="10" min="10" max="1000" data-rangeslider>
           </div>
         </div>
         <div class="single-option">
-          <label for="strob-color">Color</label>
-          <input id="strob-color" class="btn" type="color" name="input-color" value="#FFFFFF">
+          <label for="stroboscope-color">Color</label>
+          <input id="stroboscope-color" class="btn" type="color" name="input-color" value="#FFFFFF">
         </div>
-        <canvas id="strob-color-picker"></canvas>
+        <canvas id="stroboscope-color-picker"></canvas>
       </div>
       <div class="footer">
-        <button id="strob-modal-close" class="btn" type="button" name="button">CLOSE</button>
+        <button id="stroboscope-modal-close" class="btn" type="button" name="button">CLOSE</button>
       </div>
     </div>
     <div id="color-picker-modal" class="modal">

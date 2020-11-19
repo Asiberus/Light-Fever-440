@@ -6,9 +6,9 @@ class ModalFactory {
       overlay: document.getElementById('modal-overlay'),
       stroboscope: {
         container: document.getElementById('stroboscope-modal'),
-        delay: document.getElementById('strob-delay'),
-        delayText: document.getElementById('strob-delay-value'),
-        color: document.getElementById('strob-color')
+        delay: document.getElementById('stroboscope-delay'),
+        delayText: document.getElementById('stroboscope-delay-value'),
+        color: document.getElementById('stroboscope-color')
       },
       colorPicker: {
         container: document.getElementById('color-picker-modal'),
@@ -17,7 +17,7 @@ class ModalFactory {
 
     if (type === 'STROBOSCOPE') {
       // Declare range sliders to make input range touch friendly
-      window.rangesliderJs.create(this._dom.stroboscope.delay, { value: window.localStorage.getItem('strob-delay') || '50' });
+      window.rangesliderJs.create(this._dom.stroboscope.delay, { value: window.localStorage.getItem('stroboscope-delay') || '50' });
       this._stroboscopeModal();
     } else if (type === 'COLOR_PICKER') {
       this._colorPickerModal(options.color, options.callback)
@@ -29,42 +29,43 @@ class ModalFactory {
     // Make modal visible
     this._dom.overlay.classList.add('visible');
     this._dom.stroboscope.container.classList.add('visible');
+    this._dom.stroboscope.delayText.innerHTML = window.localStorage.getItem('stroboscope-delay') || '50';
     // Update range
     let range = event => {
       this._dom.stroboscope.delayText.innerHTML = event.target.value;
-      window.localStorage.setItem('strob-delay', event.target.value);
+      window.localStorage.setItem('stroboscope-delay', event.target.value);
     };
+
+    new window.KellyColorPicker({
+      place : 'stroboscope-color-picker',
+      color : window.localStorage.getItem('stroboscope-color') || '#ffffff',
+      changeCursor: false,
+      userEvents: {
+        change: self => {
+          window.localStorage.setItem('stroboscope-color', self.getCurColorHex());
+          document.getElementById('stroboscope-color').value = self.getCurColorHex();
+        }
+      }
+    });
     // Close modal internal metohd
     let close = event => {
-      if (event.target.id === 'strob-modal-close' || event.target.id === 'modal-overlay') {
+      if (event.target.id === 'stroboscope-modal-close' || event.target.id === 'modal-overlay') {
         this._dom.overlay.classList.remove('visible');
         this._dom.stroboscope.container.classList.remove('visible');
         this._dom.stroboscope.delay.removeEventListener('click', range);
         this._dom.overlay.removeEventListener('click', close);
-        document.getElementById('strob-modal-close').removeEventListener('click', close);
-        colorPicker.destroy();
+        document.getElementById('stroboscope-modal-close').removeEventListener('click', close);
       }
     };
     // Binding now to be able to remove events properly
     range = range.bind(this);
     close = close.bind(this);
 
-    const colorPicker = new window.KellyColorPicker({
-      place : 'strob-color-picker',
-      color : window.localStorage.getItem('strob-color') || '#ffffff',
-      changeCursor: false,
-      userEvents: {
-        change: self => {
-          window.localStorage.setItem('strob-color', self.getCurColorHex());
-          document.getElementById('strob-color').value = self.getCurColorHex();
-        }
-      }
-    });
-    document.getElementById('strob-color').addEventListener('click', event => { event.preventDefault(); });
+    document.getElementById('stroboscope-color').addEventListener('click', event => { event.preventDefault(); });
     // Event listeners for modal
     this._dom.stroboscope.delay.addEventListener('input', range);
     this._dom.overlay.addEventListener('click', close);
-    document.getElementById('strob-modal-close').addEventListener('click', close);
+    document.getElementById('stroboscope-modal-close').addEventListener('click', close);
   }
 
 

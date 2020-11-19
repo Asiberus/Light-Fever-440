@@ -38,33 +38,7 @@ class AnalyzerController {
       update: this._updateEffect
     });
 
-    this._initState();
     this._initEvents();
-  }
-
-
-  _initState() {
-    /* Init all input and progress with local storage state or default values */
-    this._dom.UNIFORM.peakDetection.checked = window.localStorage.getItem('auto-uniform-peak-detection') || false;
-    this._dom.UNIFORM.peakSensitivity.value = window.localStorage.getItem('auto-uniform-peak-sensitivity') || '0';
-    this._dom.UNIFORM.peakSensitivityText.innerHTML = window.localStorage.getItem('auto-uniform-peak-sensitivity') || '0';
-    this._dom.UNIFORM.colorSwitch.checked = window.localStorage.getItem('auto-uniform-color-switch') || false;
-    this._dom.UNIFORM.color.value = window.localStorage.getItem('auto-uniform-color') || '#FFFFFF';
-    this._dom.PROGRESSIVE.size.value = window.localStorage.getItem('auto-progressive-size') || '5';
-    this._dom.PROGRESSIVE.sizeText.value = window.localStorage.getItem('auto-progressive-size') || '5';
-    this._dom.PROGRESSIVE.reverse.checked = window.localStorage.getItem('auto-progressive-reverse') || false;
-    this._dom.PULSE.maxLength.value = window.localStorage.getItem('auto-pulse-length') || '100';
-    this._dom.PULSE.maxLengthText.innerHTML = window.localStorage.getItem('auto-pulse-length') || '100';
-    this._dom.PULSE.colorSwitch.checked = window.localStorage.getItem('auto-pulse-color-switch') || false;
-    this._dom.PULSE.color.value = window.localStorage.getItem('auto-pulse-color') || '#FFFFFF';
-
-    if (this._dom.UNIFORM.colorSwitch.checked === true) {
-      this._dom.UNIFORM.color.parentNode.style.filter = 'opacity(1)';
-    }
-
-    if (this._dom.PULSE.colorSwitch.checked === true) {
-      this._dom.PULSE.color.parentNode.style.filter = 'opacity(1)';
-    }
   }
 
 
@@ -90,6 +64,7 @@ class AnalyzerController {
       effect: 'UNIFORM',
       element: this._dom.UNIFORM.colorSwitch,
       color: this._dom.UNIFORM.color,
+      default: '#FFFFFF',
       lsKey: 'auto-uniform-color'
     });
     /* Progressive effect options */
@@ -125,6 +100,7 @@ class AnalyzerController {
       effect: 'PULSE',
       element: this._dom.PULSE.colorSwitch,
       color: this._dom.PULSE.color,
+      default: '#FFFFFF',
       lsKey: 'auto-pulse-color'
     });
   }
@@ -214,7 +190,7 @@ class AnalyzerController {
         max: parseInt(this._dom.PULSE.maxLength.value) / 100
       };
       if (this._dom.PULSE.colorSwitch.checked) {
-        options.color = Utils.hexToRgb(this._dom.PULSE.color);
+        options.color = Utils.hexToRgb(this._dom.PULSE.color.value);
       }
     }
 

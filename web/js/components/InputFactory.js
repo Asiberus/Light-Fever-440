@@ -21,6 +21,8 @@ class InputFactory {
       this._createColor(options);
     } else if (type === 'COLOR_OVERRIDE') {
       this._createColorOverride(options);
+    } else if (type === 'SWITCH_OVERRIDE') {
+      this._createSwitchOverride(options);
     }
   }
 
@@ -32,6 +34,7 @@ class InputFactory {
 
 
   _createSwitch(options) {
+    options.element.checked = (window.localStorage.getItem(options.lsKey) === 'true');
     // Mouse release the input, to send action for effect
     this._event('change', options, true, true);
   }
@@ -52,6 +55,7 @@ class InputFactory {
 
 
   _createSlider(options) {
+    options.label.innerHTML = window.localStorage.getItem(options.lsKey) || options.default;
     window.rangesliderJs.create(options.element, { value: window.localStorage.getItem(options.lsKey) || options.default });
     this._event('change', options, true, false);
     options.element.addEventListener('input', () => {
@@ -62,6 +66,7 @@ class InputFactory {
 
 
   _createColor(options) {
+    options.element.value = window.localStorage.getItem(options.lsKey) || options.default;
     options.element.addEventListener('click', event => {
       event.preventDefault(); // Avoid native color picker to open
       Utils.colorPickerModal(window.localStorage.getItem(options.lsKey), color => {
@@ -74,19 +79,55 @@ class InputFactory {
 
 
   _createColorOverride(options) {
-    this._event('change', options, true, true);
+    options.element.checked = (window.localStorage.getItem(`${options.lsKey}-switch`) === 'true');
+    if (options.element.checked === true) {
+      options.color.parentNode.style.filter = 'opacity(1)';
+    }
+
+    this._event('change', options, false);
     options.element.addEventListener('input', () => {
       window.localStorage.setItem(`${options.lsKey}-switch`, options.element.checked);
-      if (options.element.checked) {
+      if (options.element.checked === true) {
         options.color.parentNode.style.filter = 'opacity(1)';
       } else {
         options.color.parentNode.style.filter = 'opacity(0.1)';
       }
     });
 
+    options.color.value = window.localStorage.getItem(options.lsKey) || options.default;
     options.color.addEventListener('click', event => {
       event.preventDefault();
       if (options.element.checked === true) {
+        Utils.colorPickerModal(window.localStorage.getItem(options.lsKey), color => {
+          window.localStorage.setItem(options.lsKey, color);
+          options.color.value = color;
+          this._update.call(this._scope, options.effect);
+        });
+      }
+    });
+  }
+
+
+  _createSwitchOverride(options) {
+    options.element.checked = (window.localStorage.getItem(`${options.lsKey}-switch`) === 'true');
+    if (options.element.checked === true) {
+      options.color.parentNode.style.filter = 'opacity(0.1)';
+    }
+
+    this._event('change', options, false);
+    options.element.addEventListener('input', () => {
+      window.localStorage.setItem(`${options.lsKey}-switch`, options.element.checked);
+      if (options.element.checked === false) {
+        options.color.parentNode.style.filter = 'opacity(1)';
+      } else {
+        options.color.parentNode.style.filter = 'opacity(0.1)';
+      }
+    });
+
+    options.color.value = window.localStorage.getItem(options.lsKey) || options.default;
+    options.color.addEventListener('click', event => {
+      event.preventDefault();
+      if (options.element.checked === false) {
         Utils.colorPickerModal(window.localStorage.getItem(options.lsKey), color => {
           window.localStorage.setItem(options.lsKey, color);
           options.color.value = color;

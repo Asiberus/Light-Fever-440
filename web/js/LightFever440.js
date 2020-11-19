@@ -329,7 +329,7 @@ class LightFever440 {
       };
     }
 
-    console.log(`LightFever440 : Effect ${this._effect}, Options`, this._options);
+    console.log(`LightFever440 : Mode ${this._mode}, Effect ${this._effect}, Options`, this._options);
   }
 
 
