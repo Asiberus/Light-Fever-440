@@ -3,8 +3,7 @@ import time
 import colorsys
 from rpi_ws281x import *
 
-#Todo : add default for every options
-#Todo : chase différencier spacing et size
+import src.utils as utils
 
 class StripLed(object):
     def __init__(self):
@@ -20,6 +19,7 @@ class StripLed(object):
         self.strip.begin()
 
         self.rainbow_iterator = 0
+        self.chase_iterator = 0
 
         self.strip_color = collections.deque(maxlen=self.LED_COUNT)
         for i in range(self.LED_COUNT):
@@ -43,7 +43,6 @@ class StripLed(object):
 
     def audio_uniform(self, data, options):
         red, green, blue = options.get('color') if 'color' in options else data.get('color')
-
         peak = data.get('peak')
         peak_sensitivity = options.get('peakSensitivity', 0)
 
@@ -62,10 +61,9 @@ class StripLed(object):
     def progressive_color(self, data, options):
         red, green, blue = data.get('color', (127, 127, 127))
         reverse = options.get('reverse', False)
+        size = options.get('size', 5)
 
-        num_pixel = options.get('size', 5)
-
-        for i in range(num_pixel):
+        for i in range(size):
             self.strip_color.appendleft((red, green, blue))
 
         strip_color_split = list(self.strip_color)[:self.strip_color.maxlen // 2]
@@ -81,60 +79,41 @@ class StripLed(object):
     def pulse(self, data, options):
         red, green, blue = options.get('color') if 'color' in options else data.get('color')
         peak = data.get('peak')
-        reverse = options.get('reverse')
-        max_size = options.get('max')
-
-        test = options.get('test')
+        reverse = options.get('reverse', False)
+        max_size = options.get('max', 1)
 
         max_size = max_size if max_size > 0.02 else 0.02
 
-        num_pixel = int(((self.strip.numPixels() / 2) * max_size) * peak)
+        size = int(((self.strip.numPixels() / 2) * max_size) * peak)
 
         strip_color_split = list()
 
         for i in range(self.strip.numPixels() // 2):
-            if test:
-                if i < num_pixel - 5:
-                    brightness = 1
-                elif i > num_pixel - 5 and i <= num_pixel:
-                    brightness =  1 - (5 - (num_pixel - i))/5
-                else:
-                    brightness = 0
-
-                strip_color_split.append(self.set_color_brightness((red, green, blue), brightness))
+            if i <= size:
+                strip_color_split.append((red, green, blue))
             else:
-                if i <= num_pixel:
-                    strip_color_split.append((red, green, blue))
-                else:
-                    strip_color_split.append((0, 0, 0))
+                strip_color_split.append((0, 0, 0))
 
         if reverse:
             strip_color_mirror = strip_color_split + strip_color_split[::-1]
-        else:    
+        else:
             strip_color_mirror = strip_color_split[::-1] + strip_color_split
 
         self.show_strip_color_array(strip_color_mirror)
         
 
     def pulse_progressive(self, data, options):
-        red, green, blue = options.get('color')
         peak = data.get('peak')
-        reverse = options.get('reverse')
-        peak_threshold = options.get('peakTreshold')
-        num_pixel = options.get('size', 5)
-
-        test = options.get('test')
+        red, green, blue = options.get('color', (127, 127, 127))
+        reverse = options.get('reverse', False)
+        peak_threshold = options.get('peakTreshold', 0)
+        size = options.get('size', 5)
 
         peak = peak if peak >= peak_threshold else 0
 
-        color = self.set_color_brightness((red, green, blue), peak)
-
-        for i in range(num_pixel):
-            if test:
-                self.strip_color.appendleft(self.set_color_brightness((red, green, blue), (1 - i/num_pixel) * peak))
-            else:
-                self.strip_color.appendleft(color)
-
+        for i in range(size):
+            self.strip_color.appendleft(self.set_color_brightness((red, green, blue), (1 - i / size) * peak))
+        
         strip_color_split = list(self.strip_color)[:self.strip_color.maxlen // 2]
 
         if reverse:
@@ -148,13 +127,13 @@ class StripLed(object):
     # Manual effect
 
     def manual_uniform(self, options):
-        red, green, blue = options.get('color')
-        wave_delta = options.get('waveDelta')
+        red, green, blue = options.get('color', (127, 127, 127))
+        wave_delta = options.get('waveDelta', 0)
 
         self.set_uniform_color(red, green, blue)
 
     def stroboscope(self, options):
-        red, green, blue = options.get('color')
+        red, green, blue = options.get('color', (127, 127, 127))
         delay = options.get('delay', 50)
 
         self.set_uniform_color(red, green, blue)
@@ -172,47 +151,52 @@ class StripLed(object):
     
     def theater_chase(self, options):
         red, green, blue = options.get('color', (127, 127, 127))
-        delay = options.get('delay', 50)
+        speed = options.get('speed', 50)
         size = options.get('size', 1)
         spacing = options.get('spacing', 2)
 
-        pixel_range = spacing + 1
+        delay = utils.mapRange((0, 100), (200, 10), speed)
+        pixel_range = size + spacing
 
-        for q in range(pixel_range):
-            for i in range(0, self.strip.numPixels(), pixel_range):
-                for j in range(size):
-                    self.strip.setPixelColor(i+j+q, Color(red, green, blue))
-            self.strip.show()
-            time.sleep(delay/1000.0)
-            for i in range(0, self.strip.numPixels(), pixel_range):
-                for j in range(size):
-                    self.strip.setPixelColor(i+j+q, Color(0, 0, 0))
+        for i in range(0, self.strip.numPixels(), pixel_range):
+            for j in range(pixel_range):
+                if j < size:
+                    self.strip.setPixelColor(i + j + self.chase_iterator, Color(red, green, blue))
+                else:
+                    self.strip.setPixelColor(i + j + self.chase_iterator, Color(0, 0, 0))
+
+        self.strip.show()
+        time.sleep(delay/1000.0)
+
+        self.chase_iterator = (self.chase_iterator + 1) % pixel_range
 
     def rainbow_chase(self, options):
-        delay = options.get('delay', 50)
+        speed = options.get('speed', 50)
         size = options.get('size', 1)
         spacing = options.get('spacing', 2)
 
-        pixel_range = spacing + 1
+        delay = utils.mapRange((0, 100), (200, 10), speed)
+        pixel_range = size + spacing
 
-        for q in range(pixel_range):
-            for i in range(0, self.strip.numPixels(), pixel_range):
-                for j in range(size):
-                    self.strip.setPixelColor(i+j+q, self.color_wheel((i+self.rainbow_iterator) % 255))
-            self.strip.show()
-            time.sleep(delay/1000.0)
-            for i in range(0, self.strip.numPixels(), pixel_range):
-                for j in range(size):
-                    self.strip.setPixelColor(i+j+q, Color(0, 0, 0))
+        for i in range(0, self.strip.numPixels(), pixel_range):
+            for j in range(pixel_range):
+                if j < size:
+                    self.strip.setPixelColor(i + j + self.chase_iterator, self.color_wheel((i+self.rainbow_iterator) % 255))
+                else:
+                    self.strip.setPixelColor(i + j + self.chase_iterator, Color(0, 0, 0))
+
+        self.strip.show()
+        time.sleep(delay/1000.0)
+
+        self.chase_iterator = (self.chase_iterator + 1) % pixel_range
 
         self.rainbow_iterator = (self.rainbow_iterator + 1) % 255
 
     """Draw rainbow that uniformly distributes itself across all pixels."""
     def rainbow(self, options):
-        delay_max = 100
+        speed = options.get('speed', 50)
 
-        speed = options.get('speed')
-        delay = delay_max - delay_max * (speed / 100) if speed < 95 else 5
+        delay = utils.mapRange((0, 100), (100, 10), speed)
 
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, self.color_wheel((int(i * 256 / self.strip.numPixels()) + self.rainbow_iterator) % 255))
@@ -241,7 +225,7 @@ class StripLed(object):
 
         return (int(red * 255), int(green * 255), int(blue * 255))
 
-    def switch_off_strip(self):
+    def switch_off_strip(self, options=dict()):
         for i in range(self.strip.numPixels()):
             self.strip_color.append((0, 0, 0))
             self.strip.setPixelColor(i, Color(0, 0, 0))

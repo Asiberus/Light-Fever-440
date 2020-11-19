@@ -47,7 +47,8 @@ class AudioVisualizer(object):
 
   def get_peak(self, data):
     self.peak_history.append(data.max())
-    peak = (data.max() / np.array(self.peak_history).mean()) % 1
+    peak = data.max() / np.array(self.peak_history).max()
+
     return peak
 
   def get_bark_split(self, data):
@@ -120,9 +121,6 @@ class AudioVisualizer(object):
     rgb = [int(r[0] * 255), int(r[1] * 255), int(r[2] * 255)]
 
     return rgb
-
-
-
 
 
 if __name__ == '__main__':

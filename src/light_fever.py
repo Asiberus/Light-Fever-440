@@ -22,18 +22,20 @@ class LightFever(object):
         return self.state
 
     def handle_action(self, action):
+        print(action)
+
         state = action.get('state', 'OFF')
         mode = action.get('mode', None)
         effect = action.get('effect', None)
         options = action.get('options', None)
 
-        print(action)
         try:
             message = ''
             if state == 'ON':
                 if mode == 'MANUAL':
                     if self.is_audio_analyse_running:
                         self.stop_audio_analyse()
+                        
                     self.start_manual_mode(effect, options)
 
                 elif mode == 'AUDIO_ANALYSE':
@@ -116,8 +118,6 @@ class LightFever(object):
             return self.strip.chase
         elif effect == 'RAINBOW':
             return self.strip.rainbow
-        elif effect == 'CHASE_RAINBOW':
-            return self.strip.chase_rainbow
         else:
             return self.strip.switch_off_strip
 
