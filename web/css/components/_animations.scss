@@ -5,7 +5,7 @@
   }
 }
 /* Shining text animation (for title and subtitle when LightFever440 is ON) */
-h1.activated, h2.activated {
+.animated {
   background: linear-gradient(
     -45deg,
     var(--text-color) 5%,

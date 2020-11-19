@@ -14,7 +14,16 @@
   flex-direction: column;
   height: var(--header-height);
   justify-content: space-evenly;
+  position: relative;
   width: 100%;
+
+  svg {
+    height: 2rem;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    width: 2rem;
+  }
 }
 
 /* Mode tabs (Manual, Auto) */
@@ -60,29 +69,8 @@
   align-items: center;
   display: flex;
   height: var(--global-height);
-  justify-content: space-between;
+  justify-content: flex-end;
   width: 100%;
-
-  .light-fever-on,
-  .light-fever-off {
-    border: solid 1px var(--border-color);
-    border-radius: 5px;
-    color: var(--text-color);
-    height: var(--button-size);
-    margin: .5rem;
-    padding: 0;
-    right: 1rem;
-    width: var(--button-size);
-    transition: background-color .2s;
-  }
-
-  .light-fever-on {
-    background-color: var(--green-color);
-  }
-
-  .light-fever-off {
-    background-color: var(--red-color);
-  }
 
   .strob-wrapper {
     align-items: center;

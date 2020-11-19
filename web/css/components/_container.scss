@@ -69,6 +69,10 @@
       height: 2rem;
       margin: 0 .6rem;
       width: 2rem;
+
+      &.preset-delete {
+        fill: var(--red-color);
+      }
     }
   }
 
@@ -82,9 +86,11 @@
       border: solid 1px grey;
       border-radius: 3px;
       display: flex;
+      font-size: 1.3rem;
       height: 3rem;
       justify-content: center;
       width: 3rem;
+      transition: background-color .3s;
 
       &.selected {
         background-color: var(--text-alpha-color);
@@ -92,7 +98,7 @@
       }
 
       &.saved {
-        border-color: red;
+        border-color: var(--accent-color);
       }
     }
   }

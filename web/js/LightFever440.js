@@ -26,6 +26,7 @@ class LightFever440 {
     this._dom = {
       title: document.getElementById('title'),
       version: document.getElementById('version'),
+      appOptions: document.getElementById('app-options'),
       toggle: document.getElementById('toggle-light-fever'),
       manual: document.getElementById('manual-mode'),
       analyzer: document.getElementById('analyzer-mode'),
@@ -90,6 +91,7 @@ class LightFever440 {
    * @description <blockquote>Subscribe to all DOM element that can interact with the web server to modify the Light Fever 440
    * state, mode, effect and options. There are also events to control the UI aspect.</blockquote> **/
   _initEvents() {
+    this._dom.appOptions.addEventListener('click', this._appOptionsModal.bind(this));
     this._dom.toggle.addEventListener('click', this._toggleLightFever.bind(this));
     this._dom.manual.addEventListener('click', this._switchMode.bind(this));
     this._dom.analyzer.addEventListener('click', this._switchMode.bind(this));
@@ -172,15 +174,9 @@ class LightFever440 {
   _toggleLightFever() {
     if (this._isActive === false) {
       this._isActive = true;
-      this._dom.toggle.innerHTML = 'ON';
-      this._dom.toggle.classList.remove('light-fever-off');
-      this._dom.toggle.classList.add('light-fever-on');
       this._startLightFever();
     } else {
       this._isActive = false;
-      this._dom.toggle.innerHTML = 'OFF';
-      this._dom.toggle.classList.remove('light-fever-on');
-      this._dom.toggle.classList.add('light-fever-off');
       this._stopLightFever();
     }
   }
@@ -192,8 +188,10 @@ class LightFever440 {
    * @memberof LightFever440
    * @description <blockquote>Explicit method to set the Light Fever 440 state at ON.</blockquote> **/
   _startLightFever() {
-    this._dom.title.classList.add('activated');
-    this._dom.version.classList.add('activated');
+    this._dom.title.classList.add('animated');
+    this._dom.version.classList.add('animated');
+    this._dom.manual.classList.add('animated');
+    this._dom.analyzer.classList.add('animated');
     this._state = 'ON';
     this.sendAction().then(() => {
       this._dom.status.innerHTML = 'Light Fever 440 started';
@@ -211,8 +209,10 @@ class LightFever440 {
    * @memberof LightFever440
    * @description <blockquote>Explicit method to set the Light Fever 440 state at OFF.</blockquote> **/
   _stopLightFever() {
-    this._dom.title.classList.remove('activated');
-    this._dom.version.classList.remove('activated');
+    this._dom.title.classList.remove('animated');
+    this._dom.version.classList.remove('animated');
+    this._dom.manual.classList.remove('animated');
+    this._dom.analyzer.classList.remove('animated');
     this._state = 'OFF';
     this.sendAction().then(() => {
       this._dom.status.innerHTML = 'Light Fever 440 stopped';
@@ -370,6 +370,11 @@ class LightFever440 {
       this._dom.status.innerHTML = 'Switched to dark theme';
       window.localStorage.setItem('theme', 'dark');
     }
+  }
+
+
+  _appOptionsModal() {
+    new ModalFactory('OPTIONS');
   }
 
 

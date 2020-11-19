@@ -18,8 +18,11 @@ class PresetManager {
       ],
       save: document.getElementById(`${this._type}-preset-save`),
       del: document.getElementById(`${this._type}-preset-del`),
-      selected: null
+      selected: null,
+      count: 0
     };
+
+    this._isDelDisabled = true;
 
     this._initEvents();
     this._initPresets(options.effect);
@@ -27,7 +30,6 @@ class PresetManager {
 
 
   _initEvents() {
-    /* Preset events */
     this._presets.save.addEventListener('click', this._savePreset.bind(this));
     this._presets.del.addEventListener('click', this._deletePreset.bind(this));
     for (let i = 0; i < this._presets.slots.length; ++i) {
@@ -37,10 +39,16 @@ class PresetManager {
 
 
   _initPresets(effect) {
+    this._presets.selected = null;
+    this._isSaveDisabled = false;
+    this._isDelDisabled = true;
+    this._presets.del.style.filter = 'opacity(0.1)';
+
     for (let i = 0; i < this._presets.slots.length; ++i) {
       if (window.localStorage.getItem(`${this._type}-${effect.toLowerCase()}-preset-${i}`) !== null) {
         this._presets.slots[i].classList.add('saved');
         this._presets.slots[i].innerHTML = i + 1;
+        ++this._presets.count;
       } else {
         this._presets.slots[i].classList.remove('saved');
         this._presets.slots[i].classList.remove('selected');
@@ -52,9 +60,14 @@ class PresetManager {
 
   _savePreset() {
     const save = index => {
+      window.localStorage.setItem(`${this._type}-${window.LF440.effect.toLowerCase()}-preset-${index}`, JSON.stringify(this._getOptions()));
+      window.LF440.status = `${window.LF440.effect} preset ${index + 1} saved`;
       this._presets.slots[index].classList.add('saved');
       this._presets.slots[index].innerHTML = parseInt(index) + 1;
-      window.localStorage.setItem(`${this._type}-${window.LF440.effect.toLowerCase()}-preset-${index}`, JSON.stringify(this._getOptions()));
+      this._presets.selected = this._presets.slots[index];
+      this._isDelDisabled = false;
+      this._presets.del.style.filter = 'opacity(1)';
+      ++this._presets.count;
     };
 
     if (this._presets.selected) {
@@ -62,8 +75,8 @@ class PresetManager {
     } else {
       for (let i = 0; i < this._presets.slots.length; ++i) {
         if (!this._presets.slots[i].classList.contains('saved')) {
+          this._presets.slots[i].classList.add('selected');
           save(i);
-          // TODO status
           return;
         }
       }
@@ -72,13 +85,16 @@ class PresetManager {
 
 
   _deletePreset() {
-    if (this._presets.selected) {
+    if (this._presets.selected && this._isDelDisabled === false) {
       window.localStorage.removeItem(`${this._type}-${window.LF440.effect.toLowerCase()}-preset-${this._presets.selected.dataset.index}`);
+      window.LF440.status = `${window.LF440.effect} preset ${parseInt(this._presets.selected.dataset.index) + 1} deleted`;
       this._presets.slots[this._presets.selected.dataset.index].innerHTML = '';
       this._presets.selected.classList.remove('saved');
       this._presets.selected.classList.remove('selected');
+      --this._presets.count;
       this._presets.selected = null;
-      // TODO status
+      this._isDelDisabled = true;
+      this._presets.del.style.filter = 'opacity(0.1)';
     }
   }
 
@@ -94,6 +110,12 @@ class PresetManager {
     const options = JSON.parse(window.localStorage.getItem(`${this._type}-${window.LF440.effect.toLowerCase()}-preset-${event.target.dataset.index}`));
     if (options) {
       this._applyPresetOptions(options);
+      window.LF440.status = `Apply ${window.LF440.effect} preset ${parseInt(event.target.dataset.index) + 1}`;
+      this._isDelDisabled = false;
+      this._presets.del.style.filter = 'opacity(1)';
+    } else {
+      this._isDelDisabled = true;
+      this._presets.del.style.filter = 'opacity(0.1)';
     }
   }
 
