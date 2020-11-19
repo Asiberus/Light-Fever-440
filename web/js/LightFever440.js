@@ -122,6 +122,7 @@ class LightFever440 {
       this._dom.status.innerHTML = 'Set Light Fever 440 state';
       // No need to check for OFF, as it is the default state
       if (response.state === 'ON') {
+        this._state = 'ON';
         this._isActive = true;
         this._dom.toggle.innerHTML = 'ON';
         this._dom.toggle.classList.remove('light-fever-off');
@@ -129,12 +130,12 @@ class LightFever440 {
       }
       // No need to check manual aswell, as it is the default mode
       if (response.mode === 'AUDIO_ANALYSE') {
+        this._mode = 'AUDIO_ANALYSE';
         this._dom.manual.classList.remove('selected');
         this._dom.analyzer.classList.add('selected');
         this._dom.selection.style.left = '50%';
         this._dom.manualContainer.style.left = '-100%';
         this._dom.autoContainer.style.left = '0';
-        this._mode = 'AUDIO_ANALYSE';
       }
       // Same with effect, UNIFORM is the default one for both modes
       if (response.effect !== 'UNIFORM') {

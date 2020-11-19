@@ -31,6 +31,7 @@ export function rgbToHex(r, g, b) {
  * @returns {promise} The request <code>Promise</code>, format response as JSON on resolve, as error code string on reject **/
 export function ajax(url, data) {
   return new Promise((resolve, reject) => {
+    console.log(data);
     // Prepare sent options with proper verb, headers and body (for POST only)
     const options = {
       method: data ? 'POST' : 'GET',
