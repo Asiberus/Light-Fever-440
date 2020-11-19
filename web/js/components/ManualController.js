@@ -1,4 +1,5 @@
 import InputFactory from './InputFactory.js';
+import PresetManager from './PresetManager.js';
 import * as Utils from './Utils.js';
 
 
@@ -34,42 +35,19 @@ class ManualController {
       }
     };
 
-    this._presets = {
-      slots: [
-        document.getElementById('manual-preset0'),
-        document.getElementById('manual-preset1'),
-        document.getElementById('manual-preset2'),
-        document.getElementById('manual-preset3'),
-        document.getElementById('manual-preset4'),
-        document.getElementById('manual-preset5'),
-        document.getElementById('manual-preset6')
-      ],
-      save: document.getElementById('manual-preset-save'),
-      del: document.getElementById('manual-preset-del'),
-      selected: null
-    };
-
     this._inputFactory = new InputFactory({
       scope: this,
       update: this._updateEffect
     });
 
-    this._initPresets('UNIFORM');
+    this._presetManager = new PresetManager({
+      type: 'MANUAL',
+      effect: 'UNIFORM',
+      getOptions: this.getOptions.bind(this),
+      applyPresetOptions: this._applyPresetOptions.bind(this)
+    });
+
     this._initEvents();
-  }
-
-
-  _initPresets(effect) {
-    for (let i = 0; i < this._presets.slots.length; ++i) {
-      if (window.localStorage.getItem(`manual-${effect.toLowerCase()}-preset-${i}`) !== null) {
-        this._presets.slots[i].classList.add('saved');
-        this._presets.slots[i].innerHTML = i + 1;
-      } else {
-        this._presets.slots[i].classList.remove('saved');
-        this._presets.slots[i].classList.remove('selected');
-        this._presets.slots[i].innerHTML = '';
-      }
-    }
   }
 
 
@@ -138,12 +116,6 @@ class ManualController {
       default: '50',
       lsKey: 'manual-rainbow-speed'
     });
-    /* Preset events */
-    this._presets.save.addEventListener('click', this._savePreset.bind(this));
-    this._presets.del.addEventListener('click', this._deletePreset.bind(this));
-    for (let i = 0; i < this._presets.slots.length; ++i) {
-      this._presets.slots[i].addEventListener('click', this._selectPreset.bind(this));
-    }
   }
 
 
@@ -153,7 +125,7 @@ class ManualController {
       window.LF440.effect = effect;
       this._dom[window.LF440.effect].container.style.display = 'block';
       this._dom[window.LF440.effect].button.classList.add('selected');
-      this._initPresets(window.LF440.effect);
+      this._presetManager.initPresets(window.LF440.effect);
     }
 
     if (window.LF440.isActive === true) {
@@ -180,68 +152,24 @@ class ManualController {
   }
 
 
-  _savePreset() {
-    const save = index => {
-      this._presets.slots[index].classList.add('saved');
-      this._presets.slots[index].innerHTML = parseInt(index) + 1;
-      window.localStorage.setItem(`manual-${window.LF440.effect.toLowerCase()}-preset-${index}`, JSON.stringify(this.getOptions()));
-    };
-
-    if (this._presets.selected) {
-      save(parseInt(this._presets.selected.dataset.index));
-    } else {
-      for (let i = 0; i < this._presets.slots.length; ++i) {
-        if (!this._presets.slots[i].classList.contains('saved')) {
-          save(i);
-          // TODO status
-          return;
-        }
+  _applyPresetOptions(options) {
+    if (window.LF440.effect === 'UNIFORM') {
+      this._dom.UNIFORM.color.value = Utils.rgbToHex(options.color[0], options.color[1], options.color[2]);
+      this._dom.UNIFORM.waveDelta['rangeslider-js'].update({ value: options.waveDelta });
+    } else if (window.LF440.effect === 'CHASE') {
+      this._dom.CHASE.speed['rangeslider-js'].update({ value: options.speed });
+      this._dom.CHASE.size['rangeslider-js'].update({ value: options.size });
+      this._dom.CHASE.spacing['rangeslider-js'].update({ value: options.spacing });
+      if (options.rainbow === true) {
+        this._dom.CHASE.rainbow.checked = options.rainbow;
+        this._dom.CHASE.color.parentNode.style.filter = 'opacity(0.1)';
+      } else {
+        this._dom.CHASE.rainbow.checked = false;
+        this._dom.CHASE.color.value = Utils.rgbToHex(options.color[0], options.color[1], options.color[2]);
+        this._dom.CHASE.color.parentNode.style.filter = 'opacity(1)';
       }
-    }
-  }
-
-
-  _deletePreset() {
-    if (this._presets.selected) {
-      window.localStorage.removeItem(`manual-${window.LF440.effect.toLowerCase()}-preset-${this._presets.selected.dataset.index}`);
-      this._presets.slots[this._presets.selected.dataset.index].innerHTML = '';
-      this._presets.selected.classList.remove('saved');
-      this._presets.selected.classList.remove('selected');
-      // TODO status
-    }
-  }
-
-
-  _selectPreset(event) {
-    for (let i = 0; i < this._presets.slots.length; ++i) {
-      this._presets.slots[i].classList.remove('selected');
-    }
-    // Add to selection
-    this._presets.selected = event.target;
-    this._presets.selected.classList.add('selected');
-    // Set options for uniform
-    const options = JSON.parse(window.localStorage.getItem(`manual-${window.LF440.effect.toLowerCase()}-preset-${event.target.dataset.index}`));
-    if (options) {
-      if (window.LF440.effect === 'UNIFORM') {
-        this._dom.UNIFORM.color.value = Utils.rgbToHex(options.color[0], options.color[1], options.color[2]);
-        this._dom.UNIFORM.waveDelta['rangeslider-js'].update({ value: options.waveDelta });
-      } else if (window.LF440.effect === 'CHASE') {
-        this._dom.CHASE.speed['rangeslider-js'].update({ value: options.speed });
-        this._dom.CHASE.size['rangeslider-js'].update({ value: options.size });
-        this._dom.CHASE.spacing['rangeslider-js'].update({ value: options.spacing });
-        if (options.rainbow === true) {
-          this._dom.CHASE.rainbow.checked = options.rainbow;
-          this._dom.CHASE.color.parentNode.style.filter = 'opacity(0.1)';
-        } else {
-          this._dom.CHASE.rainbow.checked = false;
-          this._dom.CHASE.color.value = Utils.rgbToHex(options.color[0], options.color[1], options.color[2]);
-          this._dom.CHASE.color.parentNode.style.filter = 'opacity(1)';
-        }
-      } else if (window.LF440.effect === 'RAINBOW') {
-        this._dom.RAINBOW.speed['rangeslider-js'].update({ value: options.speed });
-      }
-
-      this._updateEffect(window.LF440.effect);
+    } else if (window.LF440.effect === 'RAINBOW') {
+      this._dom.RAINBOW.speed['rangeslider-js'].update({ value: options.speed });
     }
   }
 

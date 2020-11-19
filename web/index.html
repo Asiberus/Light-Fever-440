@@ -85,7 +85,7 @@
         </div>
         <div class="preset-container">
           <p>Presets</p>
-          <div id="manual-uniform-presets" class="preset-type" style="display:block;" data-effect="UNIFORM">
+          <div class="preset-type">
             <div class="preset-bank">
               <div id="manual-preset0" class="single-preset" data-index="0"></div>
               <div id="manual-preset1" class="single-preset" data-index="1"></div>
@@ -118,12 +118,6 @@
         <div class="option-container">
           <p>Options</p>
           <div id="auto-uniform-options" class="option-type" data-effect="UNIFORM" style="display:block;">
-            <div class="single-option">
-              <label for="auto-uniform-peak-detection">Peak detection</label>
-              <div class="switch-wrapper">
-          			<input id="auto-uniform-peak-detection" class="switch" type="checkbox" name="auto-uniform-peak-detection-checkbox">
-          		</div>
-            </div>
             <div class="single-option">
               <label for="auto-uniform-peak-sensitivity">Sensitivity (<span id="auto-uniform-peak-sensitivity-value"></span>)</label>
               <div class="range-wrapper">
@@ -171,6 +165,28 @@
             <div class="single-option" style="filter:opacity(0.1)">
               <label for="auto-pulse-color">Color</label>
               <input id="auto-pulse-color" class="btn" type="color" name="auto-pulse-color-picker">
+            </div>
+          </div>
+        </div>
+        <div class="preset-container">
+          <p>Presets</p>
+          <div class="preset-type">
+            <div class="preset-bank">
+              <div id="auto-preset0" class="single-preset" data-index="0"></div>
+              <div id="auto-preset1" class="single-preset" data-index="1"></div>
+              <div id="auto-preset2" class="single-preset" data-index="2"></div>
+              <div id="auto-preset3" class="single-preset" data-index="3"></div>
+              <div id="auto-preset4" class="single-preset" data-index="4"></div>
+              <div id="auto-preset5" class="single-preset" data-index="5"></div>
+              <div id="auto-preset6" class="single-preset" data-index="6"></div>
+            </div>
+            <div class="preset-control-wrapper">
+              <svg id="auto-preset-save" class="preset-control" viewBox="0 0 365.7 365.7" xmlns="http://www.w3.org/2000/svg">
+                <path d="m243.19 182.86 113.13-113.13c12.5-12.5 12.5-32.766 0-45.246l-15.082-15.082c-12.504-12.504-32.77-12.504-45.25 0l-113.13 113.13-113.13-113.15c-12.5-12.5-32.766-12.5-45.246 0l-15.105 15.082c-12.5 12.504-12.5 32.77 0 45.25l113.15 113.15-113.13 113.13c-12.504 12.504-12.504 32.77 0 45.25l15.082 15.082c12.5 12.5 32.766 12.5 45.246 0l113.13-113.13 113.13 113.13c12.504 12.5 32.77 12.5 45.25 0l15.082-15.082c12.5-12.504 12.5-32.77 0-45.25z"/>
+              </svg>
+              <svg id="auto-preset-del" class="preset-control" viewBox="0 0 365.7 365.7" xmlns="http://www.w3.org/2000/svg">
+                <path d="m243.19 182.86 113.13-113.13c12.5-12.5 12.5-32.766 0-45.246l-15.082-15.082c-12.504-12.504-32.77-12.504-45.25 0l-113.13 113.13-113.13-113.15c-12.5-12.5-32.766-12.5-45.246 0l-15.105 15.082c-12.5 12.504-12.5 32.77 0 45.25l113.15 113.15-113.13 113.13c-12.504 12.504-12.504 32.77 0 45.25l15.082 15.082c12.5 12.5 32.766 12.5 45.246 0l113.13-113.13 113.13 113.13c12.504 12.5 32.77 12.5 45.25 0l15.082-15.082c12.5-12.504 12.5-32.77 0-45.25z"/>
+              </svg>
             </div>
           </div>
         </div>

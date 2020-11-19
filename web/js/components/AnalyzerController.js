@@ -1,4 +1,5 @@
 import InputFactory from './InputFactory.js';
+import PresetManager from './PresetManager.js';
 import * as Utils from './Utils.js';
 
 
@@ -10,7 +11,6 @@ class AnalyzerController {
       UNIFORM: {
         button: document.getElementById('auto-uniform'),
         container: document.getElementById('auto-uniform-options'),
-        peakDetection: document.getElementById('auto-uniform-peak-detection'),
         peakSensitivity: document.getElementById('auto-uniform-peak-sensitivity'),
         peakSensitivityText: document.getElementById('auto-uniform-peak-sensitivity-value'),
         colorSwitch: document.getElementById('auto-uniform-color-switch'),
@@ -38,6 +38,13 @@ class AnalyzerController {
       update: this._updateEffect
     });
 
+    this._presetManager = new PresetManager({
+      type: 'AUTO',
+      effect: 'UNIFORM',
+      getOptions: this.getOptions.bind(this),
+      applyPresetOptions: this._applyPresetOptions.bind(this)
+    });
+
     this._initEvents();
   }
 
@@ -47,11 +54,6 @@ class AnalyzerController {
     this._inputFactory.new('CLICK', {
       effect: 'UNIFORM',
       element: this._dom.UNIFORM.button
-    });
-    this._inputFactory.new('SWITCH', {
-      effect: 'UNIFORM',
-      element: this._dom.UNIFORM.peakDetection,
-      lsKey: 'auto-uniform-peak-detection'
     });
     this._inputFactory.new('SLIDER', {
       effect: 'UNIFORM',
@@ -114,11 +116,13 @@ class AnalyzerController {
    * See <code>README.md</code> for the detailled API description.</blockquote>
    * @param {object} event - The event data (click) to retrieve the event target and update it **/
   _updateEffect(effect) {
-    this._unselectAllEffect();
-    // Then use target as current selection
-    window.LF440.effect = effect;
-    this._dom[window.LF440.effect].container.style.display = 'block';
-    this._dom[window.LF440.effect].button.classList.add('selected');
+    if (effect !== window.LF440.effect) {
+      this._unselectAllEffect();
+      window.LF440.effect = effect;
+      this._dom[window.LF440.effect].container.style.display = 'block';
+      this._dom[window.LF440.effect].button.classList.add('selected');
+      this._presetManager.initPresets(window.LF440.effect);
+    }
 
     if (window.LF440.isActive === true) {
       window.LF440.sendAction().then(() => {
@@ -140,6 +144,36 @@ class AnalyzerController {
     for (const [key] of Object.entries(this._dom)) {
       this._dom[key].button.classList.remove('selected');
       this._dom[key].container.style.display = 'none';
+    }
+  }
+
+
+  _applyPresetOptions(options) {
+    if (window.LF440.effect === 'UNIFORM') {
+      this._dom.UNIFORM.peakSensitivity['rangeslider-js'].update({ value: (options.peakSensitivity * 100) });
+      if (options.color) {
+        this._dom.UNIFORM.colorSwitch.checked = true;
+        this._dom.UNIFORM.color.parentNode.style.filter = 'opacity(1)';
+      } else {
+        this._dom.UNIFORM.colorSwitch.checked = false;
+        this._dom.UNIFORM.color.parentNode.style.filter = 'opacity(0.1)';
+      }
+    } else if (window.LF440.effect === 'PROGRESSIVE') {
+      this._dom.PROGRESSIVE.size['rangeslider-js'].update({ value: options.size });
+      if (options.reverse === true) {
+        this._dom.PROGRESSIVE.reverse.checked = true;
+      } else {
+        this._dom.PROGRESSIVE.reverse.checked = false;
+      }
+    } else if (window.LF440.effect === 'PULSE') {
+      this._dom.PULSE.maxLength['rangeslider-js'].update({ value: (options.size * 100) });
+      if (options.color) {
+        this._dom.PULSE.colorSwitch.checked = true;
+        this._dom.PULSE.color.parentNode.style.filter = 'opacity(1)';
+      } else {
+        this._dom.PULSE.colorSwitch.checked = false;
+        this._dom.PULSE.color.parentNode.style.filter = 'opacity(0.1)';
+      }
     }
   }
 
@@ -169,7 +203,6 @@ class AnalyzerController {
     let options = {};
     if (window.LF440.effect === 'UNIFORM') {
       options = {
-        peakDetection: this._dom.UNIFORM.peakDetection.checked,
         peakSensitivity: parseInt(this._dom.UNIFORM.peakSensitivity.value) / 100
       };
 
