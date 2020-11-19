@@ -94,7 +94,6 @@ class PresetManager {
     const options = JSON.parse(window.localStorage.getItem(`${this._type}-${window.LF440.effect.toLowerCase()}-preset-${event.target.dataset.index}`));
     if (options) {
       this._applyPresetOptions(options);
-      this._updateEffect(window.LF440.effect);
     }
   }
 
