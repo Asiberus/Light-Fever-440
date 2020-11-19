@@ -60,7 +60,8 @@
 .preset-type {
   .preset-control-wrapper {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+    height: 2rem;
 
     .preset-control {
       height: 2rem;

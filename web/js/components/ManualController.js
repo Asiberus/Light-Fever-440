@@ -193,6 +193,7 @@ class ManualController {
       for (let i = 0; i < this._presets.slots.length; ++i) {
         if (!this._presets.slots[i].classList.contains('saved')) {
           save(i);
+          // TODO status
           return;
         }
       }
@@ -206,6 +207,7 @@ class ManualController {
       this._presets.slots[this._presets.selected.dataset.index].innerHTML = '';
       this._presets.selected.classList.remove('saved');
       this._presets.selected.classList.remove('selected');
+      // TODO status
     }
   }
 
