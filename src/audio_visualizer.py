@@ -1,7 +1,6 @@
 import collections
 import colorsys
 import time
-from threading import *
 
 import numpy as np
 import pyaudio
