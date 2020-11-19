@@ -36,7 +36,7 @@ class LightFever440 {
       status: document.getElementById('status-text'),
       globalButtons: { // Buttons that are available in both modes, and that overrides selected effect for given mode
         STROBOSCOPE: document.getElementById('global-stroboscope'),
-        strobOpts: document.getElementById('strob-opts')
+        strobOpts: document.getElementById('stroboscope-opts')
       }
     };
     /*  -------------------------------------  Internal usefull attributes  ------------------------------------------  */
@@ -50,6 +50,9 @@ class LightFever440 {
     /** @private
      * @member {object} - The previous applied effect when global effect is toggled, for proper restoration */
     this._previousEffect = null;
+    /** @private
+     * @member {object} - Same principle, but with mode */
+    this._previousMode = null;
     /*  ---------------------------  Ajax parametrs (send on each /action POST call)  --------------------------------  */
     /** @private
      * @member {string} - The Light Fever 440 state (either ON/OFF) */
@@ -271,7 +274,9 @@ class LightFever440 {
     if (event.target.id === 'global-stroboscope') {
       event.preventDefault(); // Avoid context to open when keeping touch down
       this._dom.globalButtons.STROBOSCOPE.classList.add('selected');
+      this._previousMode = this._mode;
       this._previousEffect = this._effect;
+      this._mode = 'MANUAL';
       this._effect = 'STROBOSCOPE';
 
       if (this._isActive === true) {
@@ -297,7 +302,9 @@ class LightFever440 {
     event.preventDefault();
     if (event.target.id === 'global-stroboscope') {
       this._dom.globalButtons.STROBOSCOPE.classList.remove('selected');
+      this._mode = this._previousMode;
       this._effect = this._previousEffect;
+      this._previousMode = null;
       this._previousEffect = null;
 
       if (this._isActive === true) {
@@ -328,12 +335,12 @@ class LightFever440 {
 
     if (this._effect === 'STROBOSCOPE') {
       this._options = {
-        color: Utils.hexToRgb(window.localStorage.getItem('strob-color')),
-        delay: parseInt(window.localStorage.getItem('strob-delay')) || 50 // ms
+        color: Utils.hexToRgb(window.localStorage.getItem('stroboscope-color')),
+        delay: parseInt(window.localStorage.getItem('stroboscope-delay')) || 50
       };
     }
 
-    console.log(`LightFever440 : Mode ${this._mode}, Effect ${this._effect}, Options`, this._options);
+    console.log(`LightFever440 : State ${this._state}, Mode ${this._mode}, Effect ${this._effect}, Options`, this._options);
   }
 
 
