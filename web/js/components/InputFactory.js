@@ -7,6 +7,9 @@ class InputFactory {
   constructor(options) {
     this._scope = options.scope;
     this._update = options.update;
+    // This flag allow to start a transaction on a slider. When true, the change evt can be fire.
+    // We only want to fire change when the user is actually moving a slider.
+    this._changeEventLock = false;
   }
 
 
@@ -42,14 +45,17 @@ class InputFactory {
 
   _event(verb, options, lsSave, isSwitch = true) {
     options.element.addEventListener(verb, () => {
-      if (lsSave === true) {
-        if (isSwitch === true) {
-          window.localStorage.setItem(options.lsKey, options.element.checked);
-        } else {
-          window.localStorage.setItem(options.lsKey, options.element.value);
+      if (verb === 'click' || this._changeEventLock === true) {
+        if (lsSave === true) {
+          if (isSwitch === true) {
+            window.localStorage.setItem(options.lsKey, options.element.checked);
+          } else {
+            window.localStorage.setItem(options.lsKey, options.element.value);
+          }
         }
+        this._update.call(this._scope, options.effect);
+        this._changeEventLock = false;
       }
-      this._update.call(this._scope, options.effect);
     });
   }
 
@@ -59,6 +65,7 @@ class InputFactory {
     window.rangesliderJs.create(options.element, { value: window.localStorage.getItem(options.lsKey) || options.default });
     this._event('change', options, true, false);
     options.element.addEventListener('input', () => {
+      this._changeEventLock = true;
       window.localStorage.setItem(options.lsKey, options.element.value);
       options.label.innerHTML = options.element.value;
     });
