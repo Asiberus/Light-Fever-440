@@ -26,7 +26,7 @@ export function rgbToHex(r, g, b) {
 
 
 export function mapColor(color, max) {
-  return [(color[0] * max) / (255), (color[1] * max) / (255), (color[2] * max) / (255)];
+  return [Math.floor((color[0] * max) / (255)), Math.floor((color[1] * max) / (255)), Math.floor((color[2] * max) / (255))];
 }
 
 

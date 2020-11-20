@@ -11,8 +11,8 @@ class AnalyzerController {
       UNIFORM: {
         button: document.getElementById('auto-uniform'),
         container: document.getElementById('auto-uniform-options'),
-        peakSensitivity: document.getElementById('auto-uniform-peak-sensitivity'),
-        peakSensitivityText: document.getElementById('auto-uniform-peak-sensitivity-value'),
+        peak: document.getElementById('auto-uniform-peak'),
+        peakText: document.getElementById('auto-uniform-peak-value'),
         colorSwitch: document.getElementById('auto-uniform-color-switch'),
         color: document.getElementById('auto-uniform-color')
       },
@@ -66,10 +66,10 @@ class AnalyzerController {
     });
     this._inputFactory.new('SLIDER', {
       effect: 'UNIFORM',
-      element: this._dom.UNIFORM.peakSensitivity,
-      label: this._dom.UNIFORM.peakSensitivityText,
+      element: this._dom.UNIFORM.peak,
+      label: this._dom.UNIFORM.peakText,
       default: '0',
-      lsKey: 'auto-uniform-peak-sensitivity'
+      lsKey: 'auto-uniform-peak'
     });
     this._inputFactory.new('COLOR_OVERRIDE', {
       effect: 'UNIFORM',
@@ -183,7 +183,7 @@ class AnalyzerController {
 
   _applyPresetOptions(options) {
     if (window.LF440.effect === 'UNIFORM') {
-      this._dom.UNIFORM.peakSensitivity['rangeslider-js'].update({ value: (options.peakSensitivity * 100) });
+      this._dom.UNIFORM.peak['rangeslider-js'].update({ value: (options.peak * 100) });
       if (options.color) {
         this._dom.UNIFORM.colorSwitch.checked = true;
         this._dom.UNIFORM.color.parentNode.style.filter = 'opacity(1)';
@@ -252,7 +252,7 @@ class AnalyzerController {
     let options = {};
     if (window.LF440.effect === 'UNIFORM') {
       options = {
-        peakSensitivity: parseInt(this._dom.UNIFORM.peakSensitivity.value) / 100
+        peak: parseInt(this._dom.UNIFORM.peak.value) / 100
       };
 
       if (this._dom.UNIFORM.colorSwitch.checked) {
