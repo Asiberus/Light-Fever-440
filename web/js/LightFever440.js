@@ -40,6 +40,7 @@ class LightFever440 {
         strobOpts: document.getElementById('stroboscope-opts')
       }
     };
+    this._maxColor = window.localStorage.getItem('max-color') || Utils.CONST.MAX_COLOR;
     /*  -------------------------------------  Internal usefull attributes  ------------------------------------------  */
     // Useful bools and variables
     /** @private
@@ -122,6 +123,7 @@ class LightFever440 {
     }
     // Update version number
     this._dom.version.innerHTML = this.VERSION;
+    this._dom.toggle.checked = false;
     // Perform async call to retrieve LightFever440 state
     this._getState().then(response => {
       this._dom.status.innerHTML = 'Set Light Fever 440 state';
@@ -130,8 +132,7 @@ class LightFever440 {
         this._state = 'ON';
         this._isActive = true;
         this._dom.toggle.innerHTML = 'ON';
-        this._dom.toggle.classList.remove('light-fever-off');
-        this._dom.toggle.classList.add('light-fever-on');
+        this._dom.toggle.checked = true;
       }
       // No need to check manual aswell, as it is the default mode
       if (response.mode === 'AUDIO_ANALYSE') {
@@ -335,7 +336,7 @@ class LightFever440 {
 
     if (this._effect === 'STROBOSCOPE') {
       this._options = {
-        color: Utils.hexToRgb(window.localStorage.getItem('stroboscope-color')),
+        color: Utils.mapColor(Utils.hexToRgb(window.localStorage.getItem('stroboscope-color')), this.maxColor),
         delay: parseInt(window.localStorage.getItem('stroboscope-delay')) || 50
       };
     }
@@ -437,8 +438,18 @@ class LightFever440 {
   }
 
 
+  get maxColor() {
+    return this._maxColor;
+  }
+
+
   get effect() {
     return this._effect;
+  }
+
+
+  set maxColor(maxColor) {
+    this._maxColor = maxColor;
   }
 
 

@@ -10,12 +10,12 @@
   top: 0;
   width: 100%;
   z-index: 1;
-  animation: fade-out .3s ease-in-out;
+  animation: fade-out var(--animation) ease-in-out;
 
   &.visible {
     opacity: 1;
     pointer-events: auto;
-    animation: fade-in .3s ease-in-out;
+    animation: fade-in var(--animation) ease-in-out;
     z-index: 501;
   }
 }

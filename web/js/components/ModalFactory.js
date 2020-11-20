@@ -5,7 +5,9 @@ class ModalFactory {
     this._dom = {
       overlay: document.getElementById('modal-overlay'),
       options: {
-        container: document.getElementById('options-modal')
+        container: document.getElementById('options-modal'),
+        maxColorText: document.getElementById('max-color-value'),
+        maxColor: document.getElementById('max-color')
       },
       stroboscope: {
         container: document.getElementById('stroboscope-modal'),
@@ -31,6 +33,20 @@ class ModalFactory {
   _optionsModal() {
     this._dom.overlay.classList.add('visible');
     this._dom.options.container.classList.add('visible');
+    this._dom.options.maxColorText.innerHTML = window.localStorage.getItem('max-color') || '155';
+    // Declare range sliders to make input range touch friendly
+    window.rangesliderJs.create(this._dom.options.maxColor, {
+      value: window.localStorage.getItem('max-color') || '155',
+      onSlide: value => {
+        this._dom.options.maxColorText.innerHTML = value;
+      },
+      onSlideEnd: value => {
+        this._dom.options.maxColorText.innerHTML = value;
+        window.localStorage.setItem('max-color', value);
+        window.LF440.maxColor = value;
+      }
+    });
+
     let reset = () => {
       window.localStorage.clear();
       setTimeout(() => {
@@ -60,6 +76,9 @@ class ModalFactory {
     // Declare range sliders to make input range touch friendly
     window.rangesliderJs.create(this._dom.stroboscope.delay, {
       value: window.localStorage.getItem('stroboscope-delay') || '50',
+      onSlide: value => {
+        this._dom.stroboscope.delayText.innerHTML = value;
+      },
       onSlideEnd: value => {
         this._dom.stroboscope.delayText.innerHTML = value;
         window.localStorage.setItem('stroboscope-delay', value);

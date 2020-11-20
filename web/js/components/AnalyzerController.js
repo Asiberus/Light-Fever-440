@@ -222,7 +222,7 @@ class AnalyzerController {
         this._dom.PROGRESSIVE_PULSE.color.parentNode.style.filter = 'opacity(0.1)';
       }
     }
-    
+
     this._updateEffect(window.LF440.effect);
   }
 
@@ -256,7 +256,7 @@ class AnalyzerController {
       };
 
       if (this._dom.UNIFORM.colorSwitch.checked) {
-        options.color = Utils.hexToRgb(this._dom.UNIFORM.color.value);
+        options.color = Utils.mapColor(Utils.hexToRgb(this._dom.UNIFORM.color.value), window.LF440.maxColor);
       }
     } else if (window.LF440.effect === 'PROGRESSIVE') {
       options = {
@@ -269,7 +269,7 @@ class AnalyzerController {
       };
 
       if (this._dom.PULSE.colorSwitch.checked) {
-        options.color = Utils.hexToRgb(this._dom.PULSE.color.value);
+        options.color = Utils.mapColor(Utils.hexToRgb(this._dom.PULSE.color.value), window.LF440.maxColor);
       }
     } else if (window.LF440.effect === 'PROGRESSIVE_PULSE') {
       options = {
@@ -278,7 +278,7 @@ class AnalyzerController {
       };
 
       if (this._dom.PROGRESSIVE_PULSE.colorSwitch.checked) {
-        options.color = Utils.hexToRgb(this._dom.PROGRESSIVE_PULSE.color.value);
+        options.color = Utils.mapColor(Utils.hexToRgb(this._dom.PROGRESSIVE_PULSE.color.value), window.LF440.maxColor);
       }
     }
 

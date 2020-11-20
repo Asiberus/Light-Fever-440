@@ -1,6 +1,5 @@
 .app-wrapper {
-  /* Base font-size is 16pt */
-  font-size: var(--font-size);
+  font-size: var(--font-size); /* Base font-size is 16pt */
   height: 100%;
   width: 100%;
 }
@@ -55,7 +54,7 @@
     left: 0; /* This position is modified in Js when mode is switched */
     position: absolute;
     width: 50%;
-    transition: left .3s ease-in-out;
+    transition: left var(--animation) ease-in-out;
   }
 }
 
@@ -78,7 +77,7 @@
 
     .gear-options-container {
       align-items: center;
-      border: solid 1px var(--text-color);
+      border: solid 1px var(--border-color);
       border-radius: .3rem;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;

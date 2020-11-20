@@ -201,12 +201,12 @@ class ManualController {
     let options = {};
     if (window.LF440.effect === 'UNIFORM') {
       options = {
-        color: Utils.hexToRgb(window.localStorage.getItem('manual-uniform-color')),
+        color: Utils.mapColor(Utils.hexToRgb(this._dom.UNIFORM.color.value), window.LF440.maxColor),
         waveDelta: parseInt(this._dom.UNIFORM.waveDelta.value)
       };
     } else if (window.LF440.effect === 'CHASE') {
       options = {
-        color: Utils.hexToRgb(window.localStorage.getItem('manual-chase-color')),
+        color: Utils.mapColor(Utils.hexToRgb(this._dom.CHASE.color.value), window.LF440.maxColor),
         speed: parseInt(this._dom.CHASE.speed.value),
         size: parseInt(this._dom.CHASE.size.value),
         spacing: parseInt(this._dom.CHASE.spacing.value)

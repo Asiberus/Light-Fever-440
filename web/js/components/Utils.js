@@ -1,6 +1,11 @@
 import ModalFactory from './ModalFactory.js';
 
 
+export const CONST = {
+  MAX_COLOR: 155
+};
+
+
 /** @method
  * @name _hexToRgb
  * @private
@@ -17,6 +22,11 @@ export function hexToRgb(hex) {
 
 export function rgbToHex(r, g, b) {
   return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+
+export function mapColor(color, max) {
+  return [(color[0] * max) / (255), (color[1] * max) / (255), (color[2] * max) / (255)];
 }
 
 

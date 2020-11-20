@@ -10,7 +10,7 @@ html, body {
   font-size: 62.5%; // Root size is 10pt (easy computation)
   height: 100vh;
   width: 100vw;
-  transition: all .3s;
+  transition: all var(--animation);
 }
 
 body {

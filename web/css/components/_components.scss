@@ -2,17 +2,18 @@
 
 .btn {
   background-color: transparent;
-  border: solid 1px var(--text-color);
+  border: solid 1px var(--border-color);
   border-radius: .3rem;
   color: var(--text-color);
   height: var(--button-size);
   padding: .5rem 1rem;
   position: relative;
   margin: .5rem;
-  transition: all .3s;
+  transition: all var(--animation);
 
   &.selected {
     background-color: var(--text-alpha-color);
+    border-color: var(--text-color);
   }
 }
 
@@ -32,12 +33,12 @@ input[type="checkbox"].switch {
   appearance: none;
 	height: calc(1.5rem + 2px);
 	background-color: var(--red-color);
-  border: solid 1px grey;
+  border: solid 1px var(--border-color);
 	border-radius: 3rem;
 	position: relative;
 	outline: none;
   width: var(--button-size);
-	transition: all .3s ease-in-out;
+	transition: all var(--animation) ease-in-out;
 
   &::after {
     content: '';
@@ -49,7 +50,7 @@ input[type="checkbox"].switch {
     position: absolute;
     transform: scale(.7);
     width: 1.5rem;
-  	transition: all .3s ease-in-out;
+  	transition: all var(--animation) ease-in-out;
   }
 
   &:checked {
