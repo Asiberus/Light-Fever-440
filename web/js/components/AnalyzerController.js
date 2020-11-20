@@ -28,6 +28,7 @@ class AnalyzerController {
         container: document.getElementById('auto-pulse-options'),
         maxLength: document.getElementById('auto-pulse-length'),
         maxLengthText: document.getElementById('auto-pulse-length-value'),
+        reverse: document.getElementById('auto-pulse-reverse'),
         colorSwitch: document.getElementById('auto-pulse-color-switch'),
         color: document.getElementById('auto-pulse-color')
       },
@@ -106,6 +107,11 @@ class AnalyzerController {
       label: this._dom.PULSE.maxLengthText,
       default: '100',
       lsKey: 'auto-pulse-length'
+    });
+    this._inputFactory.new('SWITCH', {
+      effect: 'PULSE',
+      element: this._dom.PULSE.reverse,
+      lsKey: 'auto-pulse-reverse'
     });
     this._inputFactory.new('COLOR_OVERRIDE', {
       effect: 'PULSE',
@@ -200,6 +206,11 @@ class AnalyzerController {
       }
     } else if (window.LF440.effect === 'PULSE') {
       this._dom.PULSE.maxLength['rangeslider-js'].update({ value: (options.size * 100) });
+      if (options.reverse === true) {
+        this._dom.PULSE.reverse.checked = true;
+      } else {
+        this._dom.PULSE.reverse.checked = false;
+      }
       if (options.color) {
         this._dom.PULSE.colorSwitch.checked = true;
         this._dom.PULSE.color.parentNode.style.filter = 'opacity(1)';
@@ -265,7 +276,8 @@ class AnalyzerController {
       };
     } else if (window.LF440.effect === 'PULSE') {
       options = {
-        max: parseInt(this._dom.PULSE.maxLength.value) / 100
+        max: parseInt(this._dom.PULSE.maxLength.value) / 100,
+        reverse: this._dom.PULSE.reverse.checked
       };
 
       if (this._dom.PULSE.colorSwitch.checked) {
