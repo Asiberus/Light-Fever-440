@@ -59,8 +59,10 @@ class InputFactory {
     options.label.innerHTML = window.localStorage.getItem(options.lsKey) || options.default;
     window.rangesliderJs.create(options.element, {
       value: window.localStorage.getItem(options.lsKey) || options.default,
+      onSlide: value => {
+        options.label.innerHTML = value;
+      },
       onSlideEnd: value => {
-        this._changeEventLock = true;
         window.localStorage.setItem(options.lsKey, value);
         options.label.innerHTML = value;
         this._update.call(this._scope, options.effect);
