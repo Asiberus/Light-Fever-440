@@ -40,8 +40,8 @@ class AnalyzerController {
         reverse: document.getElementById('auto-progressive-pulse-reverse'),
         colorSwitch: document.getElementById('auto-progressive-pulse-color-switch'),
         color: document.getElementById('auto-progressive-pulse-color'),
-        threshold: document.getElementById('auto-progressive-threshold'),
-        thresholdText: document.getElementById('auto-progressive-threshold-value'),
+        threshold: document.getElementById('auto-progressive-pulse-threshold'),
+        thresholdText: document.getElementById('auto-progressive-pulse-threshold-value'),
       }
     };
 
@@ -296,7 +296,7 @@ class AnalyzerController {
       options = {
         size: parseInt(this._dom.PROGRESSIVE_PULSE.size.value),
         reverse: this._dom.PROGRESSIVE_PULSE.reverse.checked,
-        threshold: parseInt(this._dom.PROGRESSIVE_PULSE.threshold.value) / 100
+        peakThreshold: parseInt(this._dom.PROGRESSIVE_PULSE.threshold.value) / 100
       };
 
       if (this._dom.PROGRESSIVE_PULSE.colorSwitch.checked) {
