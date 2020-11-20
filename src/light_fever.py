@@ -83,7 +83,7 @@ class LightFever(object):
             return self.strip.progressive_color
         elif effect == 'PULSE':
             return self.strip.pulse
-        elif effect == 'PULSE_PROGRESSIVE':
+        elif effect == 'PROGRESSIVE_PULSE':
             return self.strip.pulse_progressive
         else:
             return self.strip.switch_off_strip
