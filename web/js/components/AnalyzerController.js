@@ -137,7 +137,7 @@ class AnalyzerController {
       element: this._dom.PROGRESSIVE_PULSE.threshold,
       label: this._dom.PROGRESSIVE_PULSE.thresholdText,
       default: '0',
-      lsKey: 'auto-pulse-threshold'
+      lsKey: 'auto-progressive-pulse-threshold'
     });
     this._inputFactory.new('SLIDER', {
       effect: 'PROGRESSIVE_PULSE',
@@ -296,9 +296,9 @@ class AnalyzerController {
       options = {
         size: parseInt(this._dom.PROGRESSIVE_PULSE.size.value),
         reverse: this._dom.PROGRESSIVE_PULSE.reverse.checked,
-        peakThreshold: parseInt(this._dom.PROGRESSIVE_PULSE.threshold.value) / 100
+        peakTreshold: parseInt(this._dom.PROGRESSIVE_PULSE.threshold.value) / 100
       };
-
+      console.log(options);
       if (this._dom.PROGRESSIVE_PULSE.colorSwitch.checked) {
         options.color = Utils.mapColor(Utils.hexToRgb(this._dom.PROGRESSIVE_PULSE.color.value), window.LF440.maxColor);
       }
