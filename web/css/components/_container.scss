@@ -69,6 +69,7 @@
       height: 2rem;
       margin: 0 .6rem;
       width: 2rem;
+      transition: filter .3s;
 
       &.preset-delete {
         fill: var(--red-color);
@@ -111,6 +112,7 @@
   padding: .5rem 0;
   position: relative;
   width: 100%;
+  transition: filter .3s;
 }
 
 .single-option label {

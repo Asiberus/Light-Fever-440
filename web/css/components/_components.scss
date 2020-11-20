@@ -9,10 +9,10 @@
   padding: .5rem 1rem;
   position: relative;
   margin: .5rem;
+  transition: all .3s;
 
   &.selected {
     background-color: var(--text-alpha-color);
-    font-weight: bold;
   }
 }
 

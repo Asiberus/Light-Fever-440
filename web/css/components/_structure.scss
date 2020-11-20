@@ -69,17 +69,36 @@
   align-items: center;
   display: flex;
   height: var(--global-height);
-  justify-content: flex-end;
+  justify-content: center;
   width: 100%;
 
   .strob-wrapper {
     align-items: center;
     display: flex;
 
-    .gear-options {
-      width: 2rem;
-      height: 2rem;
-      top: 1rem;
+    .gear-options-container {
+      align-items: center;
+      border: solid 1px var(--text-color);
+      border-radius: .3rem;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      display: flex;
+      height: 4rem;
+      justify-content: center;
+      padding: .5rem;
+
+      .gear-options {
+        width: 2rem;
+        height: 2rem;
+        top: 1rem;
+      }
+    }
+
+    .btn {
+      border-left: none;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      margin-left: 0;
     }
   }
 }
