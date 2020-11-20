@@ -189,7 +189,7 @@
                 <input id="auto-progressive-pulse-reverse" class="switch" type="checkbox" name="auto-progressive-pulse-reverse-checkbox">
               </div>
             </div>
-            <div class="single-option">
+            <div class="single-option"> <!-- TODO remove color override checbox, keep color picker -->
               <label for="auto-progressive-pulse-color-switch">Color override</label>
               <div class="switch-wrapper">
           			<input id="auto-progressive-pulse-color-switch" class="switch" type="checkbox" name="auto-progressive-pulse-color-switch-checkbox">
@@ -198,6 +198,12 @@
             <div class="single-option" style="filter:opacity(0.1)">
               <label for="auto-progressive-pulse-color">Color</label>
               <input id="auto-progressive-pulse-color" class="btn" type="color" name="auto-progressive-pulse-color-picker">
+            </div>
+            <div class="single-option">
+              <label for="auto-pulse-threshold">Max (<span id="auto-pulse-threshold-value"></span>%)</label>
+              <div class="range-wrapper">
+                <input id="auto-pulse-threshold" type="range" name="auto-pulse-threshold-range" step="1" min="0" max="100" data-rangeslider>
+              </div>
             </div>
             <div class="single-option">
               <label for="auto-progressive-pulse-size">Size (<span id="auto-progressive-pulse-size-value"></span>)</label>

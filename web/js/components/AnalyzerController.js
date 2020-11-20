@@ -39,7 +39,9 @@ class AnalyzerController {
         sizeText: document.getElementById('auto-progressive-pulse-size-value'),
         reverse: document.getElementById('auto-progressive-pulse-reverse'),
         colorSwitch: document.getElementById('auto-progressive-pulse-color-switch'),
-        color: document.getElementById('auto-progressive-pulse-color')
+        color: document.getElementById('auto-progressive-pulse-color'),
+        threshold: document.getElementById('auto-progressive-threshold'),
+        thresholdText: document.getElementById('auto-progressive-threshold-value'),
       }
     };
 
@@ -129,6 +131,13 @@ class AnalyzerController {
       effect: 'PROGRESSIVE_PULSE',
       element: this._dom.PROGRESSIVE_PULSE.reverse,
       lsKey: 'auto-progressive-pulse-reverse'
+    });
+    this._inputFactory.new('SLIDER', {
+      effect: 'PROGRESSIVE_PULSE',
+      element: this._dom.PROGRESSIVE_PULSE.threshold,
+      label: this._dom.PROGRESSIVE_PULSE.thresholdText,
+      default: '0',
+      lsKey: 'auto-pulse-threshold'
     });
     this._inputFactory.new('SLIDER', {
       effect: 'PROGRESSIVE_PULSE',
@@ -286,7 +295,8 @@ class AnalyzerController {
     } else if (window.LF440.effect === 'PROGRESSIVE_PULSE') {
       options = {
         size: parseInt(this._dom.PROGRESSIVE_PULSE.size.value),
-        reverse: this._dom.PROGRESSIVE_PULSE.reverse.checked
+        reverse: this._dom.PROGRESSIVE_PULSE.reverse.checked,
+        threshold: parseInt(this._dom.PROGRESSIVE_PULSE.threshold.value) / 100
       };
 
       if (this._dom.PROGRESSIVE_PULSE.colorSwitch.checked) {
