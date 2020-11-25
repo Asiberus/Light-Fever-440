@@ -43,8 +43,11 @@ class MicrophoneRecorder(object):
             self.frames = []
             return frames
 
-    def start(self):
+    def start_stream(self):
         self.stream.start_stream()
+
+    def stop_stream(self):
+        self.stream.stop_stream()
 
     def close(self):
         with self.lock:

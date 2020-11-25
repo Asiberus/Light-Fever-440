@@ -1,0 +1,44 @@
+/* Modal fading effects */
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+    display: none;
+  }
+}
+/* Associated keyframe with shine gradient on text effect */
+@keyframes shine-on-text {
+  to {
+    background-position: 200% center;
+  }
+}
+/* Shining text animation (for title and subtitle when LightFever440 is ON) */
+.animated {
+  background: linear-gradient(
+    -45deg,
+    var(--text-color) 5%,
+    var(--gradient-color1),
+    var(--gradient-color2),
+    var(--gradient-color3),
+    var(--gradient-color4),
+    var(--text-color) 95%
+  );
+
+  animation: shine-on-text 3s linear infinite;
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

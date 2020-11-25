@@ -1,0 +1,139 @@
+/* Container */
+
+.container {
+  height: calc(100% - var(--header-height) - var(--tabs-height) - var(--status-height) - var(--global-height));
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.manual-container,
+.auto-container {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  transition: left var(--animation) ease-in-out;
+}
+
+.manual-container {
+  left: 0;
+}
+
+.auto-container {
+  left: 100%;
+}
+
+.effect-container,
+.option-container,
+.preset-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.effect-container p,
+.option-container p,
+.preset-container p {
+  font-style: italic;
+  font-weight: bold;
+  margin: var(--font-size) 0;
+  text-align: center;
+}
+
+.effect-type {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.option-type,
+.preset-type {
+  background-color: var(--background-dark-color);
+  border: solid 1px var(--border-color);
+  border-radius: 3px;
+  display: none;
+  padding: 1rem;
+  width: 90%;
+}
+
+.preset-type {
+  display: block;
+
+  .preset-control-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    height: 2rem;
+
+    .preset-control {
+      height: 2rem;
+      margin: 0 .6rem;
+      width: 2rem;
+      transition: filter var(--animation);
+
+      &.preset-delete {
+        fill: var(--red-color);
+      }
+    }
+  }
+
+  .preset-bank {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 1rem;
+
+    .single-preset {
+      align-items: center;
+      border: solid 1px var(--border-color);
+      border-radius: 3px;
+      display: flex;
+      font-size: 1.3rem;
+      height: 3rem;
+      justify-content: center;
+      width: 3rem;
+      transition: background-color var(--animation);
+
+      &.selected {
+        background-color: var(--text-alpha-color);
+        font-weight: bold;
+      }
+
+      &.saved {
+        border-color: var(--accent-color);
+      }
+    }
+  }
+}
+
+.single-option {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: .5rem 0;
+  position: relative;
+  width: 100%;
+  transition: filter var(--animation);
+}
+
+.single-option label {
+  font-size: 1.2rem;
+  max-width: 33%;
+}
+
+.single-option input[type="color"] {
+  height: calc(1.5rem + 2px);
+  max-width: 5rem;
+  margin: 0;
+  padding: .1rem;
+  width: 5rem;
+}
+
+.range-wrapper {
+  align-items: center;
+	display: flex;
+  flex: 1;
+	height: 100%;
+  justify-content: center;
+  max-width: 67%;
+  width: 67%;
+}

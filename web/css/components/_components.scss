@@ -1,0 +1,111 @@
+/* Button */
+
+.btn {
+  background-color: transparent;
+  border: solid 1px var(--border-color);
+  border-radius: .3rem;
+  color: var(--text-color);
+  height: var(--button-size);
+  padding: .5rem 1rem;
+  position: relative;
+  margin: .5rem;
+  transition: all var(--animation);
+
+  &.selected {
+    background-color: var(--text-alpha-color);
+    border-color: var(--text-color);
+  }
+}
+
+/* Checkbox switch */
+
+.switch-wrapper {
+  align-items: center;
+	display: flex;
+  flex: 1;
+	height: 100%;
+  justify-content: center;
+  max-width: 5rem;
+  width: 5rem;
+}
+
+input[type="checkbox"].switch {
+  appearance: none;
+	height: calc(1.5rem + 2px);
+	background-color: var(--red-color);
+  border: solid 1px var(--border-color);
+	border-radius: 3rem;
+	position: relative;
+	outline: none;
+  width: var(--button-size);
+	transition: all var(--animation) ease-in-out;
+
+  &::after {
+    content: '';
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 .25rem rgba(0, 0, 0, .9);
+  	height: 1.5rem;
+    left: 0;
+    position: absolute;
+    transform: scale(.7);
+    width: 1.5rem;
+  	transition: all var(--animation) ease-in-out;
+  }
+
+  &:checked {
+  	background-color: var(--green-color);
+
+    &::after {
+    	left: calc(100% - 1.5rem);
+    }
+  }
+}
+
+/* Range slider (taken and adapted from https://github.com/stbaer/rangeslider-js) */
+
+.rangeslider {
+  cursor: pointer;
+  display: block;
+  height: 25px;
+  position: relative;
+  width: 100%;
+
+  .rangeslider__fill,
+  .rangeslider__fill__bg,
+  .rangeslider__handle {
+    border-radius: 10px;
+    background: #29e;
+    display: block;
+    height: 2px;
+    position: absolute;
+    top: 50%;
+    will-change: width;
+    z-index: 2;
+  }
+
+  .rangeslider__handle {
+    border: solid 2px #fff;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    height: 14px;
+    width: 14px;
+    will-change: width, height, top;
+    z-index: 3;
+    transition: width .1s ease-in-out, height .1s ease-in-out, top .1s ease-in-out;
+  }
+
+  .rangeslider__handle:active {
+    background: #107ecd;
+  }
+
+  .rangeslider__fill__bg {
+    background: #ccc;
+    width: 100%;
+  }
+
+  .rangeslider--disabled {
+    opacity: .4;
+  }
+}

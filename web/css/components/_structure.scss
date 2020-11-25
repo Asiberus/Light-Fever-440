@@ -1,0 +1,122 @@
+.app-wrapper {
+  font-size: var(--font-size); /* Base font-size is 16pt */
+  height: 100%;
+  width: 100%;
+}
+
+/* Header section */
+
+.header {
+  align-items: center;
+  background-color: var(--background-dark-color);
+  display: flex;
+  flex-direction: column;
+  height: var(--header-height);
+  justify-content: space-evenly;
+  position: relative;
+  width: 100%;
+
+  svg {
+    height: 2rem;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    width: 2rem;
+  }
+}
+
+/* Mode tabs (Manual, Auto) */
+
+.tabs {
+  align-items: center;
+  background-color: var(--background-dark-color);
+  border-bottom: solid 1px var(--border-color);
+  display: flex;
+  height: var(--tabs-height);
+  position: relative;
+
+  p {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    width: 50%; /* Two tabs of 50% width */
+
+    &.selected {
+      font-weight: bold;
+    }
+  }
+
+  .border {
+    bottom: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    left: 0; /* This position is modified in Js when mode is switched */
+    position: absolute;
+    width: 50%;
+    transition: left var(--animation) ease-in-out;
+  }
+}
+
+/* Main container */
+
+@import 'container.scss';
+
+/* Global controls */
+
+.global-controls {
+  align-items: center;
+  display: flex;
+  height: var(--global-height);
+  justify-content: center;
+  width: 100%;
+
+  .strob-wrapper {
+    align-items: center;
+    display: flex;
+
+    .gear-options-container {
+      align-items: center;
+      border: solid 1px var(--border-color);
+      border-radius: .3rem;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      display: flex;
+      height: 4rem;
+      justify-content: center;
+      padding: .5rem;
+
+      .gear-options {
+        width: 2rem;
+        height: 2rem;
+        top: 1rem;
+      }
+    }
+
+    .btn {
+      border-left: none;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      margin-left: 0;
+    }
+  }
+}
+
+/* Status Bar */
+
+.status-bar {
+  align-items: center;
+  background-color: var(--background-dark-color);
+  border-top: solid 1px var(--border-color);
+  display: flex;
+  height: var(--status-height);
+  justify-content: space-between;
+  width: 100%;
+
+  .status-text {
+    font-size: 1.3rem;
+    line-height: 1.3rem;
+    margin-right: .5rem;
+    text-align: right;
+  }
+}

@@ -1,0 +1,226 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: components/AnalyzerController.js | Light Fever 440</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="">
+        
+            <img src="img/toast-ui.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Light Fever 440</a></h1>
+        
+            <span class="version">v0.0.1</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+    <div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="LightFever440.html">LightFever440</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="LightFever440_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="LightFever440.html#_dom">_dom</a></li><li><a href="LightFever440.html#_effect">_effect</a></li><li><a href="LightFever440.html#_isActive">_isActive</a></li><li><a href="LightFever440.html#_isDark">_isDark</a></li><li><a href="LightFever440.html#_mode">_mode</a></li><li><a href="LightFever440.html#_options">_options</a></li><li><a href="LightFever440.html#_previousEffect">_previousEffect</a></li><li><a href="LightFever440.html#_state">_state</a></li><li><a href="LightFever440.html#_version">_version</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="LightFever440.html#._ajax">_ajax</a></li><li><a href="LightFever440.html#._getState">_getState</a></li><li><a href="LightFever440.html#._hexToRgb">_hexToRgb</a></li><li><a href="LightFever440.html#._initEvents">_initEvents</a></li><li><a href="LightFever440.html#._initState">_initState</a></li><li><a href="LightFever440.html#._setOptionsForEffect">_setOptionsForEffect</a></li><li><a href="LightFever440.html#._startLightFever">_startLightFever</a></li><li><a href="LightFever440.html#._startStroboscope">_startStroboscope</a></li><li><a href="LightFever440.html#._stopLightFever">_stopLightFever</a></li><li><a href="LightFever440.html#._stopStroboscope">_stopStroboscope</a></li><li><a href="LightFever440.html#._strobOptionsModal">_strobOptionsModal</a></li><li><a href="LightFever440.html#._switchMode">_switchMode</a></li><li><a href="LightFever440.html#._switchTheme">_switchTheme</a></li><li><a href="LightFever440.html#._toggleLightFever">_toggleLightFever</a></li><li><a href="LightFever440.html#._updateEffect">_updateEffect</a></li><li><a href="LightFever440.html#.sendAction">sendAction</a></li></ul></div></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as Utils from './Utils.js';
+
+
+class AnalyzerController {
+
+
+  constructor() {
+    this._dom = {
+      autoButtons: { // Buttons that are only available in auto analyse mode
+        UNIFORM: document.getElementById('auto-uniform'),
+        PROGRESSIVE: document.getElementById('auto-progressive'),
+        PROGRESSIVE_MIRROR: document.getElementById('auto-progressive-mirror'),
+        PULSE: document.getElementById('auto-pulse')
+      },
+      autoOptions: {
+        UNIFORM: document.getElementById('auto-uniform-options'),
+        PROGRESSIVE: document.getElementById('auto-progressive-options'),
+        PROGRESSIVE_MIRROR: document.getElementById('auto-progressive-mirror-options'),
+        PULSE: document.getElementById('auto-pulse-options'),
+        opts: {
+          lightNumber: document.getElementById('auto-progressive-led'),
+          maxPulse: document.getElementById('auto-pusle-length'),
+          colorPulse: document.getElementById('auto-pulse-color')
+        }
+      }
+    };
+
+    this._initEvents();
+    this._initState();
+  }
+
+
+  _initEvents() {
+    // Listeners for auto analyse effects
+    this._dom.autoButtons.UNIFORM.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.autoButtons.PROGRESSIVE.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.autoButtons.PROGRESSIVE_MIRROR.addEventListener('click', this._updateEffect.bind(this));
+    this._dom.autoButtons.PULSE.addEventListener('click', this._updateEffect.bind(this));
+
+    this._dom.autoOptions.opts.lightNumber.addEventListener('input', () => {
+      document.getElementById('auto-progressive-led-value').innerHTML = this._dom.autoOptions.opts.lightNumber.value;
+      window.localStorage.setItem('auto-progressive-led', this._dom.autoOptions.opts.lightNumber.value);
+    });
+    this._dom.autoOptions.opts.maxPulse.addEventListener('input', () => {
+      document.getElementById('auto-pusle-length-value').innerHTML = this._dom.autoOptions.opts.maxPulse.value;
+      window.localStorage.setItem('auto-pusle-length', this._dom.autoOptions.opts.maxPulse.value);
+    });
+    this._dom.autoOptions.opts.colorPulse.addEventListener('click', event => {
+      event.preventDefault();
+      this._colorPickerModal('pulse-color', color => {
+        this._dom.autoOptions.opts.colorPulse.value = color
+      });
+    });
+  }
+
+
+  _initState() {
+    rangesliderJs.create(this._dom.autoOptions.opts.lightNumber, { value: window.localStorage.getItem('auto-progressive-led') || '5' });
+    rangesliderJs.create(this._dom.autoOptions.opts.maxPulse, { value: window.localStorage.getItem('auto-pusle-length') || '100' });
+  }
+
+
+  initEffect(effect) {
+    // Unselect all buttons
+    for (const [key, value] of Object.entries(this._dom.autoButtons)) {
+      this._dom.autoButtons[key].classList.remove('selected');
+      this._dom.autoOptions[key].style.display = 'none';
+    }
+    // Update effect toggled
+    this._dom.autoButtons[effect].classList.add('selected');
+    this._dom.autoOptions[effect].style.display = 'block';
+  }
+
+
+  getActiveEffect() {
+    // Find selected effect in destination mode
+    for (const [key, value] of Object.entries(this._dom.autoButtons)) {
+      if (this._dom.autoButtons[key].classList.contains('selected')) {
+        this._dom.autoOptions[key].style.display = 'block';
+        return this._dom.autoButtons[key].dataset.effect;
+      }
+    }
+
+    return 'UNIFORM';
+  }
+
+
+  getOptions() {
+    let options = {};
+    if (LF440.effect === 'UNIFORM') {
+      options = {
+        peak: document.getElementById('auto-uniform-peak-detection').checked
+      };
+    } else if (LF440.effect === 'PROGRESSIVE') {
+      options = {
+        led: this._dom.autoOptions.opts.lightNumber.value || 5,
+        reverse: document.getElementById('auto-progressive-reverse').checked
+      };
+    } else if (LF440.effect === 'PULSE') {
+      options = {
+        color: Utils.hexToRgb(window.localStorage.getItem('pulse-color')),
+        maxPulse: this._dom.autoOptions.opts.maxPulse.value
+      };
+    }
+
+    return options;
+  }
+
+
+  /** @method
+   * @name _updateEffect
+   * @private
+   * @memberof LightFever440
+   * @description &lt;blockquote>Switch the Light Fever 440 effect using the HTML data-effect set on each of the concerned buttons.
+   * See &lt;code>README.md&lt;/code> for the detailled API description.&lt;/blockquote>
+   * @param {object} event - The event data (click) to retrieve the event target and update it **/
+  _updateEffect(event) {
+    // Unselect all buttons
+    for (const [key, value] of Object.entries(this._dom.autoButtons)) {
+      this._dom.autoButtons[key].classList.remove('selected');
+      this._dom.autoOptions[key].style.display = 'none';
+    }
+    // Then use target as current selection
+    event.target.classList.add('selected');
+    LF440.effect = event.target.dataset.effect;
+    this._dom.autoOptions[LF440.effect].style.display = 'block';
+
+    if (LF440.isActive === true) {
+      LF440.sendAction().then(() => {
+        LF440.status = `Effect ${LF440.effect} activated`;
+        console.log(`AnalyzerController : Successfully activate effect ${LF440.effect}`);
+      }).catch(() => {
+        LF440.status = `Unable to set effect ${LF440.effect}`;
+        console.error(`AnalyzerController : Failed to activate effect ${LF440.effect}`);
+      });
+    } else {
+      LF440.status = `Please start LightFever440`;
+      console.error(`AnalyzerController : Failed to activate effect ${LF440.effect}, LightFever440 isn't activated`);
+    }
+  }
+
+
+}
+
+
+export default AnalyzerController;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="img/toast-ui.png" style="">
+    <div class="footer-text">Light Fever 440 - Version 0.0.1</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>
