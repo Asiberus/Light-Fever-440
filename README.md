@@ -1,6 +1,6 @@
 # Light Fever 440
 
-![](https://badgen.net/badge/version/0.0.1/blue)
+![](https://badgen.net/badge/version/0.1.0/blue)
 [![License](https://img.shields.io/github/license/Asiberus/Light-Fever-440.svg)](https://github.com/Asiberus/Light-Fever-440/blob/master/LICENSE.md)
 
 Why not connecting both an audio source and a LED strip to a Raspberry, and let some piece of software manage this light system ? Say no more, here is **Light Fever 440** ! The raspberry will host a basic web server so you can control this application using your phone or computer and try all the modes and effects it contains.
