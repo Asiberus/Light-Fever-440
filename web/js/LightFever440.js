@@ -19,7 +19,7 @@ class LightFever440 {
   constructor() {
     /** @public
      * @member {string} - The application version number */
-    this.VERSION = '0.0.1';
+    this.VERSION = '0.1.0';
     /*  ---------------------------------------  DOM internal attributes  --------------------------------------------  */
     /** @private
      * @member {object} - All DOM elements used for interaction in the app */

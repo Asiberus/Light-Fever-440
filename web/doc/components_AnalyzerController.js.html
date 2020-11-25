@@ -28,7 +28,7 @@
     <div class="title">
         <h1><a href="index.html" class="link">Light Fever 440</a></h1>
         
-            <span class="version">v0.0.1</span>
+            <span class="version">v0.1.0</span>
         
     </div>
     <div class="search-container" id="search-container">
@@ -36,7 +36,7 @@
         <ul></ul>
     </div>
     
-    <div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="LightFever440.html">LightFever440</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="LightFever440_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="LightFever440.html#_dom">_dom</a></li><li><a href="LightFever440.html#_effect">_effect</a></li><li><a href="LightFever440.html#_isActive">_isActive</a></li><li><a href="LightFever440.html#_isDark">_isDark</a></li><li><a href="LightFever440.html#_mode">_mode</a></li><li><a href="LightFever440.html#_options">_options</a></li><li><a href="LightFever440.html#_previousEffect">_previousEffect</a></li><li><a href="LightFever440.html#_state">_state</a></li><li><a href="LightFever440.html#_version">_version</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="LightFever440.html#._ajax">_ajax</a></li><li><a href="LightFever440.html#._getState">_getState</a></li><li><a href="LightFever440.html#._hexToRgb">_hexToRgb</a></li><li><a href="LightFever440.html#._initEvents">_initEvents</a></li><li><a href="LightFever440.html#._initState">_initState</a></li><li><a href="LightFever440.html#._setOptionsForEffect">_setOptionsForEffect</a></li><li><a href="LightFever440.html#._startLightFever">_startLightFever</a></li><li><a href="LightFever440.html#._startStroboscope">_startStroboscope</a></li><li><a href="LightFever440.html#._stopLightFever">_stopLightFever</a></li><li><a href="LightFever440.html#._stopStroboscope">_stopStroboscope</a></li><li><a href="LightFever440.html#._strobOptionsModal">_strobOptionsModal</a></li><li><a href="LightFever440.html#._switchMode">_switchMode</a></li><li><a href="LightFever440.html#._switchTheme">_switchTheme</a></li><li><a href="LightFever440.html#._toggleLightFever">_toggleLightFever</a></li><li><a href="LightFever440.html#._updateEffect">_updateEffect</a></li><li><a href="LightFever440.html#.sendAction">sendAction</a></li></ul></div></li></ul></div>
+    <div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="LightFever440.html">LightFever440</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="LightFever440_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="LightFever440.html#_dom">_dom</a></li><li><a href="LightFever440.html#_effect">_effect</a></li><li><a href="LightFever440.html#_isActive">_isActive</a></li><li><a href="LightFever440.html#_isDark">_isDark</a></li><li><a href="LightFever440.html#_mode">_mode</a></li><li><a href="LightFever440.html#_options">_options</a></li><li><a href="LightFever440.html#_previousEffect">_previousEffect</a></li><li><a href="LightFever440.html#_previousMode">_previousMode</a></li><li><a href="LightFever440.html#_state">_state</a></li><li><a href="LightFever440.html#VERSION">VERSION</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="LightFever440.html#._ajax">_ajax</a></li><li><a href="LightFever440.html#._getState">_getState</a></li><li><a href="LightFever440.html#._hexToRgb">_hexToRgb</a></li><li><a href="LightFever440.html#._initEvents">_initEvents</a></li><li><a href="LightFever440.html#._initState">_initState</a></li><li><a href="LightFever440.html#._setOptionsForEffect">_setOptionsForEffect</a></li><li><a href="LightFever440.html#._startLightFever">_startLightFever</a></li><li><a href="LightFever440.html#._startStroboscope">_startStroboscope</a></li><li><a href="LightFever440.html#._stopLightFever">_stopLightFever</a></li><li><a href="LightFever440.html#._stopStroboscope">_stopStroboscope</a></li><li><a href="LightFever440.html#._strobOptionsModal">_strobOptionsModal</a></li><li><a href="LightFever440.html#._switchMode">_switchMode</a></li><li><a href="LightFever440.html#._switchTheme">_switchTheme</a></li><li><a href="LightFever440.html#._toggleLightFever">_toggleLightFever</a></li><li><a href="LightFever440.html#._updateEffect">_updateEffect</a></li><li><a href="LightFever440.html#.sendAction">sendAction</a></li></ul></div></li></ul></div>
 </nav>
 <div id="resizer"></div>
 
@@ -48,7 +48,9 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import * as Utils from './Utils.js';
+            <pre class="prettyprint source linenums"><code>import InputFactory from './InputFactory.js';
+import PresetManager from './PresetManager.js';
+import * as Utils from './Utils.js';
 
 
 class AnalyzerController {
@@ -56,104 +58,151 @@ class AnalyzerController {
 
   constructor() {
     this._dom = {
-      autoButtons: { // Buttons that are only available in auto analyse mode
-        UNIFORM: document.getElementById('auto-uniform'),
-        PROGRESSIVE: document.getElementById('auto-progressive'),
-        PROGRESSIVE_MIRROR: document.getElementById('auto-progressive-mirror'),
-        PULSE: document.getElementById('auto-pulse')
+      UNIFORM: {
+        button: document.getElementById('auto-uniform'),
+        container: document.getElementById('auto-uniform-options'),
+        peak: document.getElementById('auto-uniform-peak'),
+        peakText: document.getElementById('auto-uniform-peak-value'),
+        colorSwitch: document.getElementById('auto-uniform-color-switch'),
+        color: document.getElementById('auto-uniform-color')
       },
-      autoOptions: {
-        UNIFORM: document.getElementById('auto-uniform-options'),
-        PROGRESSIVE: document.getElementById('auto-progressive-options'),
-        PROGRESSIVE_MIRROR: document.getElementById('auto-progressive-mirror-options'),
-        PULSE: document.getElementById('auto-pulse-options'),
-        opts: {
-          lightNumber: document.getElementById('auto-progressive-led'),
-          maxPulse: document.getElementById('auto-pusle-length'),
-          colorPulse: document.getElementById('auto-pulse-color')
-        }
+      PROGRESSIVE: {
+        button: document.getElementById('auto-progressive'),
+        container: document.getElementById('auto-progressive-options'),
+        size: document.getElementById('auto-progressive-size'),
+        sizeText: document.getElementById('auto-progressive-size-value'),
+        reverse: document.getElementById('auto-progressive-reverse')
+      },
+      PULSE: {
+        button: document.getElementById('auto-pulse'),
+        container: document.getElementById('auto-pulse-options'),
+        maxLength: document.getElementById('auto-pulse-length'),
+        maxLengthText: document.getElementById('auto-pulse-length-value'),
+        reverse: document.getElementById('auto-pulse-reverse'),
+        colorSwitch: document.getElementById('auto-pulse-color-switch'),
+        color: document.getElementById('auto-pulse-color')
+      },
+      PROGRESSIVE_PULSE: {
+        button: document.getElementById('auto-progressive-pulse'),
+        container: document.getElementById('auto-progressive-pulse-options'),
+        size: document.getElementById('auto-progressive-pulse-size'),
+        sizeText: document.getElementById('auto-progressive-pulse-size-value'),
+        reverse: document.getElementById('auto-progressive-pulse-reverse'),
+        colorSwitch: document.getElementById('auto-progressive-pulse-color-switch'),
+        color: document.getElementById('auto-progressive-pulse-color'),
+        threshold: document.getElementById('auto-progressive-pulse-threshold'),
+        thresholdText: document.getElementById('auto-progressive-pulse-threshold-value'),
       }
     };
 
+    this._inputFactory = new InputFactory({
+      scope: this,
+      update: this._updateEffect
+    });
+
+    this._presetManager = new PresetManager({
+      type: 'AUTO',
+      effect: 'UNIFORM',
+      getOptions: this.getOptions.bind(this),
+      applyPresetOptions: this._applyPresetOptions.bind(this)
+    });
+
     this._initEvents();
-    this._initState();
   }
 
 
   _initEvents() {
-    // Listeners for auto analyse effects
-    this._dom.autoButtons.UNIFORM.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.autoButtons.PROGRESSIVE.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.autoButtons.PROGRESSIVE_MIRROR.addEventListener('click', this._updateEffect.bind(this));
-    this._dom.autoButtons.PULSE.addEventListener('click', this._updateEffect.bind(this));
-
-    this._dom.autoOptions.opts.lightNumber.addEventListener('input', () => {
-      document.getElementById('auto-progressive-led-value').innerHTML = this._dom.autoOptions.opts.lightNumber.value;
-      window.localStorage.setItem('auto-progressive-led', this._dom.autoOptions.opts.lightNumber.value);
+    /* Uniform effect options */
+    this._inputFactory.new('CLICK', {
+      effect: 'UNIFORM',
+      element: this._dom.UNIFORM.button
     });
-    this._dom.autoOptions.opts.maxPulse.addEventListener('input', () => {
-      document.getElementById('auto-pusle-length-value').innerHTML = this._dom.autoOptions.opts.maxPulse.value;
-      window.localStorage.setItem('auto-pusle-length', this._dom.autoOptions.opts.maxPulse.value);
+    this._inputFactory.new('SLIDER', {
+      effect: 'UNIFORM',
+      element: this._dom.UNIFORM.peak,
+      label: this._dom.UNIFORM.peakText,
+      default: '0',
+      lsKey: 'auto-uniform-peak'
     });
-    this._dom.autoOptions.opts.colorPulse.addEventListener('click', event => {
-      event.preventDefault();
-      this._colorPickerModal('pulse-color', color => {
-        this._dom.autoOptions.opts.colorPulse.value = color
-      });
+    this._inputFactory.new('COLOR_OVERRIDE', {
+      effect: 'UNIFORM',
+      element: this._dom.UNIFORM.colorSwitch,
+      color: this._dom.UNIFORM.color,
+      default: '#FFFFFF',
+      lsKey: 'auto-uniform-color'
     });
-  }
-
-
-  _initState() {
-    rangesliderJs.create(this._dom.autoOptions.opts.lightNumber, { value: window.localStorage.getItem('auto-progressive-led') || '5' });
-    rangesliderJs.create(this._dom.autoOptions.opts.maxPulse, { value: window.localStorage.getItem('auto-pusle-length') || '100' });
-  }
-
-
-  initEffect(effect) {
-    // Unselect all buttons
-    for (const [key, value] of Object.entries(this._dom.autoButtons)) {
-      this._dom.autoButtons[key].classList.remove('selected');
-      this._dom.autoOptions[key].style.display = 'none';
-    }
-    // Update effect toggled
-    this._dom.autoButtons[effect].classList.add('selected');
-    this._dom.autoOptions[effect].style.display = 'block';
-  }
-
-
-  getActiveEffect() {
-    // Find selected effect in destination mode
-    for (const [key, value] of Object.entries(this._dom.autoButtons)) {
-      if (this._dom.autoButtons[key].classList.contains('selected')) {
-        this._dom.autoOptions[key].style.display = 'block';
-        return this._dom.autoButtons[key].dataset.effect;
-      }
-    }
-
-    return 'UNIFORM';
-  }
-
-
-  getOptions() {
-    let options = {};
-    if (LF440.effect === 'UNIFORM') {
-      options = {
-        peak: document.getElementById('auto-uniform-peak-detection').checked
-      };
-    } else if (LF440.effect === 'PROGRESSIVE') {
-      options = {
-        led: this._dom.autoOptions.opts.lightNumber.value || 5,
-        reverse: document.getElementById('auto-progressive-reverse').checked
-      };
-    } else if (LF440.effect === 'PULSE') {
-      options = {
-        color: Utils.hexToRgb(window.localStorage.getItem('pulse-color')),
-        maxPulse: this._dom.autoOptions.opts.maxPulse.value
-      };
-    }
-
-    return options;
+    /* Progressive effect options */
+    this._inputFactory.new('CLICK', {
+      effect: 'PROGRESSIVE',
+      element: this._dom.PROGRESSIVE.button
+    });
+    this._inputFactory.new('SWITCH', {
+      effect: 'PROGRESSIVE',
+      element: this._dom.PROGRESSIVE.reverse,
+      lsKey: 'auto-progressive-reverse'
+    });
+    this._inputFactory.new('SLIDER', {
+      effect: 'PROGRESSIVE',
+      element: this._dom.PROGRESSIVE.size,
+      label: this._dom.PROGRESSIVE.sizeText,
+      default: '5',
+      lsKey: 'auto-progressive-size'
+    });
+    /* Pulse effect options */
+    this._inputFactory.new('CLICK', {
+      effect: 'PULSE',
+      element: this._dom.PULSE.button
+    });
+    this._inputFactory.new('SLIDER', {
+      effect: 'PULSE',
+      element: this._dom.PULSE.maxLength,
+      label: this._dom.PULSE.maxLengthText,
+      default: '100',
+      lsKey: 'auto-pulse-length'
+    });
+    this._inputFactory.new('SWITCH', {
+      effect: 'PULSE',
+      element: this._dom.PULSE.reverse,
+      lsKey: 'auto-pulse-reverse'
+    });
+    this._inputFactory.new('COLOR_OVERRIDE', {
+      effect: 'PULSE',
+      element: this._dom.PULSE.colorSwitch,
+      color: this._dom.PULSE.color,
+      default: '#FFFFFF',
+      lsKey: 'auto-pulse-color'
+    });
+    /* Progressive pulse */
+    this._inputFactory.new('CLICK', {
+      effect: 'PROGRESSIVE_PULSE',
+      element: this._dom.PROGRESSIVE_PULSE.button
+    });
+    this._inputFactory.new('SWITCH', {
+      effect: 'PROGRESSIVE_PULSE',
+      element: this._dom.PROGRESSIVE_PULSE.reverse,
+      lsKey: 'auto-progressive-pulse-reverse'
+    });
+    this._inputFactory.new('SLIDER', {
+      effect: 'PROGRESSIVE_PULSE',
+      element: this._dom.PROGRESSIVE_PULSE.threshold,
+      label: this._dom.PROGRESSIVE_PULSE.thresholdText,
+      default: '0',
+      lsKey: 'auto-progressive-pulse-threshold'
+    });
+    this._inputFactory.new('SLIDER', {
+      effect: 'PROGRESSIVE_PULSE',
+      element: this._dom.PROGRESSIVE_PULSE.size,
+      label: this._dom.PROGRESSIVE_PULSE.sizeText,
+      default: '5',
+      lsKey: 'auto-progressive-pulse-size'
+    });
+    this._inputFactory.new('COLOR_OVERRIDE', {
+      effect: 'PROGRESSIVE_PULSE',
+      element: this._dom.PROGRESSIVE_PULSE.colorSwitch,
+      color: this._dom.PROGRESSIVE_PULSE.color,
+      default: '#FFFFFF',
+      lsKey: 'auto-progressive-pulse-color'
+    });
   }
 
 
@@ -164,29 +213,148 @@ class AnalyzerController {
    * @description &lt;blockquote>Switch the Light Fever 440 effect using the HTML data-effect set on each of the concerned buttons.
    * See &lt;code>README.md&lt;/code> for the detailled API description.&lt;/blockquote>
    * @param {object} event - The event data (click) to retrieve the event target and update it **/
-  _updateEffect(event) {
-    // Unselect all buttons
-    for (const [key, value] of Object.entries(this._dom.autoButtons)) {
-      this._dom.autoButtons[key].classList.remove('selected');
-      this._dom.autoOptions[key].style.display = 'none';
+  _updateEffect(effect) {
+    if (effect !== window.LF440.effect) {
+      this._unselectAllEffect();
+      window.LF440.effect = effect;
+      this._dom[window.LF440.effect].container.style.display = 'block';
+      this._dom[window.LF440.effect].button.classList.add('selected');
+      this._presetManager.initPresets(window.LF440.effect);
     }
-    // Then use target as current selection
-    event.target.classList.add('selected');
-    LF440.effect = event.target.dataset.effect;
-    this._dom.autoOptions[LF440.effect].style.display = 'block';
 
-    if (LF440.isActive === true) {
-      LF440.sendAction().then(() => {
-        LF440.status = `Effect ${LF440.effect} activated`;
-        console.log(`AnalyzerController : Successfully activate effect ${LF440.effect}`);
+    if (window.LF440.isActive === true) {
+      window.LF440.sendAction().then(() => {
+        window.F440.status = `Effect ${window.LF440.effect} activated`;
+        console.log(`AnalyzerController : Successfully activate effect ${window.LF440.effect}`);
       }).catch(() => {
-        LF440.status = `Unable to set effect ${LF440.effect}`;
-        console.error(`AnalyzerController : Failed to activate effect ${LF440.effect}`);
+        window.LF440.status = `Unable to set effect ${window.LF440.effect}`;
+        console.error(`AnalyzerController : Failed to activate effect ${window.LF440.effect}`);
       });
     } else {
-      LF440.status = `Please start LightFever440`;
-      console.error(`AnalyzerController : Failed to activate effect ${LF440.effect}, LightFever440 isn't activated`);
+      window.LF440.status = `Please start LightFever440`;
+      console.error(`AnalyzerController : Failed to activate effect ${window.LF440.effect}, LightFever440 isn't activated`);
     }
+  }
+
+
+  _unselectAllEffect() {
+    // Unselect all buttons and hide all associated options
+    for (const [key] of Object.entries(this._dom)) {
+      this._dom[key].button.classList.remove('selected');
+      this._dom[key].container.style.display = 'none';
+    }
+  }
+
+
+  _applyPresetOptions(options) {
+    if (window.LF440.effect === 'UNIFORM') {
+      this._dom.UNIFORM.peak['rangeslider-js'].update({ value: (options.peak * 100) });
+      if (options.color) {
+        this._dom.UNIFORM.colorSwitch.checked = true;
+        this._dom.UNIFORM.color.parentNode.style.filter = 'opacity(1)';
+      } else {
+        this._dom.UNIFORM.colorSwitch.checked = false;
+        this._dom.UNIFORM.color.parentNode.style.filter = 'opacity(0.1)';
+      }
+    } else if (window.LF440.effect === 'PROGRESSIVE') {
+      this._dom.PROGRESSIVE.size['rangeslider-js'].update({ value: options.size });
+      if (options.reverse === true) {
+        this._dom.PROGRESSIVE.reverse.checked = true;
+      } else {
+        this._dom.PROGRESSIVE.reverse.checked = false;
+      }
+    } else if (window.LF440.effect === 'PULSE') {
+      this._dom.PULSE.maxLength['rangeslider-js'].update({ value: (options.size * 100) });
+      if (options.reverse === true) {
+        this._dom.PULSE.reverse.checked = true;
+      } else {
+        this._dom.PULSE.reverse.checked = false;
+      }
+      if (options.color) {
+        this._dom.PULSE.colorSwitch.checked = true;
+        this._dom.PULSE.color.parentNode.style.filter = 'opacity(1)';
+      } else {
+        this._dom.PULSE.colorSwitch.checked = false;
+        this._dom.PULSE.color.parentNode.style.filter = 'opacity(0.1)';
+      }
+    } else if (window.LF440.effect === 'PROGRESSIVE_PULSE') {
+      this._dom.PROGRESSIVE_PULSE.size['rangeslider-js'].update({ value: options.size });
+      if (options.reverse === true) {
+        this._dom.PROGRESSIVE_PULSE.reverse.checked = true;
+      } else {
+        this._dom.PROGRESSIVE_PULSE.reverse.checked = false;
+      }
+      if (options.color) {
+        this._dom.PROGRESSIVE_PULSE.colorSwitch.checked = true;
+        this._dom.PROGRESSIVE_PULSE.color.parentNode.style.filter = 'opacity(1)';
+      } else {
+        this._dom.PROGRESSIVE_PULSE.colorSwitch.checked = false;
+        this._dom.PROGRESSIVE_PULSE.color.parentNode.style.filter = 'opacity(0.1)';
+      }
+    }
+
+    this._updateEffect(window.LF440.effect);
+  }
+
+
+  initEffect(effect) {
+    this._unselectAllEffect();
+    // Update effect toggled
+    this._dom[effect].button.classList.add('selected');
+    this._dom[effect].container.style.display = 'block';
+  }
+
+
+  getActiveEffect() {
+    // Find selected effect in destination mode
+    for (const [key] of Object.entries(this._dom)) {
+      if (this._dom[key].button.classList.contains('selected')) {
+        this._dom[key].container.style.display = 'block';
+        return this._dom[key].button.dataset.effect;
+      }
+    }
+
+    return 'UNIFORM';
+  }
+
+
+  getOptions() {
+    let options = {};
+    if (window.LF440.effect === 'UNIFORM') {
+      options = {
+        peak: parseInt(this._dom.UNIFORM.peak.value) / 100
+      };
+
+      if (this._dom.UNIFORM.colorSwitch.checked) {
+        options.color = Utils.mapColor(Utils.hexToRgb(this._dom.UNIFORM.color.value), window.LF440.maxColor);
+      }
+    } else if (window.LF440.effect === 'PROGRESSIVE') {
+      options = {
+        size: parseInt(this._dom.PROGRESSIVE.size.value),
+        reverse: this._dom.PROGRESSIVE.reverse.checked
+      };
+    } else if (window.LF440.effect === 'PULSE') {
+      options = {
+        max: parseInt(this._dom.PULSE.maxLength.value) / 100,
+        reverse: this._dom.PULSE.reverse.checked
+      };
+
+      if (this._dom.PULSE.colorSwitch.checked) {
+        options.color = Utils.mapColor(Utils.hexToRgb(this._dom.PULSE.color.value), window.LF440.maxColor);
+      }
+    } else if (window.LF440.effect === 'PROGRESSIVE_PULSE') {
+      options = {
+        size: parseInt(this._dom.PROGRESSIVE_PULSE.size.value),
+        reverse: this._dom.PROGRESSIVE_PULSE.reverse.checked,
+        peakTreshold: parseInt(this._dom.PROGRESSIVE_PULSE.threshold.value) / 100
+      };
+      console.log(options);
+      if (this._dom.PROGRESSIVE_PULSE.colorSwitch.checked) {
+        options.color = Utils.mapColor(Utils.hexToRgb(this._dom.PROGRESSIVE_PULSE.color.value), window.LF440.maxColor);
+      }
+    }
+
+    return options;
   }
 
 
